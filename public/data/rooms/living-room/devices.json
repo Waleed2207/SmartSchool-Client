@@ -1,0 +1,87 @@
+{
+  "devices": {
+    "4629316951": {
+      "name": "Lights",
+      "switch": true,
+      "icon":"",
+      "controls": {
+        "9943131538": {
+          "name": "Intensity",
+          "type": "scale",
+          "value": 20,
+          "min": 0,
+          "max": 100,
+          "step": 10
+        }
+      }
+    },
+    "8864944773": {
+      "name": "Heater",
+      "switch": true,
+      "icon":"",
+      "controls": {
+        "9943131538": {
+          "name": "Intensity",
+          "type": "scale",
+          "value": 20,
+          "min": 0,
+          "max": 100,
+          "step": 10
+        }
+      }
+    },
+    "7851085670": {
+      "name": "Air Conditioner",
+      "switch": true,
+      "icon":"",
+      "controls": {
+        "4276924312": {
+          "name": "Mode",
+          "type": "mode",
+          "value": "cold",
+          "options": {
+            "cold": {
+              "name": "Cold",
+              "icon": "snowflake"
+            },
+            "hot": {
+              "name": "Hot",
+              "icon": "sun"
+            },
+            "fan": {
+              "name": "Fan",
+              "icon": "fan"
+            }
+          }
+        },
+        "0065575783": {
+          "name": "Temperature",
+          "type": "temperature",
+          "unit": "c",
+          "value": 18,
+          "min": 16,
+          "max": 30
+        },
+        "1747025804": {
+          "name": "Vane",
+          "type": "mode",
+          "value": "cold",
+          "options": {
+            "top": {
+              "name": "Top"
+            },
+            "middle": {
+              "name": "Middle"
+            },
+            "bottom": {
+              "name": "Bottom"
+            },
+            "swing": {
+              "name": "Swing"
+            }
+          }
+        }
+      }
+    }
+  }
+}

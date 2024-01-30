@@ -1,0 +1,26 @@
+@import "../../../styles/utils/utils";
+
+.Nav {
+  display: flex;
+
+  ul {
+    display: flex;
+    padding: 0;
+    flex-direction: row;
+    margin: auto auto 0 0;
+    list-style: none;
+
+    li {
+      margin: 0 10px;
+    }
+  }
+
+  @include mobile-view {
+    ul {
+      flex-direction: column;
+      li{
+        margin: 10px 0;
+      }
+    }
+  }
+}

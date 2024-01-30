@@ -1,0 +1,22 @@
+@import "../../styles/utils/utils";
+
+.Row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: 10rem;
+  margin-left: 10rem;
+
+  .Column {
+    width: 50%;
+    padding: 10px;
+    box-sizing: border-box;
+
+    @include mobile-view {
+      width: 100%;
+    }
+  }
+}
+
+.Link {
+  text-decoration: none;
+}

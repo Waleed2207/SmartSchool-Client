@@ -1,0 +1,10 @@
+@import "../../../styles/utils/utils";
+
+.Button {
+  font-family: $FONT_FAMILY;
+  border: 2px solid #ddd;
+  background-color: transparent;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}

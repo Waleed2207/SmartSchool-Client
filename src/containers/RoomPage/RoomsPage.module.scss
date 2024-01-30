@@ -1,0 +1,113 @@
+.RoomsPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  
+  .RoomsPageHeader {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .RoomsPageInputLabel {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .RoomsPageInputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+  }
+  
+  .RoomsPageInput {
+    border: 1px solid #ccc;
+    border-radius: 0.4rem;
+    padding: 0.5rem 1.5rem;
+    margin: 0.5rem;
+    flex-grow: 1;
+    width: 80%;
+  }
+  
+  .RoomsPageButton {
+    background-color: #00bcd4;
+    margin: 1rem;;
+    color: white;
+    padding: 0.4rem 1.5rem;
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  
+  .BackButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    position: absolute; 
+    left: 2rem; 
+    top: 6rem; 
+    justify-content: end;
+    font-size: 0.8rem;
+    color: #000;
+    margin-bottom: 2rem;
+    padding: 0;
+  
+    span {
+      margin-left: 5px;
+      font-weight: bold;
+    }
+  }
+  
+  .SearchContainer {
+    position: relative;
+    width: 20%;
+    margin-bottom: 1rem;
+  }
+  
+  .SearchInput {
+    border: 1px solid #ccc;
+    border-radius: 0.4rem;
+    padding: 0.5rem 3.5rem 0.5rem 0.5rem;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .SearchIcon {
+    position: absolute;
+    left: 22rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
+  .FilteredRooms {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 0.4rem;
+    padding: 0.5rem;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .FilteredRoom {
+    padding: 0.5rem;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: #f1f1f1;
+    }
+  }
+  

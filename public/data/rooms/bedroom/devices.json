@@ -1,0 +1,104 @@
+{
+  "devices": {
+    "3201115269": {
+      "name": "Lights",
+      "switch": true,
+      "icon":"",
+      "controls": {
+        "2612871503": {
+          "name": "Intensity",
+          "type": "scale",
+          "value": 20,
+          "min": 0,
+          "max": 100,
+          "step": 10
+        }
+      }
+    },
+    "4542264292": {
+      "name": "Fan",
+      "switch": true,
+      "icon":"",
+      "controls": {
+        "3368059519": {
+          "name": "Intensity",
+          "type": "mode",
+          "value": "low",
+          "options": {
+            "low": {
+              "name": "Low",
+              "icon": ""
+            },
+            "medium": {
+              "name": "Medium",
+              "icon": ""
+            },
+            "high": {
+              "name": "High",
+              "icon": ""
+            }
+          }
+        }
+      }
+    },
+    "2694726544": {
+      "name": "Wifi",
+      "switch": true,
+      "icon":"",
+      "controls": null
+    },
+    "4156356272": {
+      "name": "Air Conditioner",
+      "switch": true,
+      "icon":"",
+      "controls": {
+        "1464080197": {
+          "name": "Mode",
+          "type": "mode",
+          "value": "cold",
+          "options": {
+            "cold": {
+              "name": "Cold",
+              "icon": "snowflake"
+            },
+            "hot": {
+              "name": "Hot",
+              "icon": "sun"
+            },
+            "fan": {
+              "name": "Fan",
+              "icon": "fan"
+            }
+          }
+        },
+        "9450026807": {
+          "name": "Temperature",
+          "type": "temperature",
+          "unit": "c",
+          "value": 18,
+          "min": 16,
+          "max": 30
+        },
+        "6594218673": {
+          "name": "Vane",
+          "type": "mode",
+          "value": "middle",
+          "options": {
+            "top": {
+              "name": "Top"
+            },
+            "middle": {
+              "name": "Middle"
+            },
+            "bottom": {
+              "name": "Bottom"
+            },
+            "swing": {
+              "name": "Swing"
+            }
+          }
+        }
+      }
+    }
+  }
+}

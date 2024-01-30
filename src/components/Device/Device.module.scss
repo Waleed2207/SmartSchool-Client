@@ -1,0 +1,40 @@
+@import "../../styles/utils/utils";
+
+.Device {
+  border-radius: 6px;
+  padding: 30px 20px;
+  box-shadow: 0 2px 12px 0 $LIGHT_SHADOW;
+  box-sizing: border-box;
+  color: #000;
+
+  .Header {
+    display: flex;
+  }
+
+  .Title {
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  .DeviceContainer{
+    border: 1px solid #EEE;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+  }
+
+  .Switch {
+    margin-left: auto;
+  }
+}
+
+.spinnerContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+

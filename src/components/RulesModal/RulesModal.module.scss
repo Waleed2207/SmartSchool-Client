@@ -1,0 +1,43 @@
+.ModalWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.ModalBox {
+  width: 400px;
+  height: auto;
+  padding: 1.5rem;
+  background-color: rgb(206, 201, 201);
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 10%;
+  left:35%;
+  transform: translateY(-50%);
+}
+
+.ModalHeader {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.CloseIcon {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.ModalMessage {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}

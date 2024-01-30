@@ -1,0 +1,55 @@
+@import "../../styles/utils/utils";
+
+.SideDrawerContainer {
+  display: block;
+
+  @include not-mobile-view {
+    display: none;
+  }
+
+  .SideDrawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: #fff;
+    box-shadow: 0 2px 12px 0 $DARK_SHADOW;
+    padding: 20px;
+    box-sizing: border-box;
+    min-width: 250px;
+    z-index: 1000;
+    transform: translateX(-120%);
+    transition: transform ease-in-out 300ms;
+
+    .Title {
+      font-weight: bold;
+      border-bottom: 1px solid;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+    }
+  }
+
+  .CloseDrawerBtn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    color: #fff;
+    border: 0;
+    font-size: 3.5rem;
+    padding: 0;
+    visibility: hidden;
+  }
+
+  @include mobile-view {
+    &.Open {
+      .SideDrawer {
+        transform: translateX(0);
+      }
+
+      .CloseDrawerBtn {
+        visibility: visible;
+      }
+    }
+  }
+}

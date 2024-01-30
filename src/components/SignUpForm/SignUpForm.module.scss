@@ -1,0 +1,72 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin-top:1rem;
+  }
+  
+  .title {
+    margin-bottom: 0.5rem;
+  }
+  
+  .form {
+    width: 100%;
+  }
+  
+  .form_group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  .label {
+    margin-bottom: 5px;
+  }
+  
+  .input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .error_message {
+    color: red;
+    margin-bottom: 10px;
+  }
+  
+  .submit_btn {
+    background-color: #3498db;
+    left:12rem;
+    color: #fff;
+    font-size: 18px;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    margin-top: 1rem;
+  }
+  
+  .submit_btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .subContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .show_password_checkbox {
+    margin-top: 5px;
+  }
+  

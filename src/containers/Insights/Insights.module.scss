@@ -1,0 +1,20 @@
+.insightsContainer {
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto; // Center the container
+  }
+  
+  .selectorsContainer {
+    display:inline-flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .graphContainer {
+    width: 100%;
+    height: 400px; // Increase the height
+    margin: 0 auto; // Center the graph
+  }
+  

@@ -1,0 +1,46 @@
+@import '~leaflet/dist/leaflet.css';
+
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 1rem;
+}
+
+.headline {
+  color: rgb(44, 43, 43);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.location-info {
+  color: rgb(22, 22, 22);
+  margin: 0.5rem;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.map {
+  height: 400px;
+  padding:2rem;
+  width: 50%;
+}
