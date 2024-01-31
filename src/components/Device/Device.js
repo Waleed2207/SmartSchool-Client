@@ -179,7 +179,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
     console.log(`Updated mode for device ${controlId}: ${updatedMode}`);
   };
 
-
+// -------------------------------------waleed---------------------------------------------
   const onDeviceChange = async (e) => {
     const newState = e.target.checked;
     setState(newState);
@@ -205,10 +205,29 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
         temperature,
       });
     }
-    roomDeviceResponse = await axios.put(`${SERVER_URL}/room-devices`, { state: newState, id });
-    if (response.statusCode === 200) {
-      setOpenSuccessSnackbar(true);
-    } else {
+    // roomDeviceResponse = await axios.put(`${SERVER_URL}/room-devices`, { state: newState, id });
+    // if (response.statusCode === 200) {
+    //   setOpenSuccessSnackbar(true);
+    // } else {
+    //   setOpenFailureSnackbar(true);
+    // }
+    try {
+      // Assuming SERVER_URL is correctly defined and accessible
+      const roomDeviceResponse = await axios.put(`${SERVER_URL}/room-devices`, {
+        state: newState, 
+        id // Make sure 'id' is correctly defined and holds the intended value
+      });
+  
+      // Check if the response was successful (status code 200)
+      if (roomDeviceResponse.status === 200) {
+        setOpenSuccessSnackbar(true);
+      } else {
+        // If the status code is not 200, consider it a failure
+        setOpenFailureSnackbar(true);
+      }
+    } catch (error) {
+      // Log the error and show the failure snackbar in case of an exception
+      console.error('Error updating device state:', error);
       setOpenFailureSnackbar(true);
     }
   };
