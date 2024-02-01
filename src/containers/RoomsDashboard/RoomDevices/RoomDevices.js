@@ -83,7 +83,7 @@ const NavLinkStyled = styled(NavLink)`
 `;
 
 const DEVICES_IDS_MAP = {
-  AC: "9EimtVDZ",
+  AC: "YNahUQcM",
   LAUNDRY: "0e4be594-13bb-fe76-f092-c8dbdede80b2",
   HEATER: "061751378caab5219d31",
   PUMP: "061751378caab5219d33"
