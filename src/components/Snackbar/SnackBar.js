@@ -34,7 +34,6 @@ export const SnackBar = ({
   message = "Device changed",
 }) => {
   const [open, setOpen] = useState(isOpen);
-
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
