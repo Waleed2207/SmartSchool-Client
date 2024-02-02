@@ -9,14 +9,24 @@ import {
 export const Temperature = ({ temperature, onChangeValue, acState }) => {
   const [value, setValue] = useState(temperature);
 
+  useEffect(() => {
+    setValue(temperature);
+  }, [temperature]);
+
   const onIncrease = () => {
-    setValue(value + 1);
-    onChangeValue(value + 1);
+    setValue((prevValue) => {
+      const newValue = prevValue + 1;
+      onChangeValue(newValue);
+      return newValue;
+    });
   };
 
   const onDecrease = () => {
-    setValue(value - 1);
-    onChangeValue(value - 1);
+    setValue((prevValue) => {
+      const newValue = prevValue - 1;
+      onChangeValue(newValue);
+      return newValue;
+    });
   };
 
   return (
