@@ -179,27 +179,39 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
     console.log(`Updated mode for device ${controlId}: ${updatedMode}`);
   };
 
-  // Inside your React component by waleed
 useEffect(() => {
   const fetchAcState = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/api/ac-state`);
-      const acState = response.data;
-      setState(acState.on);
-      setTemperature(acState.targetTemperature);
-      // If your AC state contains a 'mode' property, you can set it here
-      // For example:
-      // setMode(acState.mode);
+      const response = await axios.get(`${SERVER_URL}/sensibo`);
+      console.log("Response from /sensibo:", response.data);
+
+      // Directly accessing the properties from response.data
+      if (response.data) {
+        const { on, mode, targetTemperature, temperatureUnit } = response.data;
+        setState(on);
+        setMode(mode);
+        setTemperature(targetTemperature);
+        // If you need to use the temperature unit, you can also set it to state here
+        // setTemperatureUnit(temperatureUnit);
+      } else {
+        // Handle the case where the response doesn't have the expected data
+        console.error("Unexpected response structure:", response.data);
+      }
     } catch (error) {
       console.error('Error fetching AC state:', error);
       // Handle the error by showing an error message or setting a default state
+      // For example, you might want to set default values:
+      setState(false);
+      setMode('cool'); // Set to your default mode
+      setTemperature(24); // Set to your default temperature
     }
   };
 
   if (isAcDevice) {
     fetchAcState();
   }
-}, [isAcDevice, SERVER_URL]); // SERVER_URL should be the base URL of your server
+}, [isAcDevice]); // SERVER_URL is constant, no need to include in dependencies array
+
 
 
 // -------------------------------------waleed---------------------------------------------
@@ -277,61 +289,62 @@ useEffect(() => {
   
   const onDeviceChange = async (e) => {
     const newState = e.target.checked;
-    setState(newState); // Make sure setState is defined and works as expected
+    setState(newState); // Update local state immediately for better user feedback
     setcolor(newState ? "green" : "red");
-    try {
-      // If there's a function to handle device toggle, call it
-      if (onToggleDeviceSwitch) { // Ensure onToggleDeviceSwitch is defined
-        await onToggleDeviceSwitch({
-          state: newState,
-          id: device.id, // Ensure 'device' is an object with an 'id' property
-          // Add temperature if it's a required parameter
-        });
-      }
-      // Perform the PUT request to the server
-      const response = await axios.post(`${SERVER_URL}/sensibo`, {
-        state: newState,
-        id: device.id, // Confirm that this matches the server's expected payload
-      });
   
-      // Check for a successful response
-      if (response.status === 200) {
+    try {
+      // Send both turn on/off and temperature update requests in parallel
+      const requests = [
+        axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: device.id }),
+        newState && temperature ? axios.post(`${SERVER_URL}/sensibo`, { temperature, id: device.id }) : null
+      ].filter(Boolean); // filter out null if newState is false or temperature is not set
+  
+      const results = await Promise.all(requests);
+  
+      // Check if all requests were successful
+      if (results.every(response => response.status === 200)) {
         setOpenSuccessSnackbar(true);
       } else {
-        console.error('Unexpected response status:', response.status);
         setOpenFailureSnackbar(true);
       }
     } catch (error) {
-      console.error('Error updating device state:', error);
-      setOpenFailureSnackbar(true); // Show an error message on UI
+      console.error('Error updating device state or temperature:', error);
+      setOpenFailureSnackbar(true);
     }
   };
+  
 
 
 
   const onChangeTemperature = async (newTemperature) => {
-    setTemperature(newTemperature); // update the local state
+    setTemperature(newTemperature); // update the local state optimistically
   
     try {
       // Perform the POST request to the server to update the temperature
       const response = await axios.post(`${SERVER_URL}/sensibo`, {
-        state: state, // send the current on/off state
-        temperature: newTemperature, // send the new temperature
-        id: device.id, // send the device id
+        state: state,
+        temperature: newTemperature,
+        id: device.id,
       });
   
       // Check for a successful response
       if (response.status === 200) {
         console.log('Temperature updated successfully');
+        // You might not need to set the temperature again if you're optimistic
       } else {
         console.error('Failed to update temperature:', response.status);
         setOpenFailureSnackbar(true);
+        // Rollback if necessary
+        setTemperature(temperature); // reset to the previous temperature
       }
     } catch (error) {
       console.error('Error updating temperature:', error);
       setOpenFailureSnackbar(true);
+      // Rollback if necessary
+      setTemperature(temperature); // reset to the previous temperature
     }
   };
+  
   
 
   const handleCloseSnackBar = () => {
