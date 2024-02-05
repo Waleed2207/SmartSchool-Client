@@ -47,17 +47,26 @@ export const ModeControl = ({ acState }) => {
   const [loading, setLoading] = useState(false);
 
   const fetchCurrentMode = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${SERVER_URL}/sensibo`);
-      console.log({ response });
-      const currentMode = response.data.state.mode;
-      setMode(currentMode);
-      setLoading(false);
+      console.log("Response data:", response.data);
+      // Access 'mode' directly from 'response.data'
+      if (response.data && response.data.mode) {
+        const currentMode = response.data.mode;
+        setMode(currentMode);
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        // Set mode to a default value or handle the lack of 'mode' as needed
+        setMode("cool"); // This is just an example default value
+      }
     } catch (error) {
       console.error("Error fetching current mode:", error);
-      setLoading(false);
+      // Handle the error appropriately, possibly setting an error state
     }
+    setLoading(false);
   };
+  
 
   useEffect(() => {
     fetchCurrentMode();

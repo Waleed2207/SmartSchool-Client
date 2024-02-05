@@ -16,7 +16,7 @@ const Insights = () => {
   const [selectedDevice, setSelectedDevice] = useState('');
   const [timeRange, setTimeRange] = useState('monthly');
   const [graphData, setGraphData] = useState({ labels: [], data: [] });
-  const [selectedYear, setSelectedYear] = useState(2023);
+  const [selectedYear, setSelectedYear] = useState(2024);
   const [monthLabels, setMonthLabels] = useState(generateMonthLabels(selectedYear));
 
   const currentYear = new Date().getFullYear();
