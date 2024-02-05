@@ -172,6 +172,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
   const isPumpDevice = device_name.toLowerCase() === "pump";
 
   const isWithControls = isAcDevice || isLaundryDevice || isPumpDevice;
+  const [motionDetected, setMotionDetected] = useState(false);
 
   const onUpdateModeValueHandler = (controlId, updatedMode) => {
     // Update the AC mode by sending a request to your Node.js server.
@@ -212,7 +213,47 @@ useEffect(() => {
   }
 }, [isAcDevice]); // SERVER_URL is constant, no need to include in dependencies array
 
+// -----------------------------motion-dected----------------------------------
+const fetchMotionState = async () => {
+  try {
+    const response = await axios.get(`${SERVER_URL}/motion-state`);
+    const isMotionDetected = response.data.motionDetected;
 
+    // Only update state and log if the motion detection state has changed
+    if (isMotionDetected !== motionDetected) {
+      setMotionDetected(isMotionDetected);
+      console.log(`Response from /motionDetected: {motionDetected: ${isMotionDetected}}`);
+      
+      if (isMotionDetected) {
+        setOpenSuccessSnackbar(true); // Show success snackbar when motion is detected
+      } else {
+        setOpenSuccessSnackbar(false); // Optionally hide the snackbar when no motion is detected
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching motion state:', error);
+    setOpenFailureSnackbar(true); // Show failure snackbar on error
+  }
+};
+useEffect(() => {
+  fetchMotionState(); // Initial fetch when component mounts
+  const intervalId = setInterval(fetchMotionState, 500); // Continue polling every 5 seconds
+
+  // Cleanup interval on component unmount
+  return () => clearInterval(intervalId);
+}, [motionDetected]); // Now this effect depends on motionDetected
+
+
+useEffect(() => {
+  if (device.device_name.toLowerCase() === 'light') {
+    const lightState = motionDetected ? 'on' : 'off';
+    setState(motionDetected);
+    setcolor(motionDetected ? "green" : "red");
+    // You can also make an API call here if you want to reflect the state change in the backend
+  }
+}, [motionDetected, device.device_name]);
+
+////////////////////////////////
 
 // -------------------------------------waleed---------------------------------------------
   // const onDeviceChange = async (e) => {
@@ -287,26 +328,52 @@ useEffect(() => {
   //   }
   // };
   
-  const onDeviceChange = async (e) => {
+  const onDeviceChange = async (device, e) => {
     const newState = e.target.checked;
+    console.log(device, newState);
     setState(newState); // Update local state immediately for better user feedback
     setcolor(newState ? "green" : "red");
   
     try {
+      if (device.device_name.toLowerCase() === 'ac') {
       // Send both turn on/off and temperature update requests in parallel
       const requests = [
         axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: device.id }),
         newState && temperature ? axios.post(`${SERVER_URL}/sensibo`, { temperature, id: device.id }) : null
       ].filter(Boolean); // filter out null if newState is false or temperature is not set
-  
+
       const results = await Promise.all(requests);
-  
+
       // Check if all requests were successful
       if (results.every(response => response.status === 200)) {
         setOpenSuccessSnackbar(true);
       } else {
         setOpenFailureSnackbar(true);
       }
+      } else if (device.device_name.toLowerCase() === 'light') {
+        // If the device is a light, log to the console and possibly toggle its state
+        console.log('Light is turn on:', newState ? "ON" : "OFF");
+        try {
+          const response = await axios.post(`${SERVER_URL}/motion-detected`, {
+            state: newState ? 'on' : 'off'
+          });
+    
+          // Check if the request was successful
+          if (response.status === 200) {
+            console.log(`Light turned ${newState ? "on" : "off"}, request received successfully`);
+            setOpenSuccessSnackbar(true);
+            // Optionally, update the UI to reflect the new state
+          } else {
+            setOpenFailureSnackbar(true);
+          }
+        } catch (error) {
+          console.error('Error turning light on/off:', error);
+          setOpenFailureSnackbar(true);
+        }
+      }
+  
+      // Add additional else if blocks for other device types as needed
+  
     } catch (error) {
       console.error('Error updating device state or temperature:', error);
       setOpenFailureSnackbar(true);
@@ -360,7 +427,10 @@ useEffect(() => {
     >
       <TopRow>
         <H2>{device_name}</H2>
-        <Switch onChange={(e) => onDeviceChange(e)} checked={state} />
+        <Switch
+          onChange={(e) => onDeviceChange(device, e)}
+          checked={state}
+        />
       </TopRow>
       {openSeccessSnackBar && (
         <SnackBar
