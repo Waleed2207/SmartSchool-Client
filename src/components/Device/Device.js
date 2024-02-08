@@ -170,6 +170,8 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
   const isHeaterDevice = device_name.toLowerCase() === "heater";
   const isLaundryDevice = device_name.toLowerCase() === "laundry";
   const isPumpDevice = device_name.toLowerCase() === "pump";
+// Assuming you're inside a React functional component
+  const [temperatureUnit, setTemperatureUnit] = useState('C'); // Default to Celsius
 
   const isWithControls = isAcDevice || isLaundryDevice || isPumpDevice;
   const [motionDetected, setMotionDetected] = useState(false);
@@ -180,38 +182,36 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
     console.log(`Updated mode for device ${controlId}: ${updatedMode}`);
   };
 
-useEffect(() => {
-  const fetchAcState = async () => {
-    try {
-      const response = await axios.get(`${SERVER_URL}/sensibo`);
-      console.log("Response from /sensibo:", response.data);
-
-      // Directly accessing the properties from response.data
-      if (response.data) {
-        const { on, mode, targetTemperature, temperatureUnit } = response.data;
-        setState(on);
-        setMode(mode);
-        setTemperature(targetTemperature);
-        // If you need to use the temperature unit, you can also set it to state here
-        // setTemperatureUnit(temperatureUnit);
-      } else {
-        // Handle the case where the response doesn't have the expected data
-        console.error("Unexpected response structure:", response.data);
-      }
-    } catch (error) {
-      console.error('Error fetching AC state:', error);
-      // Handle the error by showing an error message or setting a default state
+  useEffect(() => {
+    const fetchAcState = async () => {
+      try {
+        const response = await axios.get(`${SERVER_URL}/sensibo`);
+        console.log("Response from /sensibo:", response.data);
+  
+        if (response.data?.mode) {
+          const { on, mode, targetTemperature, temperatureUnit } = response.data;
+          setState(on);
+          setMode(mode);
+          setTemperature(targetTemperature); // Make sure this line correctly updates the temperature
+          //setTemperatureUnit(temperatureUnit); // Assuming you've defined this state as well
+        } else {
+          console.error("Unexpected response structure:", response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching AC state:', error);
       // For example, you might want to set default values:
       setState(false);
       setMode('cool'); // Set to your default mode
       setTemperature(24); // Set to your default temperature
+      }
+    };
+  
+    if (isAcDevice) {
+      fetchAcState();
     }
-  };
-
-  if (isAcDevice) {
-    fetchAcState();
-  }
-}, [isAcDevice]); // SERVER_URL is constant, no need to include in dependencies array
+  }, [isAcDevice]); // Make sure SERVER_URL and other dependencies are correctly listed if needed
+  
+  
 
 // -----------------------------motion-dected----------------------------------
 const fetchMotionState = async () => {
@@ -237,7 +237,7 @@ const fetchMotionState = async () => {
 };
 useEffect(() => {
   fetchMotionState(); // Initial fetch when component mounts
-  const intervalId = setInterval(fetchMotionState, 500); // Continue polling every 5 seconds
+  const intervalId = setInterval(fetchMotionState, 5000); // Continue polling every 5 seconds
 
   // Cleanup interval on component unmount
   return () => clearInterval(intervalId);
@@ -333,13 +333,19 @@ useEffect(() => {
     console.log(device, newState);
     setState(newState); // Update local state immediately for better user feedback
     setcolor(newState ? "green" : "red");
-  
+    const deviceId = device.id.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
+
+    // const device_room_idds= device.id.split("-");
+    const device_room_idds = deviceId.split("-")[1] || "4ahpAkJ9";
+    console.log(device_room_idds);
+
     try {
       if (device.device_name.toLowerCase() === 'ac') {
       // Send both turn on/off and temperature update requests in parallel
+
       const requests = [
-        axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: device.id }),
-        newState && temperature ? axios.post(`${SERVER_URL}/sensibo`, { temperature, id: device.id }) : null
+        axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: device_room_idds}),
+        newState && temperature ? axios.post(`${SERVER_URL}/sensibo`, { temperature, id: device_room_idds}) : null
       ].filter(Boolean); // filter out null if newState is false or temperature is not set
 
       const results = await Promise.all(requests);

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ModeControl = ({ acState }) => {
+export const ModeControl = ({ acState, device_room_idds }) => {
   const [acInternalState, setAcInternalState] = useState(acState);
   const [mode, setMode] = useState("cool");
   const [loading, setLoading] = useState(false);
@@ -70,12 +70,12 @@ export const ModeControl = ({ acState }) => {
 
   useEffect(() => {
     fetchCurrentMode();
-  }, []);
-
+  }, [device_room_idds]);
 
   const updateMode = async (newMode) => {
     try {
-      const deviceId = "YNahUQcM";
+      //const deviceId =device_room_idds.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
+      const deviceId = "4ahpAkJ9";
       const response = await axios.post(`${SERVER_URL}/sensibo/mode`, {
         deviceId,
         mode: newMode,
