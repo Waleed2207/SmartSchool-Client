@@ -74,8 +74,8 @@ export const ModeControl = ({ acState, device_room_idds }) => {
 
   const updateMode = async (newMode) => {
     try {
-      //const deviceId =device_room_idds.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
-      const deviceId = "4ahpAkJ9";
+      const deviceId =device_room_idds.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
+      //const deviceId = "4ahpAkJ9";
       const response = await axios.post(`${SERVER_URL}/sensibo/mode`, {
         deviceId,
         mode: newMode,
