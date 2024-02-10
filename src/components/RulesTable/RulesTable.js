@@ -73,6 +73,7 @@ const RulesTable = ({ searchText }) => {
         <thead>
           <tr>
             <th>Active</th>
+            <th></th>
             <th>Rule</th>
             <th>Action</th>
           </tr>
@@ -99,6 +100,19 @@ const RulesTable = ({ searchText }) => {
                 ) : (
                   rule.rule
                 )}
+              </td>
+              <td>
+              <td>
+          {editRuleId === rule.id ? (
+            <input
+              type="text"
+              value={editRuleValue}
+              onChange={handleEditChange}
+            />
+          ) : (
+            rule.description // Display the rule description here
+          )}
+        </td>
               </td>
               <td>
                 {editRuleId === rule.id ? (
