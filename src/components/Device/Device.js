@@ -237,7 +237,7 @@ const fetchMotionState = async () => {
 };
 useEffect(() => {
   fetchMotionState(); // Initial fetch when component mounts
-  const intervalId = setInterval(fetchMotionState, 5000); // Continue polling every 5 seconds
+  const intervalId = setInterval(fetchMotionState, 2000); // Continue polling every 2 seconds
 
   // Cleanup interval on component unmount
   return () => clearInterval(intervalId);
@@ -334,28 +334,38 @@ useEffect(() => {
     setState(newState); // Update local state immediately for better user feedback
     setcolor(newState ? "green" : "red");
     const deviceId = device.id.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
-
-    // const device_room_idds= device.id.split("-");
-    const device_room_idds = deviceId.split("-")[1] || "4ahpAkJ9";
-    console.log(device_room_idds);
+    console.log(deviceId);
 
     try {
       if (device.device_name.toLowerCase() === 'ac') {
-      // Send both turn on/off and temperature update requests in parallel
-
-      const requests = [
-        axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: device_room_idds}),
-        newState && temperature ? axios.post(`${SERVER_URL}/sensibo`, { temperature, id: device_room_idds}) : null
-      ].filter(Boolean); // filter out null if newState is false or temperature is not set
-
-      const results = await Promise.all(requests);
-
-      // Check if all requests were successful
-      if (results.every(response => response.status === 200)) {
-        setOpenSuccessSnackbar(true);
-      } else {
-        setOpenFailureSnackbar(true);
-      }
+  
+        // Prepare the requests
+        const requests = [
+          axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: deviceId }),
+        ];
+    
+        // If both newState is true and temperature is set, add the temperature update request
+        if (newState && temperature) {
+          requests.push(axios.post(`${SERVER_URL}/sensibo`, { state: newState,temperature, id: deviceId }));
+        }
+    
+        // Execute all the requests in parallel
+        const results = await Promise.all(requests);
+    
+        let allSuccessful = true;
+        results.forEach(result => {
+          console.log(result.data); // Log the response from each request
+          if (result.status !== 200) {
+            allSuccessful = false;
+          }
+        });
+    
+        // Check if all requests were successful
+        if (allSuccessful) {
+          setOpenSuccessSnackbar(true);
+        } else {
+          setOpenFailureSnackbar(true);
+        }
       } else if (device.device_name.toLowerCase() === 'light') {
         // If the device is a light, log to the console and possibly toggle its state
         console.log('Light is turn on:', newState ? "ON" : "OFF");
