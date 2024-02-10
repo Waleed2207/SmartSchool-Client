@@ -310,14 +310,6 @@ const RulesDashboard = ({ addRule }) => {
             >
               Fill in the form to improve your home's behavior:
             </label>
-            <input
-              type="text"
-              id="rule-input"
-              value={rule}
-              onChange={onRuleInputChange}
-              placeholder="Type your rule here..."
-              className={classes.RulesDashboardInput}
-            />
               <form onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="conditionTemperature">If Temperature(°C): </label>
@@ -400,7 +392,12 @@ const RulesDashboard = ({ addRule }) => {
                   </select>
                 </div>
 
-                <button type="submit">Set Condition</button>
+                <button
+                type="submit"
+                className={classes.RulesDashboardButton}
+              >
+                Add
+                </button>
               </form>
 
 
@@ -415,14 +412,7 @@ const RulesDashboard = ({ addRule }) => {
                   />
                 </>
               )}
-              <button
-                
-                onClick={onAddRuleClick}
-                disabled={!rule}
-                className={classes.RulesDashboardButton}
-              >
-                Add
-              </button>
+              
               <ErrorMessage>{errorMessage}</ErrorMessage>
             </div>
           </>
