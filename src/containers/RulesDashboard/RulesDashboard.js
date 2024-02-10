@@ -318,146 +318,146 @@ const RulesDashboard = ({ addRule }) => {
               placeholder="Type your rule here..."
               className={classes.RulesDashboardInput}
             />
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="conditionTemperature">If Temperature(°C): </label>
-                <select
-                  id="conditionTemperature"
-                  name="conditionTemperature"
-                  value={temperature}
-                  onChange={(e) => setTemperature(e.target.value)}
-                  required
-                >
-                  <option value="">Select Temperature</option>
-                  {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
-                    <option key={temp} value={temp}>{temp}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="operator">Condition: </label>
-                <select
-                  id="operator"
-                  name="operator"
-                  value={selectedOperator}
-                  onChange={(e) => setSelectedOperator(e.target.value)}
-                  required
-                >
-                  <option value="">Select Condition</option>
-                  <option value="is above">is above</option>
-                  <option value="is equal to">is equal to</option>
-                  <option value="is below">is below</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="acTemperatureSelect">Turn AC on to (°C): </label>
-                <select
-                  id="acTemperatureSelect"
-                  name="acTemperature"
-                  value={acTemperature}
-                  onChange={(e) => setAcTemperature(e.target.value)}
-                  required
-                >
-                  <option value="">Select Temperature</option>
-                  {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
-                    <option key={temp} value={temp}>{temp}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="acMode">And on Mode: </label>
-                <select
-                  id="acMode"
-                  name="acMode"
-                  value={acMode}
-                  onChange={(e) => setAcMode(e.target.value)}
-                  required
-                >
-                  <option value="">Select Mode</option>
-                  <option value="cool">Cool</option>
-                  <option value="heat">Heat</option>
-                  <option value="fan">Fan</option>
-                  <option value="dry">Dry</option>
-                  <option value="auto">Auto</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="acState">AC State: </label>
-                <select
-                  id="acState"
-                  name="acState"
-                  value={acState}
-                  onChange={(e) => setacState(e.target.value)}
-                  required
-                >
-                  <option value="">Select AC State</option>
-                  <option value="ON">On</option>
-                  <option value="OFF">Off</option>
-                </select>
-              </div>
-
-              <button type="submit">Set Condition</button>
-            </form>
-
-
-                        {userRole !== "User" && (
-                          <>
-                            <span style={{ marginRight: "8px" }}>Strict:</span>
-                            <Switch
-                              checked={isStrict}
-                              onChange={() => setIsStrict(!isStrict)}
-                              color="primary"
-                              inputProps={{ "aria-label": "primary checkbox" }}
-                            />
-                          </>
-                        )}
-                        <button
-                          
-                          onClick={onAddRuleClick}
-                          disabled={!rule}
-                          className={classes.RulesDashboardButton}
-                        >
-                          Add
-                        </button>
-                        <ErrorMessage>{errorMessage}</ErrorMessage>
-                      </div>
-                    </>
-                  )}
-                  {openSeccessSnackBar && (
-                    <SnackBar
-                      message={"Rule is activated"}
-                      isOpen={true}
-                      handleCloseSnackBar={handleCloseSnackBar}
-                      color="green"
-                    />
-                  )}
-                  {openFailureSnackBar && (
-                    <SnackBar
-                      message={"Error adding rule"}
-                      isOpen={true}
-                      handleCloseSnackBar={handleCloseSnackBar}
-                      color="red"
-                    />
-                  )}
-                  <RulesModal
-                    show={showModal}
-                    onCloseModal={closeModalHandler}
-                    message={modalMessage}
-                  />
+              <form onSubmit={handleSubmit}>
+                <div>
+                  <label htmlFor="conditionTemperature">If Temperature(°C): </label>
+                  <select
+                    id="conditionTemperature"
+                    name="conditionTemperature"
+                    value={temperature}
+                    onChange={(e) => setTemperature(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Temperature</option>
+                    {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
+                      <option key={temp} value={temp}>{temp}</option>
+                    ))}
+                  </select>
                 </div>
-              );
-            };
 
-            RulesDashboard.propTypes = {
-              addRule: PropTypes.func,
-            };
+                <div>
+                  <label htmlFor="operator">Condition: </label>
+                  <select
+                    id="operator"
+                    name="operator"
+                    value={selectedOperator}
+                    onChange={(e) => setSelectedOperator(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Condition</option>
+                    <option value="is above">is above</option>
+                    <option value="is equal to">is equal to</option>
+                    <option value="is below">is below</option>
+                  </select>
+                </div>
 
-            const mapDispatchToProps = {
-              addRule,
-            };
+                <div>
+                  <label htmlFor="acTemperatureSelect">Turn AC on to (°C): </label>
+                  <select
+                    id="acTemperatureSelect"
+                    name="acTemperature"
+                    value={acTemperature}
+                    onChange={(e) => setAcTemperature(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Temperature</option>
+                    {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
+                      <option key={temp} value={temp}>{temp}</option>
+                    ))}
+                  </select>
+                </div>
 
-            export default connect(null, mapDispatchToProps)(RulesDashboard);
+                <div>
+                  <label htmlFor="acMode">And on Mode: </label>
+                  <select
+                    id="acMode"
+                    name="acMode"
+                    value={acMode}
+                    onChange={(e) => setAcMode(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Mode</option>
+                    <option value="cool">Cool</option>
+                    <option value="heat">Heat</option>
+                    <option value="fan">Fan</option>
+                    <option value="dry">Dry</option>
+                    <option value="auto">Auto</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="acState">AC State: </label>
+                  <select
+                    id="acState"
+                    name="acState"
+                    value={acState}
+                    onChange={(e) => setacState(e.target.value)}
+                    required
+                  >
+                    <option value="">Select AC State</option>
+                    <option value="ON">On</option>
+                    <option value="OFF">Off</option>
+                  </select>
+                </div>
+
+                <button type="submit">Set Condition</button>
+              </form>
+
+
+              {userRole !== "User" && (
+                <>
+                  <span style={{ marginRight: "8px" }}>Strict:</span>
+                  <Switch
+                    checked={isStrict}
+                    onChange={() => setIsStrict(!isStrict)}
+                    color="primary"
+                    inputProps={{ "aria-label": "primary checkbox" }}
+                  />
+                </>
+              )}
+              <button
+                
+                onClick={onAddRuleClick}
+                disabled={!rule}
+                className={classes.RulesDashboardButton}
+              >
+                Add
+              </button>
+              <ErrorMessage>{errorMessage}</ErrorMessage>
+            </div>
+          </>
+        )}
+        {openSeccessSnackBar && (
+          <SnackBar
+            message={"Rule is activated"}
+            isOpen={true}
+            handleCloseSnackBar={handleCloseSnackBar}
+            color="green"
+          />
+        )}
+        {openFailureSnackBar && (
+          <SnackBar
+            message={"Error adding rule"}
+            isOpen={true}
+            handleCloseSnackBar={handleCloseSnackBar}
+            color="red"
+          />
+        )}
+        <RulesModal
+          show={showModal}
+          onCloseModal={closeModalHandler}
+          message={modalMessage}
+        />
+      </div>
+    );
+  };
+
+  RulesDashboard.propTypes = {
+    addRule: PropTypes.func,
+  };
+
+  const mapDispatchToProps = {
+    addRule,
+  };
+
+  export default connect(null, mapDispatchToProps)(RulesDashboard);
