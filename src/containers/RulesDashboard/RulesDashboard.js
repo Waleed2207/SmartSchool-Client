@@ -64,7 +64,7 @@ const RulesDashboard = ({ addRule }) => {
         operator: selectedOperator,
         value: parseInt(temperature, 10),
       },
-      action: `Turn AC ${acState} ${acMode} mode on ${acTemperature}°C `
+      action: `Turn AC ${acState} ${acMode} mode on ${acTemperature} °C `
     };
   
     try {
@@ -243,6 +243,7 @@ const RulesDashboard = ({ addRule }) => {
   };
 
   return (
+    
     <div className={classes.RulesDashboard}>
       {!displayIntro && (
         <button onClick={handleBackClick} className={classes.BackButton}>
@@ -302,6 +303,7 @@ const RulesDashboard = ({ addRule }) => {
         </>
       ) : (
         <>
+        <div className={classes.RulesDashboard}>
           <h3 className={classes.RulesDashboardHeader}>Add Rule</h3>
           <div className={classes.RulesDashboardInputContainer}>
             <label
@@ -310,95 +312,100 @@ const RulesDashboard = ({ addRule }) => {
             >
               Fill in the form to improve your home's behavior:
             </label>
-              <form onSubmit={handleSubmit}>
-                <div>
-                  <label htmlFor="conditionTemperature">If Temperature(°C): </label>
-                  <select
-                    id="conditionTemperature"
-                    name="conditionTemperature"
-                    value={temperature}
-                    onChange={(e) => setTemperature(e.target.value)}
-                    required
-                  >
-                    <option value="">Select Temperature</option>
-                    {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
-                      <option key={temp} value={temp}>{temp}</option>
-                    ))}
-                  </select>
-                </div>
+            <form onSubmit={handleSubmit} className={classes.formContainer}>
+      <div className={classes.formRow}>
+        <label htmlFor="conditionTemperature" className={classes.labelColumn}>If Temperature(°C):</label>
+        <select
+          id="conditionTemperature"
+          name="conditionTemperature"
+          value={temperature}
+          onChange={(e) => setTemperature(e.target.value)}
+          required
+          className={classes.inputColumn}
+        >
+          <option value="">Select Temperature</option>
+          {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
+            <option key={temp} value={temp}>{temp}°C</option>
+          ))}
+        </select>
+      </div>
 
-                <div>
-                  <label htmlFor="operator">Condition: </label>
-                  <select
-                    id="operator"
-                    name="operator"
-                    value={selectedOperator}
-                    onChange={(e) => setSelectedOperator(e.target.value)}
-                    required
-                  >
-                    <option value="">Select Condition</option>
-                    <option value="is above">is above</option>
-                    <option value="is equal to">is equal to</option>
-                    <option value="is below">is below</option>
-                  </select>
-                </div>
+      <div className={classes.formRow}>
+        <label htmlFor="operator" className={classes.labelColumn}>Condition:</label>
+        <select
+          id="operator"
+          name="operator"
+          value={selectedOperator}
+          onChange={(e) => setSelectedOperator(e.target.value)}
+          required
+          className={classes.inputColumn}
+        >
+          <option value="">Select Condition</option>
+          <option value="is above">is above</option>
+          <option value="is equal to">is equal to</option>
+          <option value="is below">is below</option>
+        </select>
+      </div>
 
-                <div>
-                  <label htmlFor="acTemperatureSelect">Turn AC on to (°C): </label>
-                  <select
-                    id="acTemperatureSelect"
-                    name="acTemperature"
-                    value={acTemperature}
-                    onChange={(e) => setAcTemperature(e.target.value)}
-                    required
-                  >
-                    <option value="">Select Temperature</option>
-                    {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
-                      <option key={temp} value={temp}>{temp}</option>
-                    ))}
-                  </select>
-                </div>
+      <div className={classes.formRow}>
+        <label htmlFor="acTemperatureSelect" className={classes.labelColumn}>Turn AC on to (°C):</label>
+        <select
+          id="acTemperatureSelect"
+          name="acTemperature"
+          value={acTemperature}
+          onChange={(e) => setAcTemperature(e.target.value)}
+          required
+          className={classes.inputColumn}
+        >
+          <option value="">Select Temperature</option>
+          {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
+            <option key={temp} value={temp}>{temp}°C</option>
+          ))}
+        </select>
+      </div>
 
-                <div>
-                  <label htmlFor="acMode">And on Mode: </label>
-                  <select
-                    id="acMode"
-                    name="acMode"
-                    value={acMode}
-                    onChange={(e) => setAcMode(e.target.value)}
-                    required
-                  >
-                    <option value="">Select Mode</option>
-                    <option value="cool">Cool</option>
-                    <option value="heat">Heat</option>
-                    <option value="fan">Fan</option>
-                    <option value="dry">Dry</option>
-                    <option value="auto">Auto</option>
-                  </select>
-                </div>
+      <div className={classes.formRow}>
+        <label htmlFor="acMode" className={classes.labelColumn}>And on Mode:</label>
+        <select
+          id="acMode"
+          name="acMode"
+          value={acMode}
+          onChange={(e) => setAcMode(e.target.value)}
+          required
+          className={classes.inputColumn}
+        >
+          <option value="">Select Mode</option>
+          <option value="cool">Cool</option>
+          <option value="heat">Heat</option>
+          <option value="fan">Fan</option>
+          <option value="dry">Dry</option>
+          <option value="auto">Auto</option>
+        </select>
+      </div>
 
-                <div>
-                  <label htmlFor="acState">AC State: </label>
-                  <select
-                    id="acState"
-                    name="acState"
-                    value={acState}
-                    onChange={(e) => setacState(e.target.value)}
-                    required
-                  >
-                    <option value="">Select AC State</option>
-                    <option value="ON">On</option>
-                    <option value="OFF">Off</option>
-                  </select>
-                </div>
+      <div className={classes.formRow}>
+        <label htmlFor="acState" className={classes.labelColumn}>AC State:</label>
+        <select
+          id="acState"
+          name="acState"
+          value={acState}
+          onChange={(e) => setacState(e.target.value)}
+          required
+          className={classes.inputColumn}
+        >
+          <option value="">Select AC State</option>
+          <option value="ON">On</option>
+          <option value="OFF">Off</option>
+        </select>
+      </div>
 
-                <button
-                type="submit"
-                className={classes.RulesDashboardButton}
-              >
-                Add
-                </button>
-              </form>
+      <div className={classes.formRow}>
+        <button type="submit" className={classes.RulesDashboardButton}>
+          Add
+        </button>
+      </div>
+    </form>
+
 
 
               {userRole !== "User" && (
@@ -412,7 +419,7 @@ const RulesDashboard = ({ addRule }) => {
                   />
                 </>
               )}
-              
+              </div>
               <ErrorMessage>{errorMessage}</ErrorMessage>
             </div>
           </>
