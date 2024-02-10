@@ -289,8 +289,8 @@ const RulesDashboard = ({ }) => {
       <div className={classes.formRow}>
         <label htmlFor="conditionTemperature" className={classes.labelColumn}>If Temperature(°C):</label>
         <select
-          id="conditionTemperature"
-          name="conditionTemperature"
+          id="conditionTemperatureselector"
+          name="onditionTemperatureselector"
           value={temperature}
           onChange={(e) => setTemperature(e.target.value)}
           required
@@ -304,10 +304,10 @@ const RulesDashboard = ({ }) => {
       </div>
 
       <div className={classes.formRow}>
-        <label htmlFor="operator" className={classes.labelColumn}>Condition:</label>
+        <label htmlFor="operatorlabel" className={classes.labelColumn}>Condition:</label>
         <select
-          id="operator"
-          name="operator"
+          id="operatorselector"
+          name="operatorselector"
           value={selectedOperator}
           onChange={(e) => setSelectedOperator(e.target.value)}
           required
@@ -323,8 +323,8 @@ const RulesDashboard = ({ }) => {
       <div className={classes.formRow}>
         <label htmlFor="acTemperatureSelect" className={classes.labelColumn}>Turn AC on to (°C):</label>
         <select
-          id="acTemperatureSelect"
-          name="acTemperature"
+          id="acTemperatureSelectselector"
+          name="acTemperatureselector"
           value={acTemperature}
           onChange={(e) => setAcTemperature(e.target.value)}
           required
