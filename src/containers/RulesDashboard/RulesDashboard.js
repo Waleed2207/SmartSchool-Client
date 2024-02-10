@@ -28,7 +28,7 @@ const ErrorMessage = styled.p`
   color: red;
 `;
 
-const RulesDashboard = ({ addRule }) => {
+const RulesDashboard = ({ }) => {
   const [rule, setRule] = useState("");
   const [isStrict, setIsStrict] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -149,34 +149,7 @@ const RulesDashboard = ({ addRule }) => {
     setRule(event.target.value);
   };
 
-  const onAddRuleClick = () => {
-    let url = `${process.env.REACT_APP_SERVER_URL}`;
-    axios
-      .post(`${SERVER_URL}/rules`, { rule, isStrict })
-      .then((response) => {
-        // setModalMessage("Rule is activated");
-        // setShowModal(true);
-        setOpenSuccessSnackbar(true);
-        setErrorMessage("");
-
-        // If userRole is 'User', notify the admin
-        if (userRole === "User") {
-          notifyAdmin(
-            "User created a rule",
-            `A new rule "${rule}" has been created by the user.`
-          );
-        }
-      })
-      .catch((error) => {
-        // setModalMessage("Error adding rule");
-        // setShowModal(true);
-        console.log(error.response.data);
-        setErrorMessage(error.response.data);
-        setOpenFailureSnackbar(true);
-      });
-    setRule("");
-    setIsStrict(false); // Reset the isStrict state
-  };
+  
 
   const onSearchInputChange = (event) => {
     setSearch(event.target.value);
