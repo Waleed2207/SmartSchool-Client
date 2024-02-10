@@ -133,8 +133,14 @@
 }
 
 .inputColumn {
-  flex: 1; /* Allows select to take up the remaining space */
+  width: 140px; /* Sets the width of the inputs to 100px */
+  padding:5px;
+  margin: 0 auto; /* Centers the inputs in the container if the container has a defined width */
+  display: block; /* Makes the inputs into block elements, which enables margin auto to work */
 }
+
+
+
 .rulesDashboard__formRow {
   display: flex;
   justify-content: flex-start;
