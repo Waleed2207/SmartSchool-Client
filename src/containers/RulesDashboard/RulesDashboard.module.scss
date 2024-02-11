@@ -20,12 +20,15 @@
 
 .RulesDashboardInputContainer {
   display: flex;
-  flex-direction: column; /* add this line */
-  align-items: center; /* adjust as needed */
+  flex-direction: column;
+  align-items: flex-start; // Align children (labels and inputs) at the start
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
   padding: 2rem;
   border-radius: 1rem;
-  text-align: center;
+  text-align: left; // Ensure text aligns to the left
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
 }
 
 .RulesDashboardInput {
@@ -39,14 +42,17 @@
 
 .RulesDashboardButton {
   background-color: #00bcd4;
-  margin: 1rem;;
   color: white;
-  padding: 0.4rem 1.5rem;
+  padding: 0.4rem 1.5rem; // Adjust padding as needed
   border: none;
   border-radius: 0.4rem;
   font-size: 1.1rem;
   cursor: pointer;
+  width: auto; // Adjust width as per requirement, or use a specific width if needed
+  margin: 1rem auto; // Center the button horizontally
+  display: block; // Ensure the button is treated as a block-level element
 }
+
 
 
 .BackButton {
@@ -113,6 +119,81 @@
     background-color: #f1f1f1;
   }
 }
+/* If using SCSS modules */
+.formRow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1rem; /* Adjust as needed */
+}
+
+.labelColumn {
+  min-width: 150px; /* Adjust the width of the label column */
+  margin-right: 1rem; /* Space between label and input */
+}
+
+.inputColumn {
+  width: 140px; /* Sets the width of the inputs to 100px */
+  padding:5px;
+  margin: 0 auto; /* Centers the inputs in the container if the container has a defined width */
+  display: block; /* Makes the inputs into block elements, which enables margin auto to work */
+}
 
 
 
+.rulesDashboard__formRow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1rem; /* Adjust as needed */
+}
+
+.rulesDashboard__labelColumn {
+  min-width: 150px; /* Adjust the width of the label column */
+  margin-right: 1rem; /* Space between label and input */
+}
+
+.rulesDashboard__inputColumn {
+  flex: 1; /* Allows select to take up the remaining space */
+}
+
+.formContainer {
+  width: 100%; // Use the full width of the parent container
+  max-width: 500px; // Adjust this as needed
+  // margin: auto; // This centers the form container
+
+  margin-top: 10px;
+
+  h2 {
+    text-align: center; // Center the title
+    margin-bottom: 20px; // Space below the title
+  }
+}
+
+.formGroup {
+  display: block; // Stack the label and select vertically
+  margin-bottom: 10px; // Space between each form group
+
+  .formLabel {
+    display: block; // Ensures the label takes up the full width
+    margin-bottom: 5px; // Space between label and select
+  }
+
+  .formSelect {
+    width: 100%; // Select takes up the full width
+    padding: 8px; // Padding inside the select
+    border: 1px solid #ccc; // Border for the select
+    border-radius: 4px; // Rounded corners for the select
+  }
+}
+
+.submitButton {
+  width: 100%; // Button takes up the full width
+  padding: 10px 15px; // Padding inside the button
+  background-color: #007bff; // Example background color
+  color: white; // Text color for the button
+  border: none; // No border for the button
+  border-radius: 4px; // Rounded corners for the button
+  cursor: pointer; // Cursor for the button
+  margin-top: 20px; // Space above the button
+}

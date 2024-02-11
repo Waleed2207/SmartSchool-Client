@@ -5,6 +5,7 @@ import { SERVER_URL } from "../consts";
 export const fetchRules = async () => {
   try {
     const response = await axios.get(`${SERVER_URL}/rules`);
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error fetching rules:", error);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { ROOMS_IDS, SERVER_URL } from "../../consts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -101,6 +101,7 @@ const HouseMap = ({ onClose }) => {
   const [sensors, setSensors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMapReady, setMapReady] = useState(false);
+    const roomsRef = useRef(rooms);
 
 
 
@@ -108,15 +109,18 @@ const HouseMap = ({ onClose }) => {
     const getRooms = async () => {
       try {
         const response = await axios.get(`${SERVER_URL}/rooms`);
+        console.log(response.data);
         const roomsWithMotion = response.data.map((room) => ({
           ...room,
-          motionDetected: false,
+          // Check if `motionDetected` is already specified in the response; if not, default to false
+          motionDetected: room.motionDetected !== undefined ? room.motionDetected : false,
         }));
         return roomsWithMotion;
       } catch (err) {
         console.log("There was a problem fetching room data:", err);
       }
     };
+  
 
     const getSensors = async () => {
       const response = await axios.get(`${SERVER_URL}/sensors`);
@@ -137,64 +141,84 @@ const HouseMap = ({ onClose }) => {
   }, []);
 
 
-  useEffect(() => {
-    const handleMotionDetected = (roomId) => {
-      showPersonIcon(roomId);
+  // useEffect(() => {
+  //   const handleMotionDetected = (roomId) => {
+  //     showPersonIcon(roomId);
+  //   };
+
+  //   eventEmitter.on("motionDetected", handleMotionDetected);
+
+  //   return () => {
+  //     eventEmitter.off("motionDetected", handleMotionDetected);
+  //   };
+  // }, [rooms]);
+
+
+    // Handles showing the person icon when motion is detected
+    const showPersonIcon = (roomId) => {
+      console.log(`Showing person icon in room: ${roomId}`);
+      setRooms((currentRooms) => 
+        currentRooms.map((room) => 
+          room._id === roomId ? { ...room, motionDetected: true } : room
+        )
+      );
+    };
+  
+    const hidePersonIcon = (roomId) => {
+      console.log(`Hiding person icon in room: ${roomId}`);
+      setRooms((currentRooms) => 
+        currentRooms.map((room) => 
+          room._id === roomId ? { ...room, motionDetected: false } : room
+        )
+      );
     };
 
-    eventEmitter.on("motionDetected", handleMotionDetected);
-
-    return () => {
-      eventEmitter.off("motionDetected", handleMotionDetected);
-    };
-  }, [rooms]);
-
-  const showPersonIcon = (roomId) => {
-    console.log(`Motion detected in room: ${roomId}`);
-    setRooms((currentRooms) => {
-      const newRooms = currentRooms.map((room) => {
-        if (room._id === roomId) {
-          return { ...room, motionDetected: true };
-        } else {
-          return { ...room, motionDetected: false };
-        }
-      });
-      return newRooms;
-    });
-  };
-
-  const hidePersonIcon = (roomId) => {
-    setRooms((currentRooms) =>
-      currentRooms.map((room) => {
-        if (room.id === roomId) {
-          return { ...room, motionDetected: false };
-        }
-        return room;
-      })
-    );
-  };
 
   const getSensorActivationStatus = (sensorId) => {
     const sensor = sensors.find((s) => s._id === sensorId);
+    console.log(JSON.stringify(sensor));
     if (sensor) {
       return sensor.activated;
     }
     return "off";
   };
+  // const getSensorActivationStatus = (sensorId) => {
+  //   const hardcodedId = "65be6d119968d8fcc0868af2";
+  //   const sensor = sensors.find((s) => s._id === hardcodedId);
+  //   console.log("Hardcoded lookup Found sensor:", sensor ? JSON.stringify(sensor) : 'Not found');
+  //   return sensor ? sensor.activated : "off";
+  // };
+// Simplified useEffect for motion events
+    useEffect(() => {
+      const handleMotionDetected = (roomId) => {
+        console.log(`Motion detected in room: ${roomId}`);
+        setRooms((currentRooms) => 
+          currentRooms.map((room) => 
+            room._id === roomId ? { ...room, motionDetected: true } : room
+          )
+        );
+      };
 
-  const handleMotionDetected = (roomId) => {
-    console.log(`Event 'motionDetected' received with roomId: ${roomId}`);
+      const handleMotionCleared = (roomId) => {
+        console.log(`Motion cleared in room: ${roomId}`);
+        setRooms((currentRooms) => 
+          currentRooms.map((room) => 
+            room._id === roomId ? { ...room, motionDetected: false } : room
+          )
+        );
+      };
 
-    showPersonIcon(roomId);
-  };
-  // useEffect block to listen to 'motionDetected' events
-  useEffect(() => {
-    eventEmitter.on("motionDetected", handleMotionDetected);
+      eventEmitter.on("motionDetected", handleMotionDetected);
+      eventEmitter.on("motionCleared", handleMotionCleared);
 
-    return () => {
-      eventEmitter.off("motionDetected", handleMotionDetected);
-    };
-  }, [rooms]);
+      return () => {
+        eventEmitter.off("motionDetected", handleMotionDetected);
+        eventEmitter.off("motionCleared", handleMotionCleared);
+      };
+    }, []);
+    useEffect(() => {
+      roomsRef.current = rooms; // Update the ref after rooms state changes
+    }, [rooms]);
 
 
   useEffect(() => {
@@ -206,7 +230,7 @@ const HouseMap = ({ onClose }) => {
         return acc;
       }, {});
       const kitchenDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.KITCHEN}`
+        `${SERVER_URL}/room-devices/${ROOMS_IDS.CLASS_ROOM}`
       );
       const livingRoomDevicesResponse = await axios.get(
         `${SERVER_URL}/room-devices/${ROOMS_IDS.LIVING_ROOM}`
@@ -222,6 +246,7 @@ const HouseMap = ({ onClose }) => {
       );
 
       const kitchenDevices = kitchenDevicesResponse.data.data;
+      console.log(JSON.stringify(kitchenDevices));
       const livingRoomDevices = livingRoomDevicesResponse.data.data;
       const bathroomDevices = bathroomDevicesResponse.data.data;
       const diningRoomDevices = diningRoomDevicesResponse.data.data;

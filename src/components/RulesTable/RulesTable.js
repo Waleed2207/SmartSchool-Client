@@ -1,195 +1,142 @@
-import { Button } from "@material-ui/core";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { Notification } from "../Notification/Notification";
-import { RuleSwitch } from "../UI/Switch/RuleSwitch";
-import classes from "./RulesTable.module.scss";
-// import Switch from '@mui/material/Switch';
-import { toast } from "react-toastify";
-import "font-awesome/css/font-awesome.min.css";
-import { updateRule } from "../../services/rules.service";
-import { SnackBar } from "../Snackbar/SnackBar";
+import axios from "axios";
+import { Button, IconButton } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import {
-  TableStyled,
-  ThStyled,
-  TitleStyled,
-  TableContainer
-} from "../Suggestions/suggestions.styles";
-import { ActionContainer, ActionTdStyled, ActiveCellStyled, Circle, RuleCell, RuleInput, RuleText, TrStyled } from "./rules.styles";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "font-awesome/css/font-awesome.min.css";
 import { SERVER_URL } from "../../consts";
-import { eventEmitter } from "../../WebSocket/ws";
+import classes from "./RulesTable.module.scss";
+import {Circle, ActiveCellStyled} from "./rules.styles"
 
+const RulesTable = ({ searchText }) => {
+  const [rules, setRules] = useState([]);
+  const [editRuleId, setEditRuleId] = useState(null);
+  const [editRuleValue, setEditRuleValue] = useState("");
 
-// const label = { inputProps: { 'aria-label': 'Switch demo' } };
-
-const RulesTable = ({ rules, onRuleClick, selectedRule, searchText, userRole }) => {
-  const [currentRules, setCurrentRules] = useState(rules);
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [editedRule, setEditedRule] = useState(null);
-  const [openSeccessSnackBar, setOpenSuccessSnackbar] = useState(false);
-  const [openFailureSnackBar, setOpenFailureSnackbar] = useState(false);
-
-  // useEffect(() => {
-  //   const handlePumpStateChange = (newState) => {
-  //     let msg;
-  //     if (newState) { // Pump is turned on
-  //       msg = new SpeechSynthesisUtterance("Watering system number one is activated");
-  //     } else { // Pump is turned off
-  //       msg = new SpeechSynthesisUtterance("Watering system number one is deactivated");
-  //     }
-
-  //     window.speechSynthesis.speak(msg);
-  //   };
-
-  //   // Add event listener for pumpStateChange events
-  //   eventEmitter.on('pumpStateChange', handlePumpStateChange);
-
-  //   // Cleanup function to remove the event listener when the component unmounts
-  //   return () => {
-  //     eventEmitter.off('pumpStateChange', handlePumpStateChange);
-  //   };
-  // }, []); // Empty array [] makes sure this effect runs only once after the component mounts.
-
-  // console.log({SERVER_URL})
-
-  const handleCloseSnackBar = () => {
-    setOpenSuccessSnackbar(false);
-    setOpenFailureSnackbar(false);
-  };
-
-  const isSearched = (rule) => {
-    return rule.rule.toLowerCase().includes(searchText.toLowerCase());
-  };
-
-
-  const notifyAdmin = async (subject, text) => {
+  // Standalone fetchRules function
+  const fetchRules = async () => {
     try {
-      await axios.post(`${SERVER_URL}/notifyadmin`, { subject, text });
+      const response = await axios.get(`${SERVER_URL}/rules`, {
+      
+      });
+      setRules(response.data);
+      toast.info("Rules fetched successfully!");
     } catch (error) {
-      console.error("Failed to send email notification to admin:", error);
+      if (axios.isCancel(error)) {
+        console.log("Request canceled:", error.message);
+      } else {
+        console.error("Failed to fetch rules:", error);
+        toast.error("Failed to fetch rules.");
+      }
+    }
+
+  };
+
+  useEffect(() => {
+    fetchRules();
+    // No clean-up function needed since there's no cancel token being used
+  }, []);
+
+  const handleEditChange = (event) => {
+    setEditRuleValue(event.target.value);
+  };
+
+  const handleSaveEdit = async (ruleId) => {
+    try {
+      await axios.put(`${SERVER_URL}/rules/${ruleId}`, { rule: editRuleValue });
+      toast.success("Rule updated successfully!");
+      setEditRuleId(null);
+      setEditRuleValue("");
+      fetchRules(); // Optionally, refetch the rules list to reflect the update
+    } catch (error) {
+      console.error("Failed to update rule:", error);
+      toast.error("Failed to update rule.");
     }
   };
 
-
-  const deleteRule = async (id) => {
+  const handleDeleteRule = async (ruleId) => {
     try {
-      const response = await axios.delete(`${SERVER_URL}/rules/${id}`);
-      if (response.status === 200) {
-        const newRules = rules.filter((rule) => rule.id !== id);
-        setCurrentRules(newRules);
-        toast.success("Rule has been deleted.");
-      }
-    } catch (err) {
-      console.log(err);
+      await axios.delete(`${SERVER_URL}/rules/${ruleId}`);
+      toast.success("Rule deleted successfully!");
+      fetchRules(); // Refresh the list
+    } catch (error) {
+      console.error("Failed to delete rule:", error);
+      toast.error("Failed to delete rule.");
     }
   };
 
   return (
-    <TableContainer>
-      <TitleStyled>Rules</TitleStyled>
-      <TableStyled className={classes.RulesTable}>
+    <div className={classes.TableContainer}>
+      <h2>Rules</h2>
+      <table className={classes.TableStyled}>
         <thead>
-          <TrStyled>
-            <ThStyled>Active</ThStyled>
-            <ThStyled>Rule</ThStyled>
-            <ThStyled>Action</ThStyled>
-          </TrStyled>
+          <tr>
+            <th>Active</th>
+            <th></th>
+            <th>Rule</th>
+            <th>Action</th>
+          </tr>
         </thead>
+       
         <tbody>
-          {currentRules.map((rule, index) => (
-            !rule.isHidden &&
-            <TrStyled
-              key={rule.id}
-              onClick={() => onRuleClick(rule.id)}
-              isSelected={rule.id === selectedRule}
-              isSearched={isSearched(rule)}
-              classes={classes}
-              isStrict={rule.isStrict}
-            >
+  {rules
+    .filter(rule => {
+      const ruleLowercased = rule.rule && rule.rule.toLowerCase();
+      const searchTextLowercased = searchText && searchText.toLowerCase();
+      return ruleLowercased && searchTextLowercased 
+        ? ruleLowercased.includes(searchTextLowercased)
+        : true; // If searchText is undefined, all rules pass the filter
+    })
+    .map((rule) => (          
+        <tr key={rule.id}>
               <ActiveCellStyled>
                 <Circle color={rule.isActive ? "green" : "red"} />
               </ActiveCellStyled>
-              <RuleCell>
-                <RuleText editing={editedRule === rule.id}>
-                  {rule.normalizedRule}
-                </RuleText>
-                {userRole !== "User" && (
+              <td>
+                {editRuleId === rule.id ? (
+                  <input
+                    type="text"
+                    value={editRuleValue}
+                    onChange={handleEditChange}
+                  />
+                ) : (
+                  rule.rule
+                )}
+              </td>
+              <td>
+              <td>
+          {editRuleId === rule.id ? (
+            <input
+              type="text"
+              value={editRuleValue}
+              onChange={handleEditChange}
+            />
+          ) : (
+            rule.description // Display the rule description here
+          )}
+        </td>
+              </td>
+              <td>
+                {editRuleId === rule.id ? (
                   <>
-                    <RuleInput
-                      editing={editedRule === rule.id}
-                      defaultValue={editedRule === rule.id ? rule.normalizedRule : ""}
-                      onBlur={async (e) => {
-                        setEditedRule(null);
-                        const inputValue = e.target.value;
-                        if (await updateRule(rule.id, { rule: inputValue })) {
-                          const newRules = currentRules.map((r) => {
-                            return r.id === rule.id
-                              ? { ...r, normalizedRule: inputValue }
-                              : r;
-                          });
-                          setCurrentRules(newRules);
-                          setOpenSuccessSnackbar(true);
-                        } else {
-                          setOpenFailureSnackbar(true);
-                        }
-
-                        if (userRole === "User") {
-                          console.log('before calling fuctnion in notfy admin');
-                          await notifyAdmin("User created a rule", `The rule "${rule.rule}"has been modified by the user.`)
-                        }
-                      }}
-                    />
-                    <EditIcon
-                      style={{ cursor: "pointer" }}
-                      onClick={() => setEditedRule(rule.id)}
-                    />
+                    <Button size="small" onClick={() => handleSaveEdit(rule.id)}>Save</Button>
+                    <Button size="small" onClick={() => { setEditRuleId(null); setEditRuleValue(""); }}>Cancel</Button>
+                  </>
+                ) : (
+                  <>
+                    <IconButton size="small" onClick={() => { setEditRuleId(rule.id); setEditRuleValue(rule.rule); }}><EditIcon /></IconButton>
+                    <IconButton size="small" onClick={() => handleDeleteRule(rule.id)}><DeleteIcon /></IconButton>
                   </>
                 )}
-              </RuleCell>
-              <ActionTdStyled>
-                <ActionContainer>
-                  <RuleSwitch isActive={rule.isActive} id={rule.id} rule={rule.rule} currentRules={currentRules} setCurrentRules={setCurrentRules} />
-                  {userRole !== "User" && (
-                    <i
-                      className="fa fa-trash"
-                      onClick={() => deleteRule(rule.id)}
-                      style={{
-                        cursor: "pointer",
-                        color: "red",
-                        fontSize: "30px",
-                        marginRight: "8px",
-                      }}
-                    ></i>
-                  )}
-                </ActionContainer>
-              </ActionTdStyled>
-            </TrStyled>
+              </td>
+            </tr>
           ))}
         </tbody>
-      </TableStyled>
-
-      {openSeccessSnackBar && (
-        <SnackBar
-          message={`Rule updated successfully`}
-          isOpen={true}
-          handleCloseSnackBar={handleCloseSnackBar}
-          color="green"
-        />
-      )}
-      {openFailureSnackBar && (
-        <SnackBar
-          message={`Cannot update rule`}
-          isOpen={true}
-          handleCloseSnackBar={handleCloseSnackBar}
-          color="red"
-        />
-      )}
-
-      {alertVisible && <Notification message={alertMessage} />}
-    </TableContainer>
+      </table>
+      <ToastContainer />
+    </div>
   );
 };
 
