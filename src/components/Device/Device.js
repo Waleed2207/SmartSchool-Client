@@ -214,35 +214,25 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
   
 
 // -----------------------------motion-dected----------------------------------
-const fetchMotionState = async () => {
-  try {
-    const response = await axios.get(`${SERVER_URL}/motion-state`);
-    const isMotionDetected = response.data.motionDetected;
-
-    // Only update state and log if the motion detection state has changed
-    if (isMotionDetected !== motionDetected) {
-      setMotionDetected(isMotionDetected);
-      console.log(`Response from /motionDetected: {motionDetected: ${isMotionDetected}}`);
-      
-      if (isMotionDetected) {
-        setOpenSuccessSnackbar(true); // Show success snackbar when motion is detected
-      } else {
-        setOpenSuccessSnackbar(false); // Optionally hide the snackbar when no motion is detected
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching motion state:', error);
-    setOpenFailureSnackbar(true); // Show failure snackbar on error
-  }
-};
 useEffect(() => {
-  fetchMotionState(); // Initial fetch when component mounts
-  const intervalId = setInterval(fetchMotionState, 2000); // Continue polling every 2 seconds
-
-  // Cleanup interval on component unmount
+  const fetchMotionState = async () => {
+    try {
+      const response = await axios.get(`${SERVER_URL}/motion-state`);
+      const isMotionDetected = response.data.motionDetected;
+      if (isMotionDetected !== motionDetected) {
+        setMotionDetected(isMotionDetected);
+        // Show success snackbar when motion is detected, else failure snackbar
+        setOpenSuccessSnackbar(isMotionDetected);
+        setOpenFailureSnackbar(!isMotionDetected);
+      }
+    } catch (error) {
+      console.error('Error fetching motion state:', error);
+      setOpenFailureSnackbar(true);
+    }
+  };
+  const intervalId = setInterval(fetchMotionState, 2000);
   return () => clearInterval(intervalId);
-}, [motionDetected]); // Now this effect depends on motionDetected
-
+}, [motionDetected]);
 
 useEffect(() => {
   if (device.device_name.toLowerCase() === 'light') {
@@ -253,80 +243,9 @@ useEffect(() => {
   }
 }, [motionDetected, device.device_name]);
 
-////////////////////////////////
+
 
 // -------------------------------------waleed---------------------------------------------
-  // const onDeviceChange = async (e) => {
-  //   const newState = e.target.checked;
-  //   setState(newState);
-
-  //   // If the device is a pump, use SpeechSynthesisUtterance to play an audio message
-  //   if (isPumpDevice) {
-  //     let msg;
-
-  //     if (newState) { // Pump is turned on
-  //       msg = new SpeechSynthesisUtterance("Watering system activated");
-  //     } else { // Pump is turned off
-  //       msg = new SpeechSynthesisUtterance("Watering system deactivated");
-  //     }
-
-  //     window.speechSynthesis.speak(msg);
-  //   }
-
-  //   let response;
-  //   if (onToggleDeviceSwitch) {
-  //     response = await onToggleDeviceSwitch({
-  //       state: newState,
-  //       id: device.id,
-  //       temperature,
-  //     });
-  //   }
-  //   try {
-  //     // Assuming SERVER_URL is correctly defined and accessible
-  //     const roomDeviceResponse = await axios.put(`${SERVER_URL}/room-devices/`, {
-  //       state: newState, 
-  //       id // Make sure 'id' is correctly defined and holds the intended value
-  //     });
-  
-  //     // Check if the response was successful (status code 200)
-  //     if (roomDeviceResponse.status === 200) {
-  //       setOpenSuccessSnackbar(true);
-  //     } else {
-  //       // If the status code is not 200, consider it a failure
-  //       setOpenFailureSnackbar(true);
-  //     }
-  //   } catch (error) {
-  //     // Log the error and show the failure snackbar in case of an exception
-  //     console.error('Error updating device state:', error);
-  //     setOpenFailureSnackbar(true);
-  //   }
-  // };
-  // const onDeviceChange = async (e) => {
-  //   const newState = e.target.checked;
-  //   setState(newState);
-  
-  //   try {
-  //     const response = await axios.put(`${SERVER_URL}/room-devices/${device.id}`, {
-  //       state: newState ? 'on' : 'off',
-  //       temperature: temperature,
-  //     });
-  
-  //     if (response.status === 200) {
-  //       setOpenSuccessSnackbar(true);
-  //     } else {
-  //       setOpenFailureSnackbar(true);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error updating device state:', error);
-  //     setOpenFailureSnackbar(true);
-  //   }
-  
-  //   if (isPumpDevice) {
-  //     const msg = newState ? "Watering system activated" : "Watering system deactivated";
-  //     const speechMsg = new SpeechSynthesisUtterance(msg);
-  //     window.speechSynthesis.speak(speechMsg);
-  //   }
-  // };
   
   const onDeviceChange = async (device, e) => {
     const newState = e.target.checked;
@@ -337,7 +256,7 @@ useEffect(() => {
     console.log(deviceId);
 
     try {
-      if (device.device_name.toLowerCase() === 'ac') {
+      if (device.device_name.toLowerCase() === 'ac' ) {
   
         // Prepare the requests
         const requests = [
@@ -373,6 +292,7 @@ useEffect(() => {
           const response = await axios.post(`${SERVER_URL}/motion-detected`, {
             state: newState ? 'on' : 'off'
           });
+          console.log(response);
     
           // Check if the request was successful
           if (response.status === 200) {

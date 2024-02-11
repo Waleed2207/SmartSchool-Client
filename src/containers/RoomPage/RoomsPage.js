@@ -23,12 +23,12 @@ const RoomsPage = () => {
         <div className={classes.RoomsPage}>
             <h1 className={classes.RoomsPageHeader}>Welcome to the Rooms Dashboard</h1>
             <button className={classes.RoomsPageButton} onClick={openRoomsDashboard}>Rooms Dashboard</button>
-            <button className={classes.RoomsPageButton} onClick={openHouseMap}>House Map</button>
+            <button className={classes.RoomsPageButton} onClick={openHouseMap}>School Map</button>
 
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
-                contentLabel="House Map"
+                contentLabel="School Map"
                 className={houseMapClasses.Modal}
             >
                 <HouseMap onClose={() => setModalIsOpen(false)} />
