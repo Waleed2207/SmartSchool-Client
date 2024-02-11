@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "font-awesome/css/font-awesome.min.css";
 import { SERVER_URL } from "../../consts";
 import classes from "./RulesTable.module.scss";
+import {Circle, ActiveCellStyled} from "./rules.styles"
 
 const RulesTable = ({ searchText }) => {
   const [rules, setRules] = useState([]);
@@ -88,8 +89,11 @@ const RulesTable = ({ searchText }) => {
         ? ruleLowercased.includes(searchTextLowercased)
         : true; // If searchText is undefined, all rules pass the filter
     })
-    .map((rule) => (            <tr key={rule.id}>
-              <td>{rule.isActive ? "Yes" : "No"}</td>
+    .map((rule) => (          
+        <tr key={rule.id}>
+              <ActiveCellStyled>
+                <Circle color={rule.isActive ? "green" : "red"} />
+              </ActiveCellStyled>
               <td>
                 {editRuleId === rule.id ? (
                   <input

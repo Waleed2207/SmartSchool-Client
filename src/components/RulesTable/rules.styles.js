@@ -12,7 +12,7 @@ export const ActiveCellStyled = styled.td`
   width: 3px;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #ccc;
+  // border-bottom: 1px solid #ccc;
   padding: 0.5rem 1.5rem;
 `;
 
