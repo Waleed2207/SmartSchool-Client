@@ -1,8 +1,5 @@
 import axios from 'axios';
 import { SERVER_URL } from '../consts';
-
-
-
 export const toggleAcState = async (props) => {
   console.log('----------toggleAcState----------')
   const {state, temperature} = props;
