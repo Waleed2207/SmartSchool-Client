@@ -1,29 +1,87 @@
-// .RulesTable {
-//     border-collapse: collapse;
-//     width: 80%;
-//     margin-bottom: 1rem;
-//     padding: 3rem;
-//   }
-  
-//   .RulesTable th,
-//   .RulesTable td {
-//     border: 1px solid #ccc;
-//     padding: 0.5rem 1.5rem;
-//     text-align: left;
-//   }
-  
-//   .RulesTable th {
-//     background-color: #f2f2f2;
-//     font-weight: bold;
-//   }
+.TableContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 
-//   .selected {
-//     background-color: lightgrey;
-//   }
-.strict {
-    color: red;
+.RulesTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  thead {
+    tr {
+      background-color: #007bff;
+      color: #ffffff;
+    }
   }
-  
-  
-  
-  
+
+  th, td {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  .ActiveCellStyled {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .Circle {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+}
+
+.ActionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fa-trash {
+  margin-right: 10px;
+  &:hover {
+    color: #d9534f;
+  }
+}
+
+/* Custom styling for Material UI EditIcon for consistency */
+.MuiSvgIcon-root {
+  cursor: pointer;
+  &:hover {
+    color: #007bff;
+  }
+}
+
+/* Styling for the switch, assuming custom implementation */
+.RuleSwitch {
+  cursor: pointer;
+}
+
+/* Modal styling, assuming it's a custom modal */
+.ConfirmationModal {
+  /* Add your modal styling here */
+}
+
+/* Snackbar notifications styling */
+.SnackBar {
+  /* Notification styling */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #323232;
+  color: #fff;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+/* You might need to adjust the CSS based on the actual structure and classes of your SnackBar and ConfirmationModal components */
