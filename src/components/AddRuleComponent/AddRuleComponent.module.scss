@@ -1,0 +1,41 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+  }
+  
+  .formRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .labelColumn {
+    flex: 1;
+    font-weight: bold;
+  }
+  
+  .inputColumn {
+    flex: 2;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .RulesDashboardButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+  
+  /* Add additional styles for responsive design or other preferences */
+  
