@@ -161,7 +161,7 @@ const RoomDevices = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const devicesFromDB = await axios.get(`${SERVER_URL}/devices`);
+        const devicesFromDB = await axios.get(`${SERVER_URL}/api-device/devices`);
         setDevices(devicesFromDB.data);
       } catch (error) {
         console.error(error);
@@ -175,7 +175,7 @@ const RoomDevices = () => {
 
   const fetchRoomData = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/rooms/${id}`);
+      const response = await axios.get(`${SERVER_URL}/api-room/rooms/${id}`);
       setRoom(response.data);
     } catch (e) {
       console.error(e);
@@ -184,7 +184,7 @@ const RoomDevices = () => {
 
   const fetchRoomDevices = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/room-devices/${id}`);
+      const response = await axios.get(`${SERVER_URL}/api-device/room-devices/${id}`);
       setRoomDevices(_.get(response, "data.data", []));
     } catch (err) {
       console.error(err);

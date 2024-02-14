@@ -4,7 +4,7 @@ import { SERVER_URL } from "../consts";
 
 export const fetchRules = async () => {
   try {
-    const response = await axios.get(`${SERVER_URL}/rules`);
+    const response = await axios.get(`${SERVER_URL}/api-rule/rules`);
     console.log(response);
     return response.data;
   } catch (error) {
@@ -16,7 +16,7 @@ export const fetchRules = async () => {
 
 export const updateRule = async (id, updatedData) => {
   try{
-    const response = await axios.post(`${SERVER_URL}/rules/${id}`, updatedData);
+    const response = await axios.post(`${SERVER_URL}/api-rule/rules/${id}`, updatedData);
     return true;
   }catch(err){
     console.log("Error updating rule:", err.message);
@@ -26,7 +26,7 @@ export const updateRule = async (id, updatedData) => {
 
 export const notifyAdmin = async (subject, text) => {
   try {
-    await axios.post(`${SERVER_URL}/notifyadmin`, { subject, text });
+    await axios.post(`${SERVER_URL}/api-login/notifyadmin`, { subject, text });
   } catch (error) {
     console.error("Failed to send email notification to admin:", error);
   }

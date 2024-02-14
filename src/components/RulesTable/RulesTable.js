@@ -18,7 +18,7 @@ const RulesTable = ({ searchText }) => {
   // Standalone fetchRules function
   const fetchRules = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/rules`, {
+      const response = await axios.get(`${SERVER_URL}/api-rule/rules`, {
       
       });
       setRules(response.data);
@@ -45,7 +45,7 @@ const RulesTable = ({ searchText }) => {
 
   const handleSaveEdit = async (ruleId) => {
     try {
-      await axios.put(`${SERVER_URL}/rules/${ruleId}`, { rule: editRuleValue });
+      await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { rule: editRuleValue });
       toast.success("Rule updated successfully!");
       setEditRuleId(null);
       setEditRuleValue("");
@@ -58,7 +58,7 @@ const RulesTable = ({ searchText }) => {
 
   const handleDeleteRule = async (ruleId) => {
     try {
-      await axios.delete(`${SERVER_URL}/rules/${ruleId}`);
+      await axios.delete(`${SERVER_URL}/api-rule/rules/${ruleId}`);
       toast.success("Rule deleted successfully!");
       fetchRules(); // Refresh the list
     } catch (error) {

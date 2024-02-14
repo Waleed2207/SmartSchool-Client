@@ -396,7 +396,7 @@ const RulesDashboard = ({ }) => {
     };
   
     try {
-      const response = await fetch(`${SERVER_URL}/rules`, {
+      const response = await fetch(`${SERVER_URL}/api-rule/rules`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

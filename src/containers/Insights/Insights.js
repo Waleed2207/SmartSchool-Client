@@ -33,7 +33,7 @@ const Insights = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/devices');
+        const response = await axios.get('http://localhost:5001/api-device/devices');
         if (isMounted) {
           setDevices(response.data);
           if (selectedDevice === null) {
@@ -81,7 +81,7 @@ const Insights = () => {
   const fetchGraphData = async (device, timeRange, year = null) => {
     try {
       let avgEnergy = 0;
-      const response = await axios.get('http://127.0.0.1:5001/graph-data', {
+      const response = await axios.get('http://127.0.0.1:5001/api-suggestion', {
         params: { device, time_range: timeRange, year },
       });
 

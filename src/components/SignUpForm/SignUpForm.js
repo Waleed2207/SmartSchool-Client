@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import classes from "./SignUpForm.module.scss";
+import { SERVER_URL } from "../../consts";
 
 const SignUpForm = ({ onSignUpSuccess = () => { } }) => {
   const [fullName, setFullName] = useState("");
@@ -20,7 +21,7 @@ const SignUpForm = ({ onSignUpSuccess = () => { } }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/register", {
+      const response = await axios.post(`${SERVER_URL}/api-login/register`, {
         fullName,
         email,
         password,

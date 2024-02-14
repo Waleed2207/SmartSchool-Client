@@ -68,7 +68,7 @@ export const NewDeviceModal = ({ setIsModalOpen, roomId, fetchRoomDevices }) => 
   const [name, setName] = useState("");
 
   const handleAdd = async () => {
-    await axios.post(`${SERVER_URL}/devices`, {
+    await axios.post(`${SERVER_URL}/api-device/devices`, {
       device: {
         name,
       },

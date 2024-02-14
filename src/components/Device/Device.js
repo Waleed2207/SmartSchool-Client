@@ -185,7 +185,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
   useEffect(() => {
     const fetchAcState = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/sensibo`);
+        const response = await axios.get(`${SERVER_URL}/api-sensors/sensibo`);
         console.log("Response from /sensibo:", response.data);
   
         if (response.data?.mode) {
@@ -217,7 +217,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
 useEffect(() => {
   const fetchMotionState = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/motion-state`);
+      const response = await axios.get(`${SERVER_URL}/api-sensors/motion-state`);
       const isMotionDetected = response.data.motionDetected;
       if (isMotionDetected !== motionDetected) {
         setMotionDetected(isMotionDetected);
@@ -260,12 +260,12 @@ useEffect(() => {
   
         // Prepare the requests
         const requests = [
-          axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: deviceId }),
+          axios.post(`${SERVER_URL}/api-sensors/sensibo`, { state: newState, id: deviceId }),
         ];
     
         // If both newState is true and temperature is set, add the temperature update request
         if (newState && temperature) {
-          requests.push(axios.post(`${SERVER_URL}/sensibo`, { state: newState,temperature, id: deviceId }));
+          requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, { state: newState,temperature, id: deviceId }));
         }
     
         // Execute all the requests in parallel
@@ -289,7 +289,7 @@ useEffect(() => {
         // If the device is a light, log to the console and possibly toggle its state
         console.log('Light is turn on:', newState ? "ON" : "OFF");
         try {
-          const response = await axios.post(`${SERVER_URL}/motion-detected`, {
+          const response = await axios.post(`${SERVER_URL}/api-sensors/motion-detected`, {
             state: newState ? 'on' : 'off'
           });
           console.log(response);
@@ -324,7 +324,7 @@ useEffect(() => {
   
     try {
       // Perform the POST request to the server to update the temperature
-      const response = await axios.post(`${SERVER_URL}/sensibo`, {
+      const response = await axios.post(`${SERVER_URL}/api-sensors/sensibo`, {
         state: state,
         temperature: newTemperature,
         id: device.id,

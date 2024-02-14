@@ -66,14 +66,14 @@ export default function ChooseRoomModal({ setIsModalOpen, selectedRule }) {
 
   useEffect(() => {
     const getRooms = async () => {
-      const response = await axios.get(`${SERVER_URL}/rooms`);
+      const response = await axios.get(`${SERVER_URL}/api-room/rooms`);
       setRooms(response.data);
     };
 
     const getRoomsThatContainsCurrentDevice = async () => {
       const action = selectedRule.split('TURN ')[1];
       const device = action.split(" ")[0];
-      const response = await axios.get(`${SERVER_URL}/devices/rooms/${device}`);
+      const response = await axios.get(`${SERVER_URL}/api-room/devices/rooms/${device}`);
       const connectedRooms = response.data;
       setRoomsWithCurrentDevice(connectedRooms.map((room) => room.room_id));
     };

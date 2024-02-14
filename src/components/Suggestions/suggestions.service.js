@@ -40,7 +40,7 @@ export const generateRule = (suggestion) => {
 
 export const getSuggestions = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/suggestions`);
+      const response = await axios.get(`${SERVER_URL}/api-suggestion/suggestions`);
       return response.data.data;
     } catch (error) {
       console.error('Error fetching suggestions:', error);
@@ -51,7 +51,7 @@ export const getSuggestions = async () => {
 
   export const updateSuggestions = async () => {
     try{
-      const response = await axios.put(`${SERVER_URL}/suggestions`,{
+      const response = await axios.put(`${SERVER_URL}/api-suggestion/suggestions`,{
         is_new: false
       });
       
@@ -62,7 +62,7 @@ export const getSuggestions = async () => {
 
   export const addSuggestedRule = async (rule, suggestionId, suggestions, setSuggestions) => {
     try {
-      const response = await axios.post(`${SERVER_URL}/rules`, { rule });
+      const response = await axios.post(`${SERVER_URL}/api-rule/rules`, { rule });
       if(response.status === 200){
         onDeleteSuggestion(
           suggestionId, 
@@ -79,7 +79,7 @@ export const getSuggestions = async () => {
   export const onDeleteSuggestion = async (id, suggestions, setSuggestions) => {
     try{
       console.log('Deleting suggestion');
-      await axios.delete(`${SERVER_URL}/suggestions/${id}`);
+      await axios.delete(`${SERVER_URL}/api-suggestion/suggestions/${id}`);
       const filteredSuggestions = suggestions.filter(suggestion => suggestion.id !== id);
       setSuggestions(filteredSuggestions);
     }catch(error){
@@ -91,5 +91,5 @@ export const getSuggestions = async () => {
 
   export const addRoomToRule =  async(rule, room) => {
     const ruleWithRoom = rule + ` in ${room}`;
-    await axios.post(`${SERVER_URL}/rules`, {rule: ruleWithRoom });
+    await axios.post(`${SERVER_URL}/api-rule/rules`, {rule: ruleWithRoom });
   }
