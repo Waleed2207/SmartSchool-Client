@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Notification } from "../Notification/Notification";
 import { RuleSwitch } from "../UI/Switch/RuleSwitch";
@@ -7,9 +7,9 @@ import classes from "./RulesTable.module.scss";
 // import Switch from '@mui/material/Switch';
 import { toast } from "react-toastify";
 import "font-awesome/css/font-awesome.min.css";
-import { updateRule } from "../../services/rules.service";
+//import { updateRule } from "../../services/rules.service";
 import { SnackBar } from "../Snackbar/SnackBar";
-import EditIcon from "@material-ui/icons/Edit";
+//import EditIcon from "@material-ui/icons/Edit";
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 
 import {
@@ -18,7 +18,7 @@ import {
   TitleStyled,
   TableContainer
 } from "../Suggestions/suggestions.styles";
-import { ActionContainer, ActionTdStyled, ActiveCellStyled, Circle, RuleCell, RuleInput, RuleText, TrStyled } from "./rules.styles";
+import { ActionContainer, ActionTdStyled, ActiveCellStyled, Circle, RuleCell, TrStyled } from "./rules.styles";
 import { SERVER_URL } from "../../consts";
 import "react-toastify/dist/ReactToastify.css";
 import "font-awesome/css/font-awesome.min.css";
@@ -26,11 +26,11 @@ const RulesTable = ({ rules, onRuleClick, selectedRule, userRole }) => {
   const [currentRules, setCurrentRules] = useState(rules);
   const [alertVisible] = useState(false);
   const [alertMessage] = useState("");
-  const [setEditedRule] = useState(null);
+ 
   const [openSeccessSnackBar, setOpenSuccessSnackbar] = useState(false);
   const [openFailureSnackBar, setOpenFailureSnackbar] = useState(false);
-  const [editRuleId, setEditRuleId] = useState(null);
-  const [editValue, setEditValue] = useState("");
+  // const [editRuleId, setEditRuleId] = useState(null);
+  // const [editValue, setEditValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 const [ruleToDelete, setRuleToDelete] = useState(null);
 const promptDeleteRule = (id) => {
@@ -43,30 +43,30 @@ const promptDeleteRule = (id) => {
     setOpenSuccessSnackbar(false);
     setOpenFailureSnackbar(false);
   };
-  const handleEditClick = (rule) => {
-    setEditRuleId(rule.id);
-    setEditValue(rule.normalizedRule || rule.description);
-  };
+  // const handleEditClick = (rule) => {
+  //   setEditRuleId(rule.id);
+  //   setEditValue(rule.normalizedRule || rule.description);
+  // };
 
-  const handleSaveEdit = async () => {
-    try {
-      const response = await axios.put(`${SERVER_URL}/rules/${editRuleId}`, { rule: editValue });
-      if (response.status === 200) {
-        toast.success("Rule updated successfully!");
-        // Update the rule in the local state to reflect the change immediately
-        const updatedRules = rules.map(rule =>
-          rule.id === editRuleId ? { ...rule, normalizedRule: editValue, description: editValue } : rule
-        );
-        onRuleClick(updatedRules); // Assuming onRuleClick can be repurposed to update rules list
-        setEditRuleId(null);
-      } else {
-        toast.error("Failed to update rule.");
-      }
-    } catch (error) {
-      console.error("Failed to update rule:", error);
-      toast.error("Failed to update rule.");
-    }
-  };
+  // const handleSaveEdit = async () => {
+  //   try {
+  //     const response = await axios.put(`${SERVER_URL}/rules/${editRuleId}`, { rule: editValue });
+  //     if (response.status === 200) {
+  //       toast.success("Rule updated successfully!");
+  //       // Update the rule in the local state to reflect the change immediately
+  //       const updatedRules = rules.map(rule =>
+  //         rule.id === editRuleId ? { ...rule, normalizedRule: editValue, description: editValue } : rule
+  //       );
+  //       onRuleClick(updatedRules); // Assuming onRuleClick can be repurposed to update rules list
+  //       setEditRuleId(null);
+  //     } else {
+  //       toast.error("Failed to update rule.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Failed to update rule:", error);
+  //     toast.error("Failed to update rule.");
+  //   }
+  // };
 
   // const handleCancelEdit = () => {
   //   setEditRuleId(null);

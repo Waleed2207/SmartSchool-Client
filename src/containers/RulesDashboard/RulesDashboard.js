@@ -15,7 +15,7 @@ import UserContext from "../../contexts/UserContext";
 import { SERVER_URL } from "../../consts";
 import { SearchRuleInput } from "../../components/RulesTable/rules.styles";
 import { toast } from "react-toastify";
-import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent'
+//import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent'
 const ErrorMessage = styled.p`
   color: red;
 `;
