@@ -200,10 +200,10 @@ const promptDeleteRule = (id) => {
 />
 
            
-                  <EditIcon
+                  {/* <EditIcon
                       style={{ cursor: "pointer" }}
                       onClick={() => setEditedRule(rule.id)}
-                    />
+                    /> */}
                 </ActionContainer>
               </ActionTdStyled>
             </TrStyled>

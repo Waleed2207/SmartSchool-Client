@@ -1,0 +1,67 @@
+/* ConfirmationModal.module.scss */
+
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99; /* Ensure it's below the modal but above other content */
+  }
+  
+  .modalContent {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    z-index: 100;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: auto; /* Adjust based on content or keep it auto */
+    max-width: 90%; /* Ensure it doesn't overflow the screen */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Optional shadow for depth */
+  }
+  
+  .modalMessage {
+    margin: 0 0 20px; /* Add space below the message */
+  }
+  
+  .buttonGroup {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .button {
+    /* Generic button styles */
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  
+    &:first-child {
+      margin-right: 10px;
+    }
+  
+    &.confirm {
+      background-color: #007bff;
+      color: white;
+  
+      &:hover {
+        background-color: darken(#007bff, 10%);
+      }
+    }
+  
+    &.cancel {
+      background-color: #ccc;
+      color: #333;
+  
+      &:hover {
+        background-color: darken(#ccc, 10%);
+      }
+    }
+  }
+  
