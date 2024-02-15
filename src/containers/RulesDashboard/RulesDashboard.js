@@ -15,7 +15,7 @@ import UserContext from "../../contexts/UserContext";
 import { SERVER_URL } from "../../consts";
 import { SearchRuleInput } from "../../components/RulesTable/rules.styles";
 import { toast } from "react-toastify";
-//import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent'
+import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent'
 const ErrorMessage = styled.p`
   color: red;
 `;
@@ -303,7 +303,7 @@ const RulesDashboard = ({ }) => {
               Fill in the form to improve your school's behavior:
             </label>
 
-            <form onSubmit={handleSubmit} className={classes.formContainer}>
+            {/* <form onSubmit={handleSubmit} className={classes.formContainer}>
       <div className={classes.formRow}>
         <label htmlFor="conditionTemperature" className={classes.labelColumn}>If Temperature(°C):</label>
         <select
@@ -395,9 +395,8 @@ const RulesDashboard = ({ }) => {
           Add
         </button>
       </div>
-    </form>
-
-            {/* <AddRuleComponent
+    </form> */}
+ <AddRuleComponent
   onSubmit={handleSubmit}
   temperature={temperature}
   setTemperature={setTemperature}
@@ -409,7 +408,7 @@ const RulesDashboard = ({ }) => {
   setAcMode={setAcMode}
   acState={acState}
   setacState={setacState}
-/> */}
+/>  
             </div>
             <ErrorMessage>{errorMessage}</ErrorMessage>
           </div>

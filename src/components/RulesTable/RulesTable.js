@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useState } from "react";
-
 import { Notification } from "../Notification/Notification";
 import { RuleSwitch } from "../UI/Switch/RuleSwitch";
 import classes from "./RulesTable.module.scss";
@@ -11,7 +10,6 @@ import "font-awesome/css/font-awesome.min.css";
 import { SnackBar } from "../Snackbar/SnackBar";
 //import EditIcon from "@material-ui/icons/Edit";
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
-
 import {
   TableStyled,
   ThStyled,
@@ -179,26 +177,25 @@ const promptDeleteRule = (id) => {
                 <ActionContainer>
                   <RuleSwitch isActive={rule.isActive} id={rule.id} rule={rule.rule} currentRules={currentRules} setCurrentRules={setCurrentRules} />
                   {/* ConfirmationModal usage */}
-<ConfirmationModal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  onConfirm={confirmDeleteRule}
-  message="Are you sure you want to delete this rule?"
-/>
-<i
-  className="fa fa-trash"
-  onClick={(e) => {
-    e.stopPropagation(); // Prevent the row click event
-    promptDeleteRule(rule.id);
-  }}
-  style={{
-    cursor: "pointer",
-    color: "red",
-    fontSize: "20px",
-    marginRight: "8px",
-  }}
-/>
-
+                      <ConfirmationModal
+                        isOpen={isModalOpen}
+                        onClose={() => setIsModalOpen(false)}
+                        onConfirm={confirmDeleteRule}
+                        message="Are you sure you want to delete this rule?"
+                      />
+                      <i
+                        className="fa fa-trash"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent the row click event
+                          promptDeleteRule(rule.id);
+                        }}
+                        style={{
+                          cursor: "pointer",
+                          color: "red",
+                          fontSize: "20px",
+                          marginRight: "8px",
+                        }}
+                      />
            
                   {/* <EditIcon
                       style={{ cursor: "pointer" }}
@@ -210,8 +207,6 @@ const promptDeleteRule = (id) => {
           ))}
         </tbody>
       </TableStyled>
-     
-     
         {openSeccessSnackBar && (
         <SnackBar
           message={`Rule updated successfully`}
@@ -228,13 +223,9 @@ const promptDeleteRule = (id) => {
           color="red"
         />
       )}
-
       {alertVisible && <Notification message={alertMessage} />}
- 
-       </TableContainer>
-      
+       </TableContainer>  
     </div>
   );
 };
-
 export default RulesTable;
