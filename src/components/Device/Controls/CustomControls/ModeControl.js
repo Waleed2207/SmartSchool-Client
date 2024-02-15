@@ -49,7 +49,7 @@ export const ModeControl = ({ acState, device_room_idds }) => {
   const fetchCurrentMode = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${SERVER_URL}/sensibo`);
+      const response = await axios.get(`${SERVER_URL}/api-sensors/sensibo`);
       console.log("Response data:", response.data);
       // Access 'mode' directly from 'response.data'
       if (response.data && response.data.mode) {
@@ -74,9 +74,9 @@ export const ModeControl = ({ acState, device_room_idds }) => {
 
   const updateMode = async (newMode) => {
     try {
-      const deviceId =device_room_idds.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
-      //const deviceId = "4ahpAkJ9";
-      const response = await axios.post(`${SERVER_URL}/sensibo/mode`, {
+      // const deviceId =device_room_idds.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
+      const deviceId = "4ahpAkJ9";
+      const response = await axios.post(`${SERVER_URL}/api-sensors/sensibo/mode`, {
         deviceId,
         mode: newMode,
       });

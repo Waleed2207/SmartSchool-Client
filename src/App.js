@@ -75,7 +75,7 @@ const getUserFromCookie = () => {
     if (user && !user.role) {
       const fetchUserRole = async () => {
         try {
-          const response = await axios.post('/login', { email: user.email, password: user.password });
+          const response = await axios.post('/api-login/login', { email: user.email, password: user.password });
           setUser({ ...user, role: response.data.user.role });
         } catch (error) {
           console.error('Error fetching user role:', error);

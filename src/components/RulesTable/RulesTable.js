@@ -94,14 +94,51 @@ const promptDeleteRule = (id) => {
     if (ruleToDelete === null) return;
   
     try {
-      const response = await axios.delete(`${SERVER_URL}/rules/${ruleToDelete}`);
-      if (response.status === 200) {
-        const newRules = currentRules.filter((rule) => rule.id !== ruleToDelete);
-        setCurrentRules(newRules);
-        toast.success("Rule has been deleted.");
+      const response = await axios.get(`${SERVER_URL}/api-rule/rules`, {
+      
+      });
+      setRules(response.data);
+      toast.info("Rules fetched successfully!");
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        console.log("Request canceled:", error.message);
+      } else {
+        console.error("Failed to fetch rules:", error);
+        toast.error("Failed to fetch rules.");
       }
-    } catch (err) {
-      console.log(err);
+    }
+
+  };
+
+  useEffect(() => {
+    fetchRules();
+    // No clean-up function needed since there's no cancel token being used
+  }, []);
+
+  const handleEditChange = (event) => {
+    setEditRuleValue(event.target.value);
+  };
+
+  const handleSaveEdit = async (ruleId) => {
+    try {
+      await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { rule: editRuleValue });
+      toast.success("Rule updated successfully!");
+      setEditRuleId(null);
+      setEditRuleValue("");
+      fetchRules(); // Optionally, refetch the rules list to reflect the update
+    } catch (error) {
+      console.error("Failed to update rule:", error);
+      toast.error("Failed to update rule.");
+    }
+  };
+
+  const handleDeleteRule = async (ruleId) => {
+    try {
+      await axios.delete(`${SERVER_URL}/api-rule/rules/${ruleId}`);
+      toast.success("Rule deleted successfully!");
+      fetchRules(); // Refresh the list
+    } catch (error) {
+      console.error("Failed to delete rule:", error);
       toast.error("Failed to delete rule.");
     } finally {
       setIsModalOpen(false);

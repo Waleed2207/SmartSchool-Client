@@ -108,7 +108,7 @@ const HouseMap = ({ onClose }) => {
   useEffect(() => {
     const getRooms = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/rooms`);
+        const response = await axios.get(`${SERVER_URL}/api-room/rooms`);
         console.log(response.data);
         const roomsWithMotion = response.data.map((room) => ({
           ...room,
@@ -123,7 +123,7 @@ const HouseMap = ({ onClose }) => {
   
 
     const getSensors = async () => {
-      const response = await axios.get(`${SERVER_URL}/sensors`);
+      const response = await axios.get(`${SERVER_URL}/api-sensors/sensors`);
       return response.data;
     };
 
@@ -223,26 +223,26 @@ const HouseMap = ({ onClose }) => {
 
   useEffect(() => {
     const getRoomDevices = async (roomId) => {
-      const devicesResponse = await axios.get(`${SERVER_URL}/devices`);
+      const devicesResponse = await axios.get(`${SERVER_URL}/api-device/devices`);
       const devices = devicesResponse.data;
       const devicesMap = devices.reduce((acc, device) => {
         acc[device.device_id] = device.name;
         return acc;
       }, {});
       const kitchenDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.CLASS_ROOM}`
+        `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM}`
       );
       const livingRoomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.LIVING_ROOM}`
+        `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.LIVING_ROOM}`
       );
       const bathroomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.BATHROOM}`
+        `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.BATHROOM}`
       );
       const diningRoomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.DINING_ROOM}`
+        `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.DINING_ROOM}`
       );
       const bedroomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.BEDROOM}`
+        `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.BEDROOM}`
       );
 
       const kitchenDevices = kitchenDevicesResponse.data.data;

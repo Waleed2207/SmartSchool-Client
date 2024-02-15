@@ -5,7 +5,7 @@ export const toggleAcState = async (props) => {
   const {state, temperature} = props;
   try {
     console.log({state, temperature});
-    const response = await axios.post(`${SERVER_URL}/sensibo`, { state, temperature });
+    const response = await axios.post(`${SERVER_URL}/api-sensors/sensibo`, { state, temperature });
     return response.data;
   } catch (error) {
     console.error('Error toggling AC state:', error);
