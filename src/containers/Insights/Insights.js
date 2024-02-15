@@ -5,6 +5,7 @@ import { Chart, LineController, LineElement, BarController, BarElement, PointEle
 import { generateMonthLabels, generateYears } from '../../utils/utils';
 import styles from './Insights.module.scss';
 import { Bar } from 'react-chartjs-2';
+import { SERVER_URL } from "../../consts";
 
 
 
@@ -33,7 +34,7 @@ const Insights = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api-device/devices');
+        const response = await axios.get(`${SERVER_URL}/api-device/devices`);
         if (isMounted) {
           setDevices(response.data);
           if (selectedDevice === null) {
@@ -81,7 +82,7 @@ const Insights = () => {
   const fetchGraphData = async (device, timeRange, year = null) => {
     try {
       let avgEnergy = 0;
-      const response = await axios.get('http://127.0.0.1:5001/api-suggestion', {
+      const response = await axios.get(`${SERVER_URL}/api-suggestion`, {
         params: { device, time_range: timeRange, year },
       });
 
