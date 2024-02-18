@@ -43,53 +43,6 @@ const RulesDashboard = ({ }) => {
   const { user } = useContext(UserContext);
   const userRole = user?.role || "User"; // Default role to "User" if user object is not available
 
-
-  //const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  
-  //   // Construct the ruleData object
-  //   const ruleData = {
-  //     description: `If temperature ${selectedOperator} ${temperature}°C, then turn AC ${acMode} to ${acTemperature}°C.`,
-  //     condition: {
-  //       variable: "temperature",
-  //       operator: selectedOperator,
-  //       value: parseInt(temperature, 10),
-  //     },
-  //     action: `Turn AC ${acState} ${acMode} mode on ${acTemperature} °C `
-  //   };
-  
-  //   try {
-  //     const response = await fetch(`${SERVER_URL}/api-rule/rules`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(ruleData),
-  //     });
-  
-  //     if (!response.ok) {
-  //       throw new Error(`Network response was not ok: ${response.statusText}`);
-  //     }
-  
-  //     // Attempt to parse as JSON, fallback to text if failed
-  //     let data;
-  //     const contentType = response.headers.get('content-type');
-  //     if (contentType && contentType.includes('application/json')) {
-  //       data = await response.json();
-  //     } else {
-  //       data = await response.text();
-  //     }
-  
-  //     console.log(data);
-  //     setOpenSuccessSnackbar(true);
-  //     // Handle success here, e.g., showing a success message or updating the UI
-  //   } catch (error) {
-  //     console.error('There was an error!', error);
-  //     // Handle error here, e.g., showing an error message to the user
-  //   }
-  // };
-  
-  
   // const inverseSeasonMap = {
   //   1: "winter",
   //   2: "spring",
@@ -296,113 +249,19 @@ const RulesDashboard = ({ }) => {
             >
               Fill in the form to improve your school's behavior:
             </label>
-
-            {/* <form onSubmit={handleSubmit} className={classes.formContainer}>
-      <div className={classes.formRow}>
-        <label htmlFor="conditionTemperature" className={classes.labelColumn}>If Temperature(°C):</label>
-        <select
-          id="conditionTemperatureselector"
-          name="onditionTemperatureselector"
-          value={temperature}
-          onChange={(e) => setTemperature(e.target.value)}
-          required
-          className={classes.inputColumn}
-        >
-          <option value="">Select Temperature</option>
-          {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
-            <option key={temp} value={temp}>{temp}°C</option>
-          ))}
-        </select>
-      </div>
-
-      <div className={classes.formRow}>
-        <label htmlFor="operatorlabel" className={classes.labelColumn}>Condition:</label>
-        <select
-          id="operatorselector"
-          name="operatorselector"
-          value={selectedOperator}
-          onChange={(e) => setSelectedOperator(e.target.value)}
-          required
-          className={classes.inputColumn}
-        >
-          <option value="">Select Condition</option>
-          <option value="is above">is above</option>
-          <option value="is equal to">is equal to</option>
-          <option value="is below">is below</option>
-        </select>
-      </div>
-
-      <div className={classes.formRow}>
-        <label htmlFor="acTemperatureSelect" className={classes.labelColumn}>Turn AC on to (°C):</label>
-        <select
-          id="acTemperatureSelectselector"
-          name="acTemperatureselector"
-          value={acTemperature}
-          onChange={(e) => setAcTemperature(e.target.value)}
-          required
-          className={classes.inputColumn}
-        >
-          <option value="">Select Temperature</option>
-          {Array.from({ length: 17 }, (_, i) => 16 + i).map(temp => (
-            <option key={temp} value={temp}>{temp}°C</option>
-          ))}
-        </select>
-      </div>
-
-      <div className={classes.formRow}>
-        <label htmlFor="acMode" className={classes.labelColumn}>And on Mode:</label>
-        <select
-          id="acMode"
-          name="acMode"
-          value={acMode}
-          onChange={(e) => setAcMode(e.target.value)}
-          required
-          className={classes.inputColumn}
-        >
-          <option value="">Select Mode</option>
-          <option value="cool">Cool</option>
-          <option value="heat">Heat</option>
-          <option value="fan">Fan</option>
-          <option value="dry">Dry</option>
-          <option value="auto">Auto</option>
-        </select>
-      </div>
-
-      <div className={classes.formRow}>
-        <label htmlFor="acState" className={classes.labelColumn}>AC State:</label>
-        <select
-          id="acState"
-          name="acState"
-          value={acState}
-          onChange={(e) => setacState(e.target.value)}
-          required
-          className={classes.inputColumn}
-        >
-          <option value="">Select AC State</option>
-          <option value="ON">On</option>
-          <option value="OFF">Off</option>
-        </select>
-      </div>
-
-      <div className={classes.formRow}>
-        <button type="submit" className={classes.RulesDashboardButton}>
-          Add
-        </button>
-      </div>
-    </form> */}
- <AddRuleComponent
-  //onSubmit={handleSubmit}
-  temperature={temperature}
-  setTemperature={setTemperature}
-  selectedOperator={selectedOperator}
-  setSelectedOperator={setSelectedOperator}
-  acTemperature={acTemperature}
-  setAcTemperature={setAcTemperature}
-  acMode={acMode}
-  setAcMode={setAcMode}
-  acState={acState}
-  setacState={setacState}
-/>  
+              <AddRuleComponent
+                //onSubmit={handleSubmit}
+                temperature={temperature}
+                setTemperature={setTemperature}
+                selectedOperator={selectedOperator}
+                setSelectedOperator={setSelectedOperator}
+                acTemperature={acTemperature}
+                setAcTemperature={setAcTemperature}
+                acMode={acMode}
+                setAcMode={setAcMode}
+                acState={acState}
+                setacState={setacState}
+              />  
             </div>
             <ErrorMessage>{errorMessage}</ErrorMessage>
           </div>
@@ -432,13 +291,10 @@ const RulesDashboard = ({ }) => {
      </div>
     );
   };
-
   RulesDashboard.propTypes = {
     addRule: PropTypes.func,
   };
-
   const mapDispatchToProps = {
     addRule,
   };
-
   export default connect(null, mapDispatchToProps)(RulesDashboard);

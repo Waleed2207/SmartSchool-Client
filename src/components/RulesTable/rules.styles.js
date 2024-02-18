@@ -22,19 +22,18 @@ export const ActionContainer = styled.div`
 `;
 
 export const ActionTdStyled = styled.td`
-  width: 130px;
+  width: 400px;
   border-bottom: 1px solid #ccc;
   padding: 0.5rem 1.5rem;
+`;
+export const RuleCell = styled.td`
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+max-width: 2500px;
+padding: 8px;
 `;
 
-export const RuleCell = styled.td`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 30px;
-  border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1.5rem;
-`;
 
 export const TrStyled = styled.tr`
   border-bottom: 1px solid #ccc;
