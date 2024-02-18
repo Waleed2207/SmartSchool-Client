@@ -1,20 +1,24 @@
+// Import necessary dependencies
 import React, { useState } from 'react';
 import classes from './AddRuleComponent.module.scss'; // Ensure the corresponding CSS module is present
 import { toast } from 'react-toastify'; // Assuming react-toastify is used for notifications
-
-// Assuming SERVER_URL is defined in your constants
-import { SERVER_URL } from '../../consts';
+import { SERVER_URL } from '../../consts'; // Assuming SERVER_URL is defined in your constants
 
 const AddRuleComponent = ({ onSuccess }) => {
+  // State hooks for form fields
   const [temperature, setTemperature] = useState('');
   const [selectedOperator, setSelectedOperator] = useState('is above');
   const [acTemperature, setAcTemperature] = useState(22); // Default starting value
   const [acMode, setAcMode] = useState('cool');
-  const [acState, setAcState] = useState('ON'); // Corrected setter name to follow convention
+  const [acState, setAcState] = useState('ON');
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission status
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setIsSubmitting(true); // Indicate that submission has started
+
+    // Construct rule data from form fields
     const ruleData = {
       description: `If temperature ${selectedOperator} ${temperature}°C, then turn AC ${acMode} to ${acTemperature}°C.`,
       condition: {
@@ -24,7 +28,7 @@ const AddRuleComponent = ({ onSuccess }) => {
       },
       action: `Turn AC ${acState} to ${acMode} mode at ${acTemperature}°C`
     };
-  
+
     try {
       const response = await fetch(`${SERVER_URL}/api-rule/rules`, {
         method: 'POST',
@@ -33,28 +37,34 @@ const AddRuleComponent = ({ onSuccess }) => {
         },
         body: JSON.stringify(ruleData),
       });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-      // Check if the response content type is JSON before parsing
+    
       const contentType = response.headers.get('content-type');
-      if (contentType && contentType.indexOf('application/json') !== -1) {
-        const data = await response.json();
+      
+      // Check if the response is JSON
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json(); // Safely parse JSON
         console.log(data); // For debugging
         toast.success('Rule added successfully!');
       } else {
-        throw new Error('Received non-JSON response from the server.');
+        // If response is not JSON, read it as text
+        const textResponse = await response.text();
+        console.log(textResponse); // For debugging
+        if (response.ok) {
+          toast.success(textResponse);
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}, ${textResponse}`);
+        }
       }
-  
-      if (onSuccess) onSuccess(); // Callback for any additional actions on success
+      
+      if (onSuccess) onSuccess(); // Execute callback if provided
     } catch (error) {
       console.error('There was an error!', error);
-      toast.error('Failed to add the rule. Please try again later.');
+      toast.error(`Failed to add the rule. ${error.message}`);
     }
+    
   };
-  
+
+  // Render form
   return (
     <form onSubmit={handleSubmit} className={classes.formContainer}>
       {/* Temperature selection */}
@@ -97,13 +107,12 @@ const AddRuleComponent = ({ onSuccess }) => {
 
       {/* AC temperature and mode selection */}
       <div className={classes.formRow}>
-        {/* Temperature */}
         <label htmlFor="acTemperatureSelector" className={classes.labelColumn}>Turn AC on to (°C):</label>
         <select
           id="acTemperatureSelector"
           name="acTemperatureSelector"
           value={acTemperature}
-          onChange={(e) => setAcTemperature(e.target.value)}
+          onChange={(e) => setAcTemperature(parseInt(e.target.value, 10))}
           required
           className={classes.inputColumn}
           aria-label="Select AC temperature"
@@ -115,7 +124,7 @@ const AddRuleComponent = ({ onSuccess }) => {
         </select>
       </div>
 
-      {/* AC mode */}
+      {/* AC mode selection */}
       <div className={classes.formRow}>
         <label htmlFor="acMode" className={classes.labelColumn}>And on Mode:</label>
         <select
@@ -136,7 +145,7 @@ const AddRuleComponent = ({ onSuccess }) => {
         </select>
       </div>
 
-      {/* AC state */}
+      {/* AC state selection */}
       <div className={classes.formRow}>
         <label htmlFor="acState" className={classes.labelColumn}>AC State:</label>
         <select
@@ -154,10 +163,10 @@ const AddRuleComponent = ({ onSuccess }) => {
         </select>
       </div>
 
-      {/* Submit button */}
+      {/* Submit button with dynamic label based on submission status */}
       <div className={classes.formRow}>
-        <button type="submit" className={classes.RulesDashboardButton}>
-          Add
+        <button type="submit" className={classes.RulesDashboardButton} disabled={isSubmitting}>
+          {isSubmitting ? 'Adding...' : 'Add'}
         </button>
       </div>
     </form>
