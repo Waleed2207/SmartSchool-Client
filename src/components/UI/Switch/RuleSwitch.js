@@ -1,30 +1,31 @@
 import axios from "axios";
 import React from "react";
+// Assuming SERVER_URL is correctly defined in your environment variables
 import { SERVER_URL } from "../../../consts";
 import classes from "./Switch.module.scss";
 
 export const RuleSwitch = ({ id, isActive: initialIsActive, rule, currentRules, setCurrentRules }) => {
   const [isActive, setIsActive] = React.useState(initialIsActive);
+  const [error, setError] = React.useState(""); // New state for handling errors
 
-  const ontoggleChange = async () => {
+  const toggleChange = async () => {
     const payload = {
       isActive: !isActive,
-      rule: rule
+      rule: rule,
     };
-  
+
     try {
       const response = await axios.post(`${SERVER_URL}/api-rule/rules/${id}`, payload);
-      setCurrentRules(prevRules =>
-        prevRules.map(r => (r.id === id ? { ...r, isActive: !isActive } : r))
+      setCurrentRules((prevRules) =>
+        prevRules.map((r) => (r.id === id ? { ...r, isActive: !isActive } : r))
       );
-      setIsActive(prevIsActive => !prevIsActive);
+      setIsActive((prevIsActive) => !prevIsActive);
+      setError(""); // Clear any previous errors
     } catch (error) {
-      console.error(error.response);
-      console.error("Error toggling rule state:" + error);
-      // Handle the error...
+      console.error(error.response || error);
+      setError("Error toggling rule state. Please try again."); // Update the UI to inform the user
     }
   };
-  
 
   let switchClasses = [classes.Switch];
   if (isActive) {
@@ -32,13 +33,16 @@ export const RuleSwitch = ({ id, isActive: initialIsActive, rule, currentRules, 
   }
 
   return (
-    <label className={switchClasses.join(" ")}>
+    <label className={switchClasses.join(" ")} aria-label={`Toggle rule ${rule}`}>
       <input
         type="checkbox"
-        onChange={ontoggleChange}
+        onChange={toggleChange}
         checked={isActive}
+        role="switch"
+        aria-checked={isActive}
       />
       <div />
+      {error && <p className={classes.Error}>{error}</p>} {/* Display error message if any */}
     </label>
   );
 };

@@ -17,6 +17,7 @@ export const fetchRules = async () => {
 export const updateRule = async (id, updatedData) => {
   try{
     const response = await axios.post(`${SERVER_URL}/api-rule/rules/${id}`, updatedData);
+    console.log(response.data);
     return true;
   }catch(err){
     console.log("Error updating rule:", err.message);

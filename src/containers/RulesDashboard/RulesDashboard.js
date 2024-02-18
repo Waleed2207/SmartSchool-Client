@@ -44,52 +44,50 @@ const RulesDashboard = ({ }) => {
   const userRole = user?.role || "User"; // Default role to "User" if user object is not available
 
 
-  // Operators could be defined outside the component if they are static
-  //const operators = ['is above or equal to', 'is below or equal to', 'is above', 'is below', 'is equal to' , 'is less' , 'is gretter than','And' ,'Or'];
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  //const handleSubmit = async (e) => {
+  //   e.preventDefault();
   
-    // Construct the ruleData object
-    const ruleData = {
-      description: `If temperature ${selectedOperator} ${temperature}°C, then turn AC ${acMode} to ${acTemperature}°C.`,
-      condition: {
-        variable: "temperature",
-        operator: selectedOperator,
-        value: parseInt(temperature, 10),
-      },
-      action: `Turn AC ${acState} ${acMode} mode on ${acTemperature} °C `
-    };
+  //   // Construct the ruleData object
+  //   const ruleData = {
+  //     description: `If temperature ${selectedOperator} ${temperature}°C, then turn AC ${acMode} to ${acTemperature}°C.`,
+  //     condition: {
+  //       variable: "temperature",
+  //       operator: selectedOperator,
+  //       value: parseInt(temperature, 10),
+  //     },
+  //     action: `Turn AC ${acState} ${acMode} mode on ${acTemperature} °C `
+  //   };
   
-    try {
-      const response = await fetch(`${SERVER_URL}/api-rule/rules`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ruleData),
-      });
+  //   try {
+  //     const response = await fetch(`${SERVER_URL}/api-rule/rules`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(ruleData),
+  //     });
   
-      if (!response.ok) {
-        throw new Error(`Network response was not ok: ${response.statusText}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`Network response was not ok: ${response.statusText}`);
+  //     }
   
-      // Attempt to parse as JSON, fallback to text if failed
-      let data;
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        data = await response.json();
-      } else {
-        data = await response.text();
-      }
+  //     // Attempt to parse as JSON, fallback to text if failed
+  //     let data;
+  //     const contentType = response.headers.get('content-type');
+  //     if (contentType && contentType.includes('application/json')) {
+  //       data = await response.json();
+  //     } else {
+  //       data = await response.text();
+  //     }
   
-      console.log(data);
-      setOpenSuccessSnackbar(true);
-      // Handle success here, e.g., showing a success message or updating the UI
-    } catch (error) {
-      console.error('There was an error!', error);
-      // Handle error here, e.g., showing an error message to the user
-    }
-  };
+  //     console.log(data);
+  //     setOpenSuccessSnackbar(true);
+  //     // Handle success here, e.g., showing a success message or updating the UI
+  //   } catch (error) {
+  //     console.error('There was an error!', error);
+  //     // Handle error here, e.g., showing an error message to the user
+  //   }
+  // };
   
   
   // const inverseSeasonMap = {
@@ -125,7 +123,7 @@ const RulesDashboard = ({ }) => {
 
  const fetchRules = async () => {
   try {
-    const response = await axios.get(`${SERVER_URL}/rules`);
+    const response = await axios.get(`${SERVER_URL}/api-rule/rules`);
     // Assuming the response.data is the array of rules you're expecting
     // No need to setRules here, we will return the data and let the caller handle it
     toast.info("Rules fetched successfully!");
@@ -165,10 +163,6 @@ const RulesDashboard = ({ }) => {
     fetchAllRules();
   }, []);
   
-
-  // const onRuleInputChange = (event) => {
-  //   setRule(event.target.value);
-  // };
 
   const onSearchInputChange = (event) => {
     setSearch(event.target.value);
@@ -397,7 +391,7 @@ const RulesDashboard = ({ }) => {
       </div>
     </form> */}
  <AddRuleComponent
-  onSubmit={handleSubmit}
+  //onSubmit={handleSubmit}
   temperature={temperature}
   setTemperature={setTemperature}
   selectedOperator={selectedOperator}

@@ -1,22 +1,24 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { Notification } from "../Notification/Notification";
 import { RuleSwitch } from "../UI/Switch/RuleSwitch";
 import classes from "./RulesTable.module.scss";
 // import Switch from '@mui/material/Switch';
 import { toast } from "react-toastify";
 import "font-awesome/css/font-awesome.min.css";
-//import { updateRule } from "../../services/rules.service";
+import { updateRule } from "../../services/rules.service";
 import { SnackBar } from "../Snackbar/SnackBar";
-//import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@material-ui/icons/Edit";
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
+
 import {
   TableStyled,
   ThStyled,
   TitleStyled,
   TableContainer
 } from "../Suggestions/suggestions.styles";
-import { ActionContainer, ActionTdStyled, ActiveCellStyled, Circle, RuleCell, TrStyled } from "./rules.styles";
+import { ActionContainer, ActionTdStyled, ActiveCellStyled, Circle, RuleCell, RuleInput, RuleText, TrStyled } from "./rules.styles";
 import { SERVER_URL } from "../../consts";
 import "react-toastify/dist/ReactToastify.css";
 import "font-awesome/css/font-awesome.min.css";
@@ -24,11 +26,11 @@ const RulesTable = ({ rules, onRuleClick, selectedRule, userRole }) => {
   const [currentRules, setCurrentRules] = useState(rules);
   const [alertVisible] = useState(false);
   const [alertMessage] = useState("");
- 
+  const [setEditedRule] = useState(null);
   const [openSeccessSnackBar, setOpenSuccessSnackbar] = useState(false);
   const [openFailureSnackBar, setOpenFailureSnackbar] = useState(false);
-  // const [editRuleId, setEditRuleId] = useState(null);
-  // const [editValue, setEditValue] = useState("");
+  const [editRuleId, setEditRuleId] = useState(null);
+  const [editValue, setEditValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 const [ruleToDelete, setRuleToDelete] = useState(null);
 const promptDeleteRule = (id) => {
@@ -41,30 +43,30 @@ const promptDeleteRule = (id) => {
     setOpenSuccessSnackbar(false);
     setOpenFailureSnackbar(false);
   };
-  // const handleEditClick = (rule) => {
-  //   setEditRuleId(rule.id);
-  //   setEditValue(rule.normalizedRule || rule.description);
-  // };
+  const handleEditClick = (rule) => {
+    setEditRuleId(rule.id);
+    setEditValue(rule.normalizedRule || rule.description);
+  };
 
-  // const handleSaveEdit = async () => {
-  //   try {
-  //     const response = await axios.put(`${SERVER_URL}/rules/${editRuleId}`, { rule: editValue });
-  //     if (response.status === 200) {
-  //       toast.success("Rule updated successfully!");
-  //       // Update the rule in the local state to reflect the change immediately
-  //       const updatedRules = rules.map(rule =>
-  //         rule.id === editRuleId ? { ...rule, normalizedRule: editValue, description: editValue } : rule
-  //       );
-  //       onRuleClick(updatedRules); // Assuming onRuleClick can be repurposed to update rules list
-  //       setEditRuleId(null);
-  //     } else {
-  //       toast.error("Failed to update rule.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Failed to update rule:", error);
-  //     toast.error("Failed to update rule.");
-  //   }
-  // };
+  const handleSaveEdit = async () => {
+    try {
+      const response = await axios.put(`${SERVER_URL}/api-rule/rules/${editRuleId}`, { rule: editValue });
+      if (response.status === 200) {
+        toast.success("Rule updated successfully!");
+        // Update the rule in the local state to reflect the change immediately
+        const updatedRules = rules.map(rule =>
+          rule.id === editRuleId ? { ...rule, normalizedRule: editValue, description: editValue } : rule
+        );
+        onRuleClick(updatedRules); // Assuming onRuleClick can be repurposed to update rules list
+        setEditRuleId(null);
+      } else {
+        toast.error("Failed to update rule.");
+      }
+    } catch (error) {
+      console.error("Failed to update rule:", error);
+      toast.error("Failed to update rule.");
+    }
+  };
 
   // const handleCancelEdit = () => {
   //   setEditRuleId(null);
@@ -94,51 +96,14 @@ const promptDeleteRule = (id) => {
     if (ruleToDelete === null) return;
   
     try {
-      const response = await axios.get(`${SERVER_URL}/api-rule/rules`, {
-      
-      });
-      setRules(response.data);
-      toast.info("Rules fetched successfully!");
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log("Request canceled:", error.message);
-      } else {
-        console.error("Failed to fetch rules:", error);
-        toast.error("Failed to fetch rules.");
+      const response = await axios.delete(`${SERVER_URL}/api-rule/rules/${ruleToDelete}`);
+      if (response.status === 200) {
+        const newRules = currentRules.filter((rule) => rule.id !== ruleToDelete);
+        setCurrentRules(newRules);
+        toast.success("Rule has been deleted.");
       }
-    }
-
-  };
-
-  useEffect(() => {
-    fetchRules();
-    // No clean-up function needed since there's no cancel token being used
-  }, []);
-
-  const handleEditChange = (event) => {
-    setEditRuleValue(event.target.value);
-  };
-
-  const handleSaveEdit = async (ruleId) => {
-    try {
-      await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { rule: editRuleValue });
-      toast.success("Rule updated successfully!");
-      setEditRuleId(null);
-      setEditRuleValue("");
-      fetchRules(); // Optionally, refetch the rules list to reflect the update
-    } catch (error) {
-      console.error("Failed to update rule:", error);
-      toast.error("Failed to update rule.");
-    }
-  };
-
-  const handleDeleteRule = async (ruleId) => {
-    try {
-      await axios.delete(`${SERVER_URL}/api-rule/rules/${ruleId}`);
-      toast.success("Rule deleted successfully!");
-      fetchRules(); // Refresh the list
-    } catch (error) {
-      console.error("Failed to delete rule:", error);
+    } catch (err) {
+      console.log(err);
       toast.error("Failed to delete rule.");
     } finally {
       setIsModalOpen(false);
@@ -214,25 +179,26 @@ const promptDeleteRule = (id) => {
                 <ActionContainer>
                   <RuleSwitch isActive={rule.isActive} id={rule.id} rule={rule.rule} currentRules={currentRules} setCurrentRules={setCurrentRules} />
                   {/* ConfirmationModal usage */}
-                      <ConfirmationModal
-                        isOpen={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                        onConfirm={confirmDeleteRule}
-                        message="Are you sure you want to delete this rule?"
-                      />
-                      <i
-                        className="fa fa-trash"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent the row click event
-                          promptDeleteRule(rule.id);
-                        }}
-                        style={{
-                          cursor: "pointer",
-                          color: "red",
-                          fontSize: "20px",
-                          marginRight: "8px",
-                        }}
-                      />
+<ConfirmationModal
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+  onConfirm={confirmDeleteRule}
+  message="Are you sure you want to delete this rule?"
+/>
+<i
+  className="fa fa-trash"
+  onClick={(e) => {
+    e.stopPropagation(); // Prevent the row click event
+    promptDeleteRule(rule.id);
+  }}
+  style={{
+    cursor: "pointer",
+    color: "red",
+    fontSize: "20px",
+    marginRight: "8px",
+  }}
+/>
+
            
                   {/* <EditIcon
                       style={{ cursor: "pointer" }}
@@ -244,6 +210,8 @@ const promptDeleteRule = (id) => {
           ))}
         </tbody>
       </TableStyled>
+     
+     
         {openSeccessSnackBar && (
         <SnackBar
           message={`Rule updated successfully`}
@@ -260,9 +228,13 @@ const promptDeleteRule = (id) => {
           color="red"
         />
       )}
+
       {alertVisible && <Notification message={alertMessage} />}
-       </TableContainer>  
+ 
+       </TableContainer>
+      
     </div>
   );
 };
+
 export default RulesTable;
