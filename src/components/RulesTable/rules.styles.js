@@ -35,20 +35,18 @@ padding: 8px;
 `;
 
 
+// Assuming TrStyled is the component throwing the error
 export const TrStyled = styled.tr`
-  border-bottom: 1px solid #ccc;
-  height: 30px;
-  ${({ isSelected, isSearched, classes }) => {
-    return isSelected ? css`
-      background-color: ${classes.selected};
-      color: lightgrey;
-    ` : isSearched ? css`
-      background-color: ${classes.searched};
-    ` : '';
-  }}
-  color: ${({ isStrict }) => (isStrict ? "red" : "inherit")};
-
+  ${props => props.isSelected && css`
+    background-color: lightblue; // Example of changing background if selected
+    // Add any other styles that depend on being selected
+  `}
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+  }
 `;
+
 
 export const RuleInput = styled.input`
   display: ${(props) => (props.editing ? "block" : "none")};
