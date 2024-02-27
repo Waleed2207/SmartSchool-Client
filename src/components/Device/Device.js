@@ -3,13 +3,13 @@
 import { Button } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { Temperature } from "./Controls/CustomControls/Temperature";
+//import { Temperature } from "./Controls/CustomControls/Temperature";
 import { SnackBar } from "../Snackbar/SnackBar";
 import Switch from "../UI/Switch/Switch";
-import ModeControl from "./Controls/Mode/ModeControl";
+//import ModeControl from "./Controls/Mode/ModeControl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { MenuItem, Select } from "@material-ui/core";
+//import { MenuItem, Select } from "@material-ui/core";
 import axios from "axios";
 import { SERVER_URL } from "../../consts";
 import { AcControls } from "./Controls/CustomControls/AcControls";

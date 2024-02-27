@@ -164,11 +164,13 @@ const AddRuleComponent = ({ onSuccess }) => {
       </div>
 
       {/* Submit button with dynamic label based on submission status */}
+    
       <div className={classes.formRow}>
         <button type="submit" className={classes.RulesDashboardButton} disabled={isSubmitting}>
           {isSubmitting ? 'Adding...' : 'Add'}
         </button>
       </div>
+      
     </form>
   );
 };

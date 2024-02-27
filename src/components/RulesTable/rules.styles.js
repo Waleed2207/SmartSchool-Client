@@ -30,7 +30,7 @@ export const RuleCell = styled.td`
 white-space: nowrap;
 overflow: hidden;
 text-overflow: ellipsis;
-max-width: 2500px;
+
 padding: 8px;
 `;
 
