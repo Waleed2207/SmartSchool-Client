@@ -21,7 +21,7 @@
 .RulesDashboardInputContainer {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Align children (labels and inputs) at the start
+  align-items: center; // Align children (labels and inputs) at the start
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
   padding: 2rem;
   border-radius: 1rem;
@@ -43,14 +43,14 @@
 .RulesDashboardButton {
   background-color: #00bcd4;
   color: white;
-  padding: 0.4rem 1.5rem; // Adjust padding as needed
+  padding: 0.4rem 1.5rem;
   border: none;
   border-radius: 0.4rem;
   font-size: 1.1rem;
   cursor: pointer;
-  width: auto; // Adjust width as per requirement, or use a specific width if needed
-  margin: 1rem auto; // Center the button horizontally
-  display: block; // Ensure the button is treated as a block-level element
+  width: auto;
+  margin: 1rem auto;
+  display: block;
 }
 
 
@@ -196,4 +196,17 @@
   border-radius: 4px; // Rounded corners for the button
   cursor: pointer; // Cursor for the button
   margin-top: 20px; // Space above the button
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Center children horizontally */
+  align-items: center;     /* Center children vertically (if needed) */
+  gap: 10px;              /* Optional: space between buttons */
+}
+
+.toggle-button {
+  padding: 10px 20px;      /* Size of buttons */
+  font-size: 1em;          /* Text size inside buttons */
+  /* Additional styles for button appearance */
 }

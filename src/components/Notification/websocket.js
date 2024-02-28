@@ -4,7 +4,7 @@ let socket = null;
 function connectWebSocket() {
   if (!socket) {
     const WebSocket = window.WebSocket;
-    socket = new WebSocket('ws://localhost:8080');
+    socket = new WebSocket('ws://waleed.shenkar.dev:8002');
 
     socket.addEventListener('open', function (event) {
       console.log('WebSocket connection opened');

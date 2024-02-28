@@ -13,43 +13,40 @@ export const ActiveCellStyled = styled.td`
   align-items: center;
   justify-content: center;
   // border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1.5rem;
+  padding: 1rem ;
 `;
 
 export const ActionContainer = styled.div`
   display: flex;
+  align-items: center;
+  width: 135px;
+  margin-inline: 1rem;
   justify-content: space-between;
 `;
 
 export const ActionTdStyled = styled.td`
-  width: 130px;
-  border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1.5rem;
+  width: 400px;
 `;
-
 export const RuleCell = styled.td`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 30px;
-  border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1.5rem;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+padding: 15px;
 `;
 
+
+// Assuming TrStyled is the component throwing the error
 export const TrStyled = styled.tr`
-  border-bottom: 1px solid #ccc;
-  height: 30px;
-  ${({ isSelected, isSearched, classes }) => {
-    return isSelected ? css`
-      background-color: ${classes.selected};
-      color: lightgrey;
-    ` : isSearched ? css`
-      background-color: ${classes.searched};
-    ` : '';
-  }}
-  color: ${({ isStrict }) => (isStrict ? "red" : "inherit")};
-
+  ${props => props.isSelected && css`
+    background-color: lightblue; // Example of changing background if selected
+    // Add any other styles that depend on being selected
+  `}
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+  }
 `;
+
 
 export const RuleInput = styled.input`
   display: ${(props) => (props.editing ? "block" : "none")};
