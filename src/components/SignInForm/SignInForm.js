@@ -12,7 +12,7 @@ const SignInForm = ({ onSignIn }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${SERVER_URL}/login`, {
+      const response = await axios.post(`${SERVER_URL}/api-login/login`, {
         email,
         password,
       });

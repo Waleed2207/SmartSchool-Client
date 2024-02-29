@@ -5,26 +5,31 @@ import classes from "./Switch.module.scss";
 
 export const RuleSwitch = ({ id, isActive: initialIsActive, rule, currentRules, setCurrentRules }) => {
   const [isActive, setIsActive] = React.useState(initialIsActive);
+  const [error, setError] = React.useState("");
 
-  const ontoggleChange = async () => {
+  const toggleChange = async () => {
+    const newIsActive = !isActive; // Determine the new state early to log it
+    console.log(`Toggling rule ${id} to ${newIsActive ? 'active' : 'inactive'}.`); // Log the intended new state
+
     const payload = {
-      isActive: !isActive,
-      rule: rule
+      isActive: newIsActive,
+      rule: rule,
     };
-  
+
     try {
-      const response = await axios.post(`${SERVER_URL}/rules/${id}`, payload);
-      setCurrentRules(prevRules =>
-        prevRules.map(r => (r.id === id ? { ...r, isActive: !isActive } : r))
+      const response = await axios.post(`${SERVER_URL}/api-rule/rules/${id}`, payload);
+      setCurrentRules((prevRules) =>
+        prevRules.map((r) => (r.id === id ? { ...r, isActive: newIsActive } : r))
       );
-      setIsActive(prevIsActive => !prevIsActive);
+      setIsActive(newIsActive); // Update the local state to the new value
+      setError(""); // Clear any previous errors
+      console.log(`Rule ${id} successfully toggled to ${newIsActive ? 'active' : 'inactive'}.`); // Log successful state change
     } catch (error) {
-      console.error(error.response);
-      console.error("Error toggling rule state:" + error);
-      // Handle the error...
+      console.error(error.response || error);
+      setError("Error toggling rule state. Please try again."); // Update the UI to inform the user
+      console.log(`Error toggling rule ${id}.`); // Log the error
     }
   };
-  
 
   let switchClasses = [classes.Switch];
   if (isActive) {
@@ -32,13 +37,16 @@ export const RuleSwitch = ({ id, isActive: initialIsActive, rule, currentRules, 
   }
 
   return (
-    <label className={switchClasses.join(" ")}>
+    <label className={switchClasses.join(" ")} aria-label={`Toggle rule ${rule}`}>
       <input
         type="checkbox"
-        onChange={ontoggleChange}
+        onChange={toggleChange}
         checked={isActive}
+        role="switch"
+        aria-checked={isActive}
       />
       <div />
+      {error && <p className={classes.Error}>{error}</p>} {/* Display error message if any */}
     </label>
   );
 };

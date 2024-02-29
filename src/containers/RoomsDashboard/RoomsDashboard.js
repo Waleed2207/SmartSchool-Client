@@ -11,7 +11,7 @@ const RoomsDashboard = () => {
   const [roomsTest, setRoomsTest] = useState([]);
   useEffect(() => {
     const getRooms = async () => {
-      const response = await axios.get(`${SERVER_URL}/rooms`);
+      const response = await axios.get(`${SERVER_URL}/api-room/rooms`);
       console.log(response.data)
       setRoomsTest(response.data);
     };

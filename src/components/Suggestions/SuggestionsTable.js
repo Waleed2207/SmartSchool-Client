@@ -73,7 +73,7 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
   };
 
   const mlTrigger = () => {
-    const response = axios.post(`${SERVER_URL}/test`);
+    const response = axios.post(`${SERVER_URL}/api-suggestion/test`);
   }
 
 
