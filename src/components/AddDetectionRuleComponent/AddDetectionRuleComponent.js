@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import classes from './AddDetectionRuleComponent.module.scss'; // Ensure this CSS module exists and styles the form appropriately
 import { toast } from 'react-toastify';
 import { SERVER_URL } from '../../consts';
 
 const AddDetectionRuleComponent = ({ onSuccess }) => {
-  const [detectionState, setDetectionState] = useState('on');
+  const [detectionState, setDetectionState] = useState('ON');
   const [lightState, setLightState] = useState('ON');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -46,7 +45,7 @@ const AddDetectionRuleComponent = ({ onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className={classes.formContainer}>
       <div className={classes.formRow}>
-        <label htmlFor="detectionStateSelector" className={classes.labelColumn}>If Detection:</label>
+        <label htmlFor="detectionStateSelector" className={classes.labelColumn}>If Motion Detection:</label>
         <select
           id="detectionStateSelector"
           name="detectionStateSelector"
@@ -56,6 +55,7 @@ const AddDetectionRuleComponent = ({ onSuccess }) => {
           className={classes.inputColumn}
           aria-label="Select detection state"
         >
+          <option value="">Select Option</option>
           <option value="on">On</option>
           <option value="off">Off</option>
         </select>
@@ -72,8 +72,9 @@ const AddDetectionRuleComponent = ({ onSuccess }) => {
           className={classes.inputColumn}
           aria-label="Select light state"
         >
-          <option value="ON">On</option>
-          <option value="OFF">Off</option>
+          <option value="">Select Option</option>
+          <option value="on">On</option>
+          <option value="off">Off</option>
         </select>
       </div>
 

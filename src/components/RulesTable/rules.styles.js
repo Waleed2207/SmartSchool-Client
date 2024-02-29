@@ -13,25 +13,25 @@ export const ActiveCellStyled = styled.td`
   align-items: center;
   justify-content: center;
   // border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1.5rem;
+  padding: 1rem ;
 `;
 
 export const ActionContainer = styled.div`
   display: flex;
+  align-items: center;
+  width: 135px;
+  margin-inline: 1rem;
   justify-content: space-between;
 `;
 
 export const ActionTdStyled = styled.td`
   width: 400px;
-  border-bottom: 1px solid #ccc;
-  padding: 0.5rem 1.5rem;
 `;
 export const RuleCell = styled.td`
 white-space: nowrap;
 overflow: hidden;
 text-overflow: ellipsis;
-
-padding: 8px;
+padding: 15px;
 `;
 
 

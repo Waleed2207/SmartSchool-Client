@@ -26,7 +26,7 @@ const AddRuleComponent = ({ onSuccess }) => {
         operator: selectedOperator,
         value: parseInt(temperature, 10),
       },
-      action: `Turn AC ${acState} to ${acMode} mode at ${acTemperature}°C`
+      action: `Turn AC ${acState} to ${acMode} mode at ${acTemperature}`
     };
 
     try {
@@ -164,13 +164,11 @@ const AddRuleComponent = ({ onSuccess }) => {
       </div>
 
       {/* Submit button with dynamic label based on submission status */}
-    
       <div className={classes.formRow}>
         <button type="submit" className={classes.RulesDashboardButton} disabled={isSubmitting}>
           {isSubmitting ? 'Adding...' : 'Add'}
         </button>
       </div>
-      
     </form>
   );
 };

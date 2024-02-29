@@ -1,45 +1,40 @@
-
 .formContainer {
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
-  max-width: 400px; // Set a max-width to match your design
-  background: #fff;
-  padding: 20px;
-
-}
-
-.formRow {
-  display: flex;
-  justify-content: flex-start; // Align items to the start of the main-axis
-  align-items: center; // Center items along the cross-axis
-  margin-bottom: 1rem; // Space between form rows
-}
-
-.labelColumn {
-  min-width: 160px; // Assign a minimum width for label text to avoid text wrapping
-  margin-right: 10px; // Space between label and input
-  text-align: right; // Align the text to the right
-}
-
-.inputColumn {
-  flex-grow: 1; // Allow input to take up remaining space
-  // Additional styles for your input/select elements here
-}
-
-.RulesDashboardButton {
-  background-color: #00bcd4;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%; // Set button width to full container width
-  margin-top: 1rem; // Adjust margin as needed
-}
-.RulesDashboardButton:hover {
-  background-color: #0056b3;
-}
-
-/* Add additional styles for responsive design or other preferences */
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    justify-content: center;
+    align-self: center;
+  }
+  
+  .formRow {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .labelColumn {
+    // flex: 1 1 100px;
+    width: 200px;
+    font-family: 'courier new', monospace;
+  }
+  .inputColumn {
+    flex: 2 1 70px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .RulesDashboardButton {
+    background-color: #00bcd4;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #00bcd4;
+    }
+  }

@@ -246,76 +246,56 @@ useEffect(() => {
 
 
 // -------------------------------------waleed---------------------------------------------
-  
-  const onDeviceChange = async (device, e) => {
-    const newState = e.target.checked;
-    console.log(device, newState);
-    setState(newState); // Update local state immediately for better user feedback
-    setcolor(newState ? "green" : "red");
-    const deviceId = device.id.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
-    console.log(deviceId);
+      
+    const onDeviceChange = async (device, e) => {
+      const newState = e.target.checked;
+      console.log(device, newState);
+      setState(newState); 
+      setcolor(newState ? "green" : "red");
+      const deviceId = device.id.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
+      console.log(deviceId);
 
-    try {
-      if (device.device_name.toLowerCase() === 'ac' ) {
-  
-        // Prepare the requests
-        const requests = [
-          axios.post(`${SERVER_URL}/api-sensors/sensibo`, { state: newState, id: deviceId }),
-        ];
-    
-        // If both newState is true and temperature is set, add the temperature update request
-        if (newState && temperature) {
-          requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, { state: newState,temperature, id: deviceId }));
+      try {
+        let requests = [];
+        const basePayload = { state: newState, id: deviceId };
+
+        if (device.device_name.toLowerCase() === 'ac') {
+          console.log("is here");
+          requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, basePayload));
+
+          if (newState && typeof temperature !== 'undefined') {
+            requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, { ...basePayload, temperature }));
+          }
+        } else if (device.device_name.toLowerCase() === 'light') {
+          console.log('Light is turn on:', newState ? "ON" : "OFF");
+          requests.push(axios.post(`${SERVER_URL}/api-sensors/motion-detected`, { state: newState ? 'on' : 'off' }));
         }
-    
-        // Execute all the requests in parallel
-        const results = await Promise.all(requests);
-    
+
+        const results = await Promise.allSettled(requests);
         let allSuccessful = true;
         results.forEach(result => {
-          console.log(result.data); // Log the response from each request
-          if (result.status !== 200) {
+          if (result.status === 'fulfilled' && result.value.status === 200) {
+            console.log(result.value.data); // Log successful response
+          } else {
             allSuccessful = false;
+            if (result.reason && result.reason.response) {
+              console.error('Request failed:', result.reason.response.data);
+            } else {
+              console.error('Request failed with no server response');
+            }
           }
         });
-    
-        // Check if all requests were successful
+
         if (allSuccessful) {
           setOpenSuccessSnackbar(true);
         } else {
           setOpenFailureSnackbar(true);
         }
-      } else if (device.device_name.toLowerCase() === 'light') {
-        // If the device is a light, log to the console and possibly toggle its state
-        console.log('Light is turn on:', newState ? "ON" : "OFF");
-        try {
-          const response = await axios.post(`${SERVER_URL}/api-sensors/motion-detected`, {
-            state: newState ? 'on' : 'off'
-          });
-          console.log(response);
-    
-          // Check if the request was successful
-          if (response.status === 200) {
-            console.log(`Light turned ${newState ? "on" : "off"}, request received successfully`);
-            setOpenSuccessSnackbar(true);
-            // Optionally, update the UI to reflect the new state
-          } else {
-            setOpenFailureSnackbar(true);
-          }
-        } catch (error) {
-          console.error('Error turning light on/off:', error);
-          setOpenFailureSnackbar(true);
-        }
+      } catch (error) {
+        console.error('Error updating device state or temperature:', error);
+        setOpenFailureSnackbar(true);
       }
-  
-      // Add additional else if blocks for other device types as needed
-  
-    } catch (error) {
-      console.error('Error updating device state or temperature:', error);
-      setOpenFailureSnackbar(true);
-    }
-  };
-  
+    };
 
 
 
