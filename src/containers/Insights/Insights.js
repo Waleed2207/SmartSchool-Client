@@ -79,40 +79,60 @@ const Insights = () => {
 
 
 
-  const fetchGraphData = async (device, timeRange, year = null) => {
+  const fetchGraphData = async (device, timeRange , year = null ) => {
     try {
-      let avgEnergy = 0;
-      const response = await axios.get(`${SERVER_URL}/api-suggestion`, {
-        params: { device, time_range: timeRange, year },
-      });
+        let avgEnergy = 0;
+          /*
+          const response = await axios.get(`${SERVER_URL}/api-suggestion`, {
+            params: { device, time_range: timeRange, year },
+          });
+          */
 
-      console.log(response.data)
+          // Initialize an empty dataset for all months
+         
+            
+          // Initialize an empty dataset for all months
+          const monthLabels = generateMonthLabels(year);
+          console.log({monthLabels})
+          const emptyData = {
+            labels: monthLabels,
+            data: new Array(12).fill(0),
+          };
 
-      // Initialize an empty dataset for all months
-      const monthLabels = generateMonthLabels(year);
-      const emptyData = {
-        labels: monthLabels,
-        data: new Array(12).fill(0),
-      };
-
+          // Mock data generation
+          const mockData = {
+            labels: monthLabels,
+            data: monthLabels.map(() => Math.random() * 100), // Replace 100 by the max value you expect
+          };
+          /*
       if (timeRange === 'monthly' && year !== null) {
-        response.data.labels.forEach((label, index) => {
-          const date = new Date(label);
-          const monthIndex = date.getMonth();
-          const labelYear = date.getFullYear();
+      mockData.labels.forEach((label, index) => {
+        const date = new Date(year, index, 1);
+        const monthIndex = date.getMonth();
+        const labelYear = date.getFullYear();
 
-          if (labelYear === year) {
-            emptyData.data[monthIndex] = response.data.data[index];
-          }
-        });
+        if (labelYear === year) {
+          emptyData.data[monthIndex] = mockData.data[index];
+        }
+      });
+      */
+        if (timeRange === 'monthly' && year !== null) {
+          mockData.labels.forEach((label, index) => {
+            const date = new Date(year, index, 1);
+            const monthIndex = date.getMonth();
+            const labelYear = date.getFullYear();
+    
+            if (labelYear === year) {
+              emptyData.data[monthIndex] = mockData.data[index];
+            }
+          });
 
-        avgEnergy = emptyData.data.reduce((acc, cur) => acc + cur, 0) / 12;
-      } else {
-        emptyData.labels = response.data.labels;
-        emptyData.data = response.data.data;
-      }
+          avgEnergy = emptyData.data.reduce((acc, cur) => acc + cur, 0) / emptyData.data.length;
+        } else {
+          // For 'daily' or 'yearly', you would need to adjust your mock data generation accordingly
+        }
 
-      setGraphData({ ...emptyData, avgEnergy });
+        setGraphData({ ...emptyData, avgEnergy });
     } catch (error) {
       console.log(error);
     }
@@ -176,28 +196,31 @@ const Insights = () => {
       </div>
       <div className={styles.graphContainer}>
         {timeRange === "monthly" ? (
-          <Bar
-            data={{
-              labels: graphData.labels,
-              datasets: [
-                {
-                  label: "Energy Consumption",
-                  data: graphData.data,
-                  backgroundColor: "rgba(75, 192, 192, 0.2)",
-                  borderColor: "rgba(75, 192, 192, 1)",
-                },
-                {
-                  label: "Average Energy Consumption",
-                  data: Array(12).fill(graphData.avgEnergy),
-                  type: "line",
-                  fill: false,
-                  backgroundColor: "rgba(255, 0, 0, 1)",
-                  borderColor: "rgba(255, 0, 0, 1)",
-                  borderWidth: 2,
-                  pointRadius: 0,
-                },
-              ],
-            }}
+           <Line // Changed from <Bar> to <Line>
+           data={{
+             labels: graphData.labels,
+             datasets: [
+               {
+                 label: "Energy Consumption",
+                 data: graphData.data,
+                 fill: false,
+                 borderColor: "rgba(75, 192, 192, 1)",
+                 borderWidth: 2,
+                 pointRadius: 0, // Ensures that the points are not visible on the line
+                 tension: 0.4 // Adjust for curvature (set to 0 for no curvature)
+               },
+               // Keep the "Average Energy Consumption" dataset if needed
+               {
+                 label: "Average Energy Consumption",
+                 data: Array(12).fill(graphData.avgEnergy),
+                 type: "line",
+                 fill: false,
+                 borderColor: "rgba(255, 0, 0, 1)",
+                 borderWidth: 2,
+                 pointRadius: 0, // Ensures that the points are not visible on the average line
+               },
+             ],
+           }}
             options={{
               scales: {
                 x: {
