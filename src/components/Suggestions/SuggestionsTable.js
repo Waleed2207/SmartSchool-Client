@@ -113,6 +113,7 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
       <TableStyled>
         <thead>
           <tr>
+            <ThStyled>from</ThStyled>
             <ThStyled>Device</ThStyled>
             <ThStyled>Suggested Rule</ThStyled>
             <ThStyled>Actions</ThStyled>
