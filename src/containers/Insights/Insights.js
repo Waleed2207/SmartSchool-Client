@@ -2,18 +2,17 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
 import DeviceSelector from '../../components/DeviceSelector/DeviceSelector';
-import Graph from '../../components/Graph/Graph';
+import LineChart from '../../components/LineChart/LineChart'; // Ensure this import is correct
 import { staticGraphData, chartOptions } from '../../components/GraphData/GraphData';
-import styles from './Insights.module.scss'; // Make sure this is the correct path to your styles file
-import { SERVER_URL } from '../../consts'; // Ensure SERVER_URL is correctly defined
+import styles from './Insights.module.scss';
+import { SERVER_URL } from '../../consts';
 
 const Insights = () => {
     const [devices, setDevices] = useState([]);
     const [selectedDevice, setSelectedDevice] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // Define the available years and selected year
-    const availableYears = [2020, 2021, 2022, 2023]; // Example years
+    const availableYears = [2020, 2021, 2022, 2023];
     const [selectedYear, setSelectedYear] = useState(availableYears[0]);
 
     useEffect(() => {
@@ -24,7 +23,7 @@ const Insights = () => {
                 const response = await axios.get(`${SERVER_URL}/api-device/devices`);
                 if (isMounted) {
                     setDevices(response.data);
-                    setSelectedDevice(response.data[0]?.device); // Set to the first device by default
+                    setSelectedDevice(response.data[0]?.device);
                     setLoading(false);
                 }
             } catch (error) {
@@ -47,11 +46,8 @@ const Insights = () => {
         setSelectedDevice(event.target.value);
     };
 
-    // Handler for year selection change
     const handleYearChange = (event) => {
         setSelectedYear(event.target.value);
-        // Here, you can also perform actions based on the new year selection,
-        // such as fetching new data or updating graphs.
     };
 
     if (loading) {
@@ -71,14 +67,10 @@ const Insights = () => {
                         selectedDevice={selectedDevice}
                         onSelectDevice={handleDeviceChange}
                     />
-                    {/* Year Selector */}
                     <div>
                         <label>Year:</label>
-                        <select
-                            value={selectedYear}
-                            onChange={handleYearChange}
-                        >
-                            {availableYears.map((year) => (
+                        <select value={selectedYear} onChange={handleYearChange}>
+                            {availableYears.map(year => (
                                 <option key={year} value={year}>
                                     {year}
                                 </option>
@@ -87,8 +79,8 @@ const Insights = () => {
                     </div>
                 </div>
             )}
-            <div className={styles.graphContainer}> {/* Apply styles here */}
-                <Graph data={staticGraphData} options={chartOptions} />
+            <div className={styles.graphContainer}>
+                <LineChart graphData={staticGraphData} options={chartOptions} />
             </div>
         </div>
     );
