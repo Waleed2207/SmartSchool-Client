@@ -1,10 +1,10 @@
-import { Snackbar, IconButton } from "@material-ui/core";
+import { Snackbar, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import {
   Close as CloseIcon,
   CheckCircle as CheckCircleIcon,
-} from "@material-ui/icons";
-import ErrorIcon from "@material-ui/icons/Error";
+} from "@mui/icons-material";
+import ErrorIcon from "@mui/icons-material/Error";
 // '#2fa324' green
 
 const SnackBarMessage = ({ text, icon }) => {

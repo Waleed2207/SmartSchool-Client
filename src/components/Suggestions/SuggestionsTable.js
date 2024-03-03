@@ -1,6 +1,6 @@
-import { Button, Tooltip } from "@material-ui/core";
+import { Button, Tooltip } from "@mui/material";
 import Modal from "react-modal";
-import Pagination from "@material-ui/lab/Pagination";
+import Pagination from "@mui/material/Pagination"; // Updated import path
 import React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -12,7 +12,8 @@ import {
 import styled from "styled-components";
 import { RuleCell } from "./RuleCell";
 
-import "font-awesome/css/font-awesome.min.css";
+// Remove this line if you're using Font Awesome icons from @fortawesome packages
+// import "font-awesome/css/font-awesome.min.css";
 
 import {
   ButtonStyled,

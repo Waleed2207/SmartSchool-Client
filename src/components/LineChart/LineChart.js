@@ -1,16 +1,10 @@
 import React from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart , CategoryScale, Title, Tooltip, Legend ,PointElement, LineElement, LinearScale} from 'chart.js';
 import { Line } from 'react-chartjs-2'; // Import the Line component
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import { BarElement, BarController } from 'chart.js';
+Chart.register(BarElement, LinearScale, BarController, Title, Tooltip, Legend,PointElement, LineElement, CategoryScale);
+
 
 // Your custom component to display the line chart
 const LineChart = ({ graphData, options }) => { // Include options in the props

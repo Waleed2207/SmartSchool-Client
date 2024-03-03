@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 
 export const eventEmitter = new EventEmitter();
 //export const ws = new WebSocket('ws://waleed.shenkar.dev:8002');
-export const ws = new WebSocket('ws://localhost:8080');
+export const ws = new WebSocket('ws://localhost:8002');
 ws.addEventListener('open', () => {
     console.log('connected');
 });
