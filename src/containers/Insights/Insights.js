@@ -6,7 +6,7 @@ import LineChart from '../../components/LineChart/LineChart'; // Ensure this imp
 import { staticGraphData, chartOptions } from '../../components/GraphData/GraphData';
 import styles from './Insights.module.scss';
 import { SERVER_URL } from '../../consts';
-//import { Bar } from 'some-chart-library';
+
 const Insights = () => {
     const [devices, setDevices] = useState([]);
     const [selectedDevice, setSelectedDevice] = useState(null);

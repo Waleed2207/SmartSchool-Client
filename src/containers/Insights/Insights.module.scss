@@ -23,10 +23,6 @@
   height: 100%; // This can be adjusted based on your layout needs
   
   // If your graph component renders within a specific element like a div or canvas, you might want to ensure it fills the container
-  > * { // This targets any direct child of .graphContainer
-    width: 100%;
-    max-width: 600px; // Adjust based on your maximum preferred width for the graph
-    height: auto; // Adjust if you have a specific height in mind
-  }
+  
 }
 

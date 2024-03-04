@@ -5,18 +5,19 @@ import { addRule } from "./../../store/rules/rules.actions";
 import RulesModal from "./../../components/RulesModal/RulesModal";
 import axios from "axios";
 import RulesTable from "./../../components/RulesTable/RulesTable";
-import { faChevronLeft, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import classes from "./RulesDashboard.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SnackBar } from "../../components/Snackbar/SnackBar";
 import styled from "styled-components";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import UserContext from "../../contexts/UserContext";
 import { SERVER_URL } from "../../consts";
 import { SearchRuleInput } from "../../components/RulesTable/rules.styles";
 import { toast } from "react-toastify";
 import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent';
 import AddDetectionRuleComponent from '../../components/AddDetectionRuleComponent/AddDetectionRuleComponent';
-import { Button } from "@mui/material"; // Updated import path
+import { Button } from "@material-ui/core";
 const ErrorMessage = styled.p`
   color: red;
 `;

@@ -8,7 +8,7 @@ import {
   faSpinner,
   faCircleNotch,
 } from "@fortawesome/free-solid-svg-icons";
-import { MenuItem, Select } from "@mui/material";
+import { MenuItem, Select } from "@material-ui/core";
 import axios from "axios";
 import { SERVER_URL } from "../../../../consts";
 import _ from "lodash";
