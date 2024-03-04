@@ -143,8 +143,10 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
             </DeviceCellContent>
           </TdStyled>
           <TdStyled>
-            <Tooltip title={rule}>
-              <RuleCell onClick={() => handleRuleClick(suggestion)}>{rule}</RuleCell>
+          <Tooltip title={rule}>
+              <RuleCell onClick={() => handleRuleClick(suggestion)}>
+                {rule}
+              </RuleCell>
             </Tooltip>
           </TdStyled>
           <TdStyled>
@@ -277,7 +279,8 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
           </TdStyled>
           <TdStyled>
             <DeviceCellContent>
-             IF temperature is above 25 turn the AC on cool  on temperature 23 
+             IF temperature is above 25 turn the AC on cool 
+             on temperature 23 
             </DeviceCellContent>
           </TdStyled>
           <TdStyled>

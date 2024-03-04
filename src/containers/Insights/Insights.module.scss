@@ -13,9 +13,20 @@
   gap: 0.5rem;
   margin-bottom: 2rem;
 }
+
 .graphContainer {
-  width: 50%;
-  height: 400px; /* Increase the height */
-  margin: 0 auto; /* Center the graph initially */
-  transform: translateX(230px); /* Move the graph slightly to the right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 50%; // Ensures the container takes full width of its parent
+  height: 100%; // This can be adjusted based on your layout needs
+  
+  // If your graph component renders within a specific element like a div or canvas, you might want to ensure it fills the container
+  > * { // This targets any direct child of .graphContainer
+    width: 100%;
+    max-width: 600px; // Adjust based on your maximum preferred width for the graph
+    height: auto; // Adjust if you have a specific height in mind
+  }
 }
+
