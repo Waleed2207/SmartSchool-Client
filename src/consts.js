@@ -1,4 +1,6 @@
-export const SERVER_URL = 'http://waleed.shenkar.dev:8001'
+// export const SERVER_URL = 'http://software.shenkar.cloud:8001'
+export const SERVER_URL = 'http://localhost:8001'
+
 
 
 

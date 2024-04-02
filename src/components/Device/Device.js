@@ -175,6 +175,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
 
   const isWithControls = isAcDevice || isLaundryDevice || isPumpDevice;
   const [motionDetected, setMotionDetected] = useState(false);
+  const [devicesOn, setDevicesOn] = useState([]);
 
   const onUpdateModeValueHandler = (controlId, updatedMode) => {
     // Update the AC mode by sending a request to your Node.js server.
@@ -210,7 +211,6 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
       fetchAcState();
     }
   }, [isAcDevice]); // Make sure SERVER_URL and other dependencies are correctly listed if needed
-  
   
 
 // -----------------------------motion-dected----------------------------------
@@ -253,12 +253,11 @@ useEffect(() => {
       setState(newState); 
       setcolor(newState ? "green" : "red");
       const deviceId = device.id.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
-      console.log(deviceId);
+      // console.log(deviceId);
 
       try {
         let requests = [];
         const basePayload = { state: newState, id: deviceId };
-
         if (device.device_name.toLowerCase() === 'ac') {
           console.log("is here");
           requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, basePayload));
@@ -270,7 +269,14 @@ useEffect(() => {
           console.log('Light is turn on:', newState ? "ON" : "OFF");
           requests.push(axios.post(`${SERVER_URL}/api-sensors/motion-detected`, { state: newState ? 'on' : 'off' }));
         }
-
+        else if (device.device_name.toLowerCase() === 'plug') {
+          console.log(device.device_name);
+          console.log('Plug is turned:', newState ? "ON" : "OFF");
+          // Adjust the payload to match the expected API format
+          const payloadForPlug = {  deviceId: '5', state: newState };
+                  requests.push(axios.post(`${SERVER_URL}/api-mindolife/change-feature-state`, payloadForPlug));
+        }
+        
         const results = await Promise.allSettled(requests);
         let allSuccessful = true;
         results.forEach(result => {

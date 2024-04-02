@@ -1,6 +1,6 @@
-import { Button, Tooltip } from "@material-ui/core";
+import { Button, Tooltip } from "@mui/material";
 import Modal from "react-modal";
-import Pagination from "@material-ui/lab/Pagination";
+import Pagination from "@mui/material/Pagination"; // Updated import path
 import React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -12,7 +12,8 @@ import {
 import styled from "styled-components";
 import { RuleCell } from "./RuleCell";
 
-import "font-awesome/css/font-awesome.min.css";
+// Remove this line if you're using Font Awesome icons from @fortawesome packages
+// import "font-awesome/css/font-awesome.min.css";
 
 import {
   ButtonStyled,
@@ -90,11 +91,11 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
   }, []);
 
   useEffect(() => {
-    setNewSuggestionsCount(0);
+    setNewSuggestionsCount(0); // Assuming this is intended to reset some state
     if (suggestions) {
       updateSuggestions();
     }
-  }, [suggestions]);
+  }, [suggestions, setNewSuggestionsCount]); 
 
   // Function to handle page change
   const handlePageChange = (event, value) => {
@@ -113,64 +114,209 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
       <TableStyled>
         <thead>
           <tr>
+            <ThStyled>User</ThStyled>
             <ThStyled>Device</ThStyled>
             <ThStyled>Suggested Rule</ThStyled>
             <ThStyled>Actions</ThStyled>
           </tr>
         </thead>
         <tbody>
-          {suggestionsOnPage.map((suggestion, idx) => {
-            const rule = suggestion.normalized_rule;
-            const { is_new: isNew } = suggestion;
-            return (
-              <tr key={idx}>
-                <TdStyled>
-                  <DeviceCellContent>
-                    {suggestion.device}
-                    {isNew && (
-                      <NewTag>
-                        <NewTagText>NEW!</NewTagText>
-                      </NewTag>
-                    )}
-                  </DeviceCellContent>
-                </TdStyled>
-                <TdStyled>
-                  <Tooltip title={rule}>
-                    <RuleCell onClick={handleRuleClick}>{rule}</RuleCell>
-                  </Tooltip>
-                </TdStyled>
-                <TdStyled>
-                  <ButtonStyled
-                    className="custom-button"
-                    onClick={() => {
-                      setIsChooseRoomModalOpen(true);
-                      setSelectedRule(rule);
-                      onDeleteSuggestion(
-                        suggestion.id,
-                        suggestions,
-                        setSuggestions
-                      )
-                    }}
-                  >
-                    <i className="fa fa-plus" aria-hidden="true"></i> Add
-                  </ButtonStyled>
-                  <ButtonStyled
-                    className="custom-button"
-                    onClick={() =>
-                      onDeleteSuggestion(
-                        suggestion.id,
-                        suggestions,
-                        setSuggestions
-                      )
-                    }
-                  >
-                    <i className="fa fa-trash" aria-hidden="true"></i> Delete
-                  </ButtonStyled>
-                </TdStyled>
-              </tr>
-            );
-          })}
-        </tbody>
+  {suggestionsOnPage.map((suggestion) => {
+    const rule = suggestion.normalized_rule;
+    const { is_new: isNew } = suggestion;
+    return (
+      <>
+        <tr>
+          <TdStyled>
+            <DeviceCellContent>
+             IEC
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+            <DeviceCellContent>
+              {suggestion.device}
+              {isNew && (
+                <NewTag>
+                  <NewTagText>NEW!</NewTagText>
+                </NewTag>
+              )}
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+          <Tooltip title={rule}>
+              <RuleCell onClick={() => handleRuleClick(suggestion)}>
+                {rule}
+              </RuleCell>
+            </Tooltip>
+          </TdStyled>
+          <TdStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() => {
+                setIsChooseRoomModalOpen(true);
+                setSelectedRule(rule);
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }}
+            >
+              <i className="fa fa-plus" aria-hidden="true"></i> Add
+            </ButtonStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() =>
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }
+            >
+              <i className="fa fa-trash" aria-hidden="true"></i> Delete
+            </ButtonStyled>
+          </TdStyled>
+        </tr>
+        {/* Additional row for each suggestion */}
+        <tr>
+          <TdStyled>
+            {/* You can customize this section with whatever additional info/actions you need */}
+            IEC
+          </TdStyled>
+          <TdStyled>
+            <DeviceCellContent>
+             Light
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+            <DeviceCellContent>
+             IF Detection is true turn Light Off
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() => {
+                setIsChooseRoomModalOpen(true);
+                setSelectedRule(rule);
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }}
+            >
+              <i className="fa fa-plus" aria-hidden="true"></i> Add
+            </ButtonStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() =>
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }
+            >
+              <i className="fa fa-trash" aria-hidden="true"></i> Delete
+            </ButtonStyled>
+          </TdStyled>
+        </tr>
+        <tr>
+          <TdStyled>
+            {/* You can customize this section with whatever additional info/actions you need */}
+            IEC
+          </TdStyled>
+          <TdStyled>
+            <DeviceCellContent>
+             Light
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+            <DeviceCellContent>
+             IF hour is 23:00 and the light is on then turn off the light 
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() => {
+                setIsChooseRoomModalOpen(true);
+                setSelectedRule(rule);
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }}
+            >
+              <i className="fa fa-plus" aria-hidden="true"></i> Add
+            </ButtonStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() =>
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }
+            >
+              <i className="fa fa-trash" aria-hidden="true"></i> Delete
+            </ButtonStyled>
+          </TdStyled>
+        </tr>
+        <tr>
+          <TdStyled>
+            {/* You can customize this section with whatever additional info/actions you need */}
+            IEC
+          </TdStyled>
+          <TdStyled>
+            <DeviceCellContent>
+             AC
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+            <DeviceCellContent>
+             IF temperature is above 25 turn the AC on cool 
+             on temperature 23 
+            </DeviceCellContent>
+          </TdStyled>
+          <TdStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() => {
+                setIsChooseRoomModalOpen(true);
+                setSelectedRule(rule);
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }}
+            >
+              <i className="fa fa-plus" aria-hidden="true"></i> Add
+            </ButtonStyled>
+            <ButtonStyled
+              className="custom-button"
+              onClick={() =>
+                onDeleteSuggestion(
+                  suggestion.id,
+                  suggestions,
+                  setSuggestions
+                )
+              }
+            >
+              <i className="fa fa-trash" aria-hidden="true"></i> Delete
+            </ButtonStyled>
+          </TdStyled>
+        </tr>
+      </>
+    );
+  })}
+</tbody>
+
       </TableStyled>
       <PaginationContainer>
         <Pagination

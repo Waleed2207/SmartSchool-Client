@@ -37,7 +37,7 @@ const Header = ({ toggleSideDrawer, user, onLogout, newSuggestionsCount }) => {
       <div className={classes.HeaderContainer}>
         <div className={classes.AppName}>
           <NavLink to="/" className={classes.AppNameLink}>
-            Smarthome
+            SmartHome
           </NavLink>
         </div>
         <div className={classes.Navigation}>

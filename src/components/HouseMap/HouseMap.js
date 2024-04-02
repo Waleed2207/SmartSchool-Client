@@ -15,9 +15,10 @@ import {
   faWind,
   faFan,
   faTshirt,
+  faSnowflake,
   faTemperatureHigh,
   faLightbulb,
-  faSeedling
+  faSeedling,faPlug, faToggleOn, 
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTint,
@@ -36,12 +37,14 @@ import HouseMapLoading from "../Spinner/HouseMapLoading";
 
 
 const ICON_MAPPING = {
-  AC: faWind,
+  AC: faSnowflake,
   fan: faFan,
   laundry: faTshirt,
   heater: faTemperatureHigh,
   lights: faLightbulb,
   pump: faSeedling,
+  plug: faPlug,         // Assuming faPlug is the icon for the plug
+  switch: faToggleOn,   // Assuming faToggleOn is the icon for the switch
   default: faHandshake
 };
 

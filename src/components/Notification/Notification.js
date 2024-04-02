@@ -14,7 +14,7 @@ export const Notification = () => {
 
 
   useEffect(() => {
-    const socket = new WebSocket('ws://waleed.shenkar.dev:8002');
+    const socket = new WebSocket('ws://software.shenkar.cloud:8002');
 
     socket.addEventListener('message', handleMessageReceived);
 
