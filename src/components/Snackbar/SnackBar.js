@@ -1,10 +1,10 @@
-import { Snackbar, IconButton } from "@material-ui/core";
+import { Snackbar, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import {
   Close as CloseIcon,
   CheckCircle as CheckCircleIcon,
-} from "@material-ui/icons";
-import ErrorIcon from "@material-ui/icons/Error";
+} from "@mui/icons-material";
+import ErrorIcon from "@mui/icons-material/Error";
 // '#2fa324' green
 
 const SnackBarMessage = ({ text, icon }) => {
@@ -48,6 +48,7 @@ export const SnackBar = ({
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Center the Snackbar
         message={
           <SnackBarMessage
             text={message}
@@ -57,6 +58,11 @@ export const SnackBar = ({
         ContentProps={{
           style: { backgroundColor: color, color: "#fff" }, // set the background and text color
         }}
+        action={
+          <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
       />
     </>
   );

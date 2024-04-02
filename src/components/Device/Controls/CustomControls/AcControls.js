@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { ModeControl } from "./ModeControl";
 import { Temperature } from "./Temperature";
 

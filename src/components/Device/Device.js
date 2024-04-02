@@ -1,15 +1,10 @@
-// import Switch from '@mui/material/Switch';
-// import { Button, CircularProgress, Snackbar, MuiAlert } from '@material-ui/core';
-import { Button } from "@material-ui/core";
+
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { Temperature } from "./Controls/CustomControls/Temperature";
 import { SnackBar } from "../Snackbar/SnackBar";
 import Switch from "../UI/Switch/Switch";
-import ModeControl from "./Controls/Mode/ModeControl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { MenuItem, Select } from "@material-ui/core";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { SERVER_URL } from "../../consts";
 import { AcControls } from "./Controls/CustomControls/AcControls";
@@ -40,46 +35,6 @@ const ControlContainer = styled.div`
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
 `;
 
-const TestBox = styled.div`
-  width: 100px;
-  height: 100px;
-  background: red;
-  transition: width 2s;
-
-  &:hover {
-    width: 300px;
-  }
-`;
-
-// const DeviceCard = styled.div`
-//   width: 100%;
-//   background-color: white;
-//   border: 1px solid;
-//   padding: 1rem;
-//   border-radius: 10px;
-//   border-color: #e4e6eb;
-//   min-height: 8rem;
-//   overflow: hidden;
-//   transition: height 0.3s ease-in-out;
-
-//   &.expanded {
-//     height: auto;
-//   }
-// `;
-
-const DeviceContainer = styled.div`
-  display: flex;
-  width: 18rem;
-  height: 50rem;
-  gap: 1rem;
-  flex-direction: column;
-`;
-
-const AcControlsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  // flex-wrap: wrap;
-`;
 
 const TopRow = styled.div`
   display: flex;
@@ -88,27 +43,6 @@ const TopRow = styled.div`
   margin-bottom: 1rem;
 `;
 
-const Controls = styled.div`
-  display: flex;
-`;
-
-const StyledSwitch = styled(Switch)`
-  && {
-    color: blue;
-
-    &:hover {
-      background-color: green;
-    }
-
-    &.Mui-checked {
-      color: blue;
-    }
-
-    &.Mui-checked:hover {
-      background-color: yellow;
-    }
-  }
-`;
 
 const ShowControlsContainer = styled.div`
   width: 12rem;
@@ -175,7 +109,6 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
 
   const isWithControls = isAcDevice || isLaundryDevice || isPumpDevice;
   const [motionDetected, setMotionDetected] = useState(false);
-  const [devicesOn, setDevicesOn] = useState([]);
 
   const onUpdateModeValueHandler = (controlId, updatedMode) => {
     // Update the AC mode by sending a request to your Node.js server.
@@ -269,11 +202,18 @@ useEffect(() => {
           console.log('Light is turn on:', newState ? "ON" : "OFF");
           requests.push(axios.post(`${SERVER_URL}/api-sensors/motion-detected`, { state: newState ? 'on' : 'off' }));
         }
-        else if (device.device_name.toLowerCase() === 'plug') {
+        else if (device.device_name.toLowerCase() === 'tv') {
+          console.log(device.device_name);
+          console.log('TV is turned:', newState ? "ON" : "OFF");
+          // Adjust the payload to match the expected API format
+          const payloadForPlug = {  deviceId: '5', state: newState };
+                  requests.push(axios.post(`${SERVER_URL}/api-mindolife/change-feature-state`, payloadForPlug));
+        }
+        else if (device.device_name.toLowerCase() === 'bulb') {
           console.log(device.device_name);
           console.log('Plug is turned:', newState ? "ON" : "OFF");
           // Adjust the payload to match the expected API format
-          const payloadForPlug = {  deviceId: '5', state: newState };
+          const payloadForPlug = {  deviceId: '4', state: newState };
                   requests.push(axios.post(`${SERVER_URL}/api-mindolife/change-feature-state`, payloadForPlug));
         }
         

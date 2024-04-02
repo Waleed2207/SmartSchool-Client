@@ -43,7 +43,8 @@ const ICON_MAPPING = {
   heater: faTemperatureHigh,
   lights: faLightbulb,
   pump: faSeedling,
-  plug: faPlug,         // Assuming faPlug is the icon for the plug
+  plug: faPlug,     
+  Bulb:   faLightbulb,  // Assuming faPlug is the icon for the plug
   switch: faToggleOn,   // Assuming faToggleOn is the icon for the switch
   default: faHandshake
 };
@@ -179,6 +180,7 @@ const HouseMap = ({ onClose }) => {
 
   const getSensorActivationStatus = (sensorId) => {
     const sensor = sensors.find((s) => s._id === sensorId);
+    
     console.log(JSON.stringify(sensor));
     if (sensor) {
       return sensor.activated;
