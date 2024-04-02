@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent';
 import AddDetectionRuleComponent from '../../components/AddDetectionRuleComponent/AddDetectionRuleComponent';
 import { Button } from "@mui/material"; // Updated import path
+
 const ErrorMessage = styled.p`
   color: red;
 `;

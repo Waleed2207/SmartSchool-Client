@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   fetchRoomDevices,
-  toggleDeviceSwitch,
-  updateDeviceControlValue,
 } from "./../../../store/devices/devices.actions";
 import { NavLink } from "react-router-dom";
 import { useParams } from "react-router";

@@ -13,7 +13,7 @@ const Insights = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const availableYears = [2020, 2021, 2022, 2023];
-    const [selectedYear, setSelectedYear] = useState(availableYears[0]);
+    const [selectedYear, setSelectedYear] = useState(availableYears[3]);
 
     useEffect(() => {
         let isMounted = true;

@@ -3,13 +3,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
-
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save"; // Import Save icon
 import CancelIcon from "@mui/icons-material/Cancel"; // Import Cancel icon
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
-
-
 import { RuleSwitch } from "../UI/Switch/RuleSwitch";
 import classes from "./RulesTable.module.scss";
 import {

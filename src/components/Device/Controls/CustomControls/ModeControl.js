@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFan,
-  faFire,
-  faSnowflake,
-  faTint,
-  faMagic,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFan, faFire, faSnowflake, faTint, faMagic } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "@mui/material";
-//import { makeStyles } from "@mui/material/styles";
 import axios from "axios";
 import { SERVER_URL } from "../../../../consts";
 
@@ -32,67 +25,47 @@ const ModeContainer = styled.div`
   margin: 10px;
 `;
 
-// const useStyles = makeStyles((theme) => ({
-//   tooltip: {
-//     backgroundColor: "#333",
-//     color: "#fff",
-//     fontSize: "14px",
-//     padding: "8px",
-//   },
-// }));
-
 export const ModeControl = ({ acState, device_room_idds }) => {
   const [acInternalState, setAcInternalState] = useState(acState);
   const [mode, setMode] = useState("cool");
   const [loading, setLoading] = useState(false);
 
-  const fetchCurrentMode = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${SERVER_URL}/api-sensors/sensibo`);
-      console.log("Response data:", response.data);
-      // Access 'mode' directly from 'response.data'
-      if (response.data && response.data.mode) {
-        const currentMode = response.data.mode;
-        setMode(currentMode);
-      } else {
-        console.error("Unexpected response structure:", response.data);
-        // Set mode to a default value or handle the lack of 'mode' as needed
-        setMode("cool"); // This is just an example default value
-      }
-    } catch (error) {
-      console.error("Error fetching current mode:", error);
-      // Handle the error appropriately, possibly setting an error state
-    }
-    setLoading(false);
-  };
-  
-
   useEffect(() => {
+    const fetchCurrentMode = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${SERVER_URL}/api-sensors/sensibo`);
+        if (response.data && response.data.mode) {
+          setMode(response.data.mode);
+        } else {
+          console.error("Unexpected response structure:", response.data);
+          setMode("cool"); // Example default value
+        }
+      } catch (error) {
+        console.error("Error fetching current mode:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchCurrentMode();
   }, [device_room_idds]);
 
   const updateMode = async (newMode) => {
     try {
-      // const deviceId =device_room_idds.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
-      const deviceId = "4ahpAkJ9";
-      const response = await axios.post(`${SERVER_URL}/api-sensors/sensibo/mode`, {
-        deviceId,
-        mode: newMode,
-      });
-      console.log("Mode updated successfully:", response.data);
+      const deviceId = "4ahpAkJ9"; // Example device ID
+      await axios.post(`${SERVER_URL}/api-sensors/sensibo/mode`, { deviceId, mode: newMode });
+      console.log("Mode updated successfully");
     } catch (error) {
       console.error("Error updating mode:", error);
     }
   };
-
 
   const onModeChange = async (newMode) => {
     setMode(newMode);
     await updateMode(newMode);
   };
 
- // const classes = useStyles();
   const modes = [
     { id: "cool", icon: faSnowflake, color: "blue", tooltip: "Cool" },
     { id: "heat", icon: faFire, color: "red", tooltip: "Heat" },
@@ -107,11 +80,7 @@ export const ModeControl = ({ acState, device_room_idds }) => {
         <p>Loading mode...</p>
       ) : (
         modes.map(({ id, icon, color, tooltip }) => (
-          <Tooltip
-            title={tooltip}
-
-            key={id}
-          >
+          <Tooltip title={tooltip} key={id} sx={{ backgroundColor: "#333", color: "#fff", fontSize: "14px", padding: "8px" }}>
             <ModeButton
               color={acInternalState && mode === id ? color : "grey"}
               onClick={() => {

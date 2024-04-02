@@ -91,11 +91,11 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
   }, []);
 
   useEffect(() => {
-    setNewSuggestionsCount(0);
+    setNewSuggestionsCount(0); // Assuming this is intended to reset some state
     if (suggestions) {
       updateSuggestions();
     }
-  }, [suggestions]);
+  }, [suggestions, setNewSuggestionsCount]); 
 
   // Function to handle page change
   const handlePageChange = (event, value) => {
