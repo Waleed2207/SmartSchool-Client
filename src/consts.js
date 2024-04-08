@@ -1,11 +1,7 @@
-export const SERVER_URL = 'http://software.shenkar.cloud:8001'
-// export const SERVER_URL = 'http://localhost:8001'
+// export const SERVER_URL = 'https://software.shenkar.cloud:8888'
+export const SERVER_URL = 'http://localhost:8001'
 
 
-
-
-
-// export const SERVER_URL = 'https://smartbute-alpha.onrender.com';
 
 export const TABLET_WIDTH = 1024;
 export const TABLET_HEIGHT = 768;
