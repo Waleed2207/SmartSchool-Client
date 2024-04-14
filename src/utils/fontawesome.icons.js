@@ -1,5 +1,6 @@
 import {
   faCouch,
+  faChalkboardTeacher,
   faUtensils,
   faBed,
   faBook,
@@ -13,6 +14,7 @@ import {
 export default {
   faCouch,
   faUtensils,
+  faChalkboardTeacher,
   faBed,
   faBook,
   faBath,

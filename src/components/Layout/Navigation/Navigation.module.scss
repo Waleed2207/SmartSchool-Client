@@ -1,4 +1,4 @@
-@import "../../../styles/utils/utils";
+@import "../../../styles/utils/utils"; // Ensure this path is correct
 
 .Nav {
   display: flex;
@@ -6,20 +6,30 @@
   ul {
     display: flex;
     padding: 0;
-    flex-direction: row;
+    flex-direction: row; // Default for non-mobile views
     margin: auto auto 0 0;
     list-style: none;
 
     li {
-      margin: 0 10px;
+      margin: 0 10px; // Spacing between menu items
     }
   }
 
+  // Assuming the mobile-view mixin is defined like this:
+  // @mixin mobile-view {
+  //   @media (max-width: $mobile-width) { // where $mobile-width is a predefined width
+  //     @content;
+  //   }
+  // }
   @include mobile-view {
+    flex-direction: column;
+    align-items: center; // Center items in mobile view
+
     ul {
-      flex-direction: column;
-      li{
-        margin: 10px 0;
+      flex-direction: column; // Stack list items vertically in mobile view
+
+      li {
+        margin: 10px 0; // Adjust margins for stacked items
       }
     }
   }
