@@ -9,7 +9,10 @@ import {
   faBath,
   faBroadcastTower,
   faConciergeBell,
-  faHandshake
+  faHandshake,
+  faDesktop,
+  faVideo,
+  faLaptop
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faWind,
@@ -43,10 +46,13 @@ const ICON_MAPPING = {
   heater: faTemperatureHigh,
   lights: faLightbulb,
   pump: faSeedling,
-  plug: faPlug,     
+  plug: faVideo,     
   Bulb:   faLightbulb,  // Assuming faPlug is the icon for the plug
   switch: faToggleOn,   // Assuming faToggleOn is the icon for the switch
-  default: faHandshake
+  default: faHandshake,
+  computer: faDesktop,
+  projector: faVideo,
+  TV:   faLaptop,
 };
 
 

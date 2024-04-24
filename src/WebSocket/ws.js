@@ -1,8 +1,14 @@
 import { EventEmitter } from 'events';
 
 export const eventEmitter = new EventEmitter();
-export const ws = new WebSocket('ws://software.shenkar.cloud:8002');
 
+let tempws;
+if (window.location.protocol === "https:") {
+    tempws = new WebSocket('wss://software.shenkar.cloud:8888');
+} else {
+    tempws= new WebSocket('ws://software.shenkar.cloud:8001');
+}
+export const ws = tempws;
 ws.addEventListener('open', () => {
     console.log('connected');
 });

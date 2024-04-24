@@ -5,6 +5,7 @@ import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-regular-svg-icons";
 
+// Styled components remain the same
 const RuleCellStyled = styled.div`
   text-align: left;
   white-space: nowrap;
@@ -12,7 +13,6 @@ const RuleCellStyled = styled.div`
   text-overflow: ellipsis;
   flex-direction: row;
   display: inline-flex;
-  flex-direction: row;
   cursor: pointer;
 `;
 
@@ -23,7 +23,6 @@ const TextStyled = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   user-select: none;
-
 `;
 
 const TooltipContent = styled.div`
@@ -35,18 +34,8 @@ const RuleTooltip = ({ text }) => {
   return <TooltipContent>{text}</TooltipContent>;
 };
 
-// const useStyles = makeStyles((theme) => ({
-//   tooltip: {
-//     backgroundColor: '#333',
-//     color: '#fff',
-//     fontSize: '14px',
-//     padding: '8px',
-//   },
-// }));
-
 export const RuleCell = forwardRef(({ children, onClick }, ref) => {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-
   const divRef = useRef(null);
 
   const handleCopy = () => {
@@ -56,8 +45,14 @@ export const RuleCell = forwardRef(({ children, onClick }, ref) => {
     setIsTooltipOpen(true);
     setTimeout(() => setIsTooltipOpen(false), 1000);
   };
+
   return (
-    <RuleCellStyled onClick={() => onClick(children)}>
+    <RuleCellStyled onClick={() => onClick(children)} sx={{
+      backgroundColor: '#333',
+      color: '#fff',
+      fontSize: '14px',
+      padding: '8px',
+    }}>
       <Tooltip title={children}>
         <TextStyled ref={divRef}>{children}</TextStyled>
       </Tooltip>

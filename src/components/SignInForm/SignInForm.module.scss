@@ -50,27 +50,33 @@
     text-align: center;
   }
   
+/* Assuming .submit_btn is within .subContainer */
 
-  .subContainer {
-    display: flex;
-    flex-direction: inherit;
-    margin-left: 9rem;
-  }
+.subContainer {
+  display: flex;
+  flex-direction: column; /* Change this to column for vertical stacking */
+  align-items: center; /* This will center horizontally the child items */
+  justify-content: center; /* This will center vertically the child items in the available space */
+  margin-left: auto; /* Remove fixed margin for responsive design */
+  margin-right: auto; /* Center the container itself */
+  padding: 1rem; /* Optional: it gives some space inside the container */
+  width: 100%; /* It takes the full width */
+  max-width: 400px; /* Maximum width of the container, you can change this value */
+}
 
-  .showPasswordButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-    color: #007bff;
-    padding: 0;
-    margin-left: 5px;
-  }
-  
-  
+.showPasswordButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #007bff;
+  padding: 0;
+  margin-left: 5px;
+  align-self: flex-start; /* This aligns the showPasswordButton to the start of the flex container */
+}
 
 .submit_btn {
-  display: flex; 
+  display: flex;
   padding: 0.5rem 1rem;
   font-size: 1rem;
   font-weight: 500;
@@ -78,16 +84,27 @@
   background-color: #007bff;
   border: 1px solid #007bff;
   border-radius: 4px;
-
   cursor: pointer;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
   margin-top: 1rem;
+  width: 50%; /* Make the button expand to the width of its container */
+  justify-content: center; /* Center the text or elements within the button */
+}
 
-  &:hover {
-    background-color: #0069d9;
-    border-color: #0069d9;
+.submit_btn:hover {
+  background-color: #0069d9;
+  border-color: #0069d9;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  .subContainer {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 1rem;
   }
 }
+
 
 
   

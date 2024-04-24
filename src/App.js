@@ -31,16 +31,6 @@ function App() {
     Cookies.get("isAuthenticated") === "true" || false
   );
 
-  // const [user, setUser] = useState(
-  //   Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null
-  // );
-
-  // const [user, setUser] = useState(
-  //   Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null
-  // );
-
-// Remove the initial state declaration for 'user' and 'setUser' here
-
 const getUserFromCookie = () => {
   const userData = Cookies.get("user");
   if (userData) {

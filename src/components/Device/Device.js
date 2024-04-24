@@ -154,13 +154,10 @@ useEffect(() => {
       const isMotionDetected = response.data.motionDetected;
       if (isMotionDetected !== motionDetected) {
         setMotionDetected(isMotionDetected);
-        // Show success snackbar when motion is detected, else failure snackbar
-        setOpenSuccessSnackbar(isMotionDetected);
-        setOpenFailureSnackbar(!isMotionDetected);
       }
     } catch (error) {
       console.error('Error fetching motion state:', error);
-      setOpenFailureSnackbar(true);
+      setOpenFailureSnackbar(true); // Generic failure notification
     }
   };
   const intervalId = setInterval(fetchMotionState, 2000);
@@ -172,13 +169,20 @@ useEffect(() => {
     const lightState = motionDetected ? 'on' : 'off';
     setState(motionDetected);
     setcolor(motionDetected ? "green" : "red");
-    // You can also make an API call here if you want to reflect the state change in the backend
+
+    if (motionDetected) {
+      setOpenSuccessSnackbar(true);
+      setOpenFailureSnackbar(false);  // Ensure to hide failure snackbar when motion is detected
+    } else {
+      // Failure snackbar for no motion detected and light turned off
+      setOpenSuccessSnackbar(false);
+      setOpenFailureSnackbar(true);
+    }
   }
 }, [motionDetected, device.device_name]);
 
 
-
-// -------------------------------------waleed---------------------------------------------
+// -------------------------------------DeviceChange---------------------------------------------
       
     const onDeviceChange = async (device, e) => {
       const newState = e.target.checked;

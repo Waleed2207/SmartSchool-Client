@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { eventEmitter } from '../../WebSocket/ws.js'; // import eventEmitter instead of ws
+// import { eventEmitter } from '../../WebSocket/ws.js'; // import eventEmitter instead of ws
 import { connectWebSocket } from "./websocket.js";
 
 // const WebSocket = window.WebSocket;
@@ -12,10 +12,14 @@ export const Notification = () => {
   const [notification, setNotification] = useState('');
 
 
-
+  let socket;
+  
   useEffect(() => {
-    const socket = new WebSocket('ws://software.shenkar.cloud:8002');
-
+    if (window.location.protocol === "https:") {
+      socket = new WebSocket('wss://software.shenkar.cloud:8888');
+  } else {
+      socket = new WebSocket('ws://software.shenkar.cloud:8001');
+  }
     socket.addEventListener('message', handleMessageReceived);
 
     return () => {
