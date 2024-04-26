@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import "./App.module.scss";
 import RoomsDashboard from "./containers/RoomsDashboard/RoomsDashboard";
+import SpacesDashboard from "./containers/SpacesDashboard/SpacesDashboard";
 import WelcomeDashboard from "./containers/WelcomeDashboard/WelcomeDashboard";
 import SignIn from "./containers/SignIn/SignIn";
 import SignUp from "./containers/SignUp/SignUp";
@@ -109,7 +110,7 @@ const getUserFromCookie = () => {
             path="/"
             element={
               isAuthenticated ? (
-                <Navigate to="/rooms" replace />
+                <Navigate to="/spaces" replace />
               ) : (
                 <WelcomeDashboard />
               )
@@ -119,7 +120,7 @@ const getUserFromCookie = () => {
             path="/login"
             element={
               isAuthenticated ? (
-                <Navigate to="/rooms" replace />
+                <Navigate to="/spaces" replace />
               ) : (
                 <SignIn onSignInSuccess={handleSignIn} />
               )
@@ -129,6 +130,9 @@ const getUserFromCookie = () => {
             path="/signup"
             element={<SignUp onSignUpSuccess={handleSignIn} />}
           />
+        <Route path="/spaces" element={isAuthenticated ? <SpacesDashboard /> : <Navigate to="/login" />} />
+        <Route path="/spaces/:spaceId/rooms" element={isAuthenticated ? <RoomsPage /> : <Navigate to="/login" />} />
+        <Route path="/spaces/:spaceId/rooms-dashboard" element={isAuthenticated ? <RoomsDashboard /> : <Navigate to="/login" />} />         
           <Route
             path="/rooms"
             element={
@@ -159,6 +163,10 @@ const getUserFromCookie = () => {
             element={
               isAuthenticated ? <RulesDashboard user={user} /> : <Navigate to="/login" />
             }
+          />
+          <Route
+            path="/spaces/:spaceId/rooms-dashboard/room/:id"
+            element={isAuthenticated ? <RoomDevices /> : <Navigate to="/login" />}
           />
           <Route
             path="/room/:id"

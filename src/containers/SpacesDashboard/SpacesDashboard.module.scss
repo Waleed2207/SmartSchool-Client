@@ -1,0 +1,23 @@
+@import "../../styles/utils/utils";
+.Row {
+  display: flex;
+  flex-wrap: wrap;
+  // margin-right: 5rem;
+  // margin-left: 5rem;
+  justify-content: center;
+  width: 100%; /* Ensures full width from .kAbjJN */
+}
+
+.Column {
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+
+  @include mobile-view {
+    width: 100%;
+  }
+}
+
+.Link {
+  text-decoration: none;
+}

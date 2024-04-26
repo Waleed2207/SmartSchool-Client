@@ -69,10 +69,35 @@ const DevicesSection = styled.div`
   flex-wrap: wrap;
   // padding: 10px;
   gap: 2rem;
+  @media (max-width: 912px) {
+    justify-content: center
+
+  }
+  // Media query for mobile devices
+  @media (max-width: 480px) {
+    justify-content: center
+
+  }
+
 `;
 
 const RoomContainer = styled.div`
   padding: 30px;
+  margin-right: 5rem;
+  margin-left: 5rem;
+  @media (max-width: 768px) {
+    justify-content: center
+    padding: 15px;
+    margin-right: 2rem;
+    margin-left: 2rem;
+  }
+  // Media query for mobile devices
+  @media (max-width: 480px) {
+    padding: 10px;
+    margin-right: 1rem;
+    justify-content: center
+    margin-left: 1rem;
+  }
 `;
 
 const NavLinkStyled = styled(NavLink)`
@@ -140,6 +165,10 @@ const RoomDevices = () => {
   const [pumpState, setPumpState] = useState('OFF');
   const [pumpDuration, setPumpDuration] = useState(0.05);
 
+  const { id,spaceId } = useParams();
+  console.log("spacseID:"+ spaceId);
+
+
   const fetchLaundryDetails = async () => {
     try {
       const response = await axios.get(`${SERVER_URL}/laundry/details/`);
@@ -169,7 +198,6 @@ const RoomDevices = () => {
     fetchData();
   }, []);
 
-  const { id } = useParams();
 
   const fetchRoomData = async () => {
     try {
@@ -212,7 +240,7 @@ const RoomDevices = () => {
 
   return (
     <RoomContainer>
-      <NavLinkStyled to="/" className={classes.BackLink}>
+      <NavLinkStyled to={`/spaces/${spaceId}/rooms-dashboard`} className={classes.BackLink}>
         <FontAwesomeIcon icon={faChevronLeft} />
         <span>Back to Rooms</span>
       </NavLinkStyled>
@@ -242,7 +270,7 @@ const RoomDevices = () => {
 
       {isModalOpen &&
         <ModalStyled isOpen={isModalOpen}>
-          <NewDeviceModal setIsModalOpen={setIsModalOpen} roomId={id} fetchRoomDevices={fetchRoomDevices} />
+          <NewDeviceModal setIsModalOpen={setIsModalOpen} spaceId={spaceId} roomId={id} fetchRoomDevices={fetchRoomDevices} />
         </ModalStyled>
       }
     </RoomContainer>
