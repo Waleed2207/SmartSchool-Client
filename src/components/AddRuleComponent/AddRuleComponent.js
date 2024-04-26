@@ -30,7 +30,7 @@ const AddRuleComponent = ({ onSuccess }) => {
     };
 
     try {
-      const response = await fetch(`${SERVER_URL}/api-rule/rules`, {
+      const response = await fetch(`${SERVER_URL}/api-rules/rules`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

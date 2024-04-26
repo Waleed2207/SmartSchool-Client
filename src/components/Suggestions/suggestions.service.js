@@ -62,7 +62,7 @@ export const getSuggestions = async () => {
 
   export const addSuggestedRule = async (rule, suggestionId, suggestions, setSuggestions) => {
     try {
-      const response = await axios.post(`${SERVER_URL}/api-rule/rules`, { rule });
+      const response = await axios.post(`${SERVER_URL}/api-rules/rules`, { rule });
       if(response.status === 200){
         onDeleteSuggestion(
           suggestionId, 
@@ -91,5 +91,5 @@ export const getSuggestions = async () => {
 
   export const addRoomToRule =  async(rule, room) => {
     const ruleWithRoom = rule + ` in ${room}`;
-    await axios.post(`${SERVER_URL}/api-rule/rules`, {rule: ruleWithRoom });
+    await axios.post(`${SERVER_URL}/api-rules/rules`, {rule: ruleWithRoom });
   }

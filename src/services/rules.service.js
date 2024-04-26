@@ -4,7 +4,7 @@ import { SERVER_URL } from "../consts";
 
 export const fetchRules = async () => {
   try {
-    const response = await axios.get(`${SERVER_URL}/api-rule/rules`);
+    const response = await axios.get(`${SERVER_URL}/api-rules/rules`);
     console.log(response);
     return response.data;
   } catch (error) {
@@ -16,7 +16,7 @@ export const fetchRules = async () => {
 
 export const updateRule = async (id, updatedData) => {
   try{
-    const response = await axios.post(`${SERVER_URL}/api-rule/rules/${id}`, updatedData);
+    const response = await axios.post(`${SERVER_URL}/api-rules/rules/${id}`, updatedData);
     console.log(response.data);
     return true;
   }catch(err){

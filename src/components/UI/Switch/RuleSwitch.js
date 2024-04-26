@@ -17,7 +17,7 @@ export const RuleSwitch = ({ id, isActive: initialIsActive, rule, currentRules, 
     };
 
     try {
-      const response = await axios.post(`${SERVER_URL}/api-rule/rules/${id}`, payload);
+      const response = await axios.post(`${SERVER_URL}/api-rules/rules/${id}`, payload);
       setCurrentRules((prevRules) =>
         prevRules.map((r) => (r.id === id ? { ...r, isActive: newIsActive } : r))
       );
