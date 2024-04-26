@@ -1,5 +1,7 @@
-export const SERVER_URL = 'http://localhost:5001'
-// export const SERVER_URL = 'https://smartbute-alpha.onrender.com';
+// export const SERVER_URL = 'https://software.shenkar.cloud:8888'
+export const SERVER_URL = 'http://localhost:8001'
+
+
 
 export const TABLET_WIDTH = 1024;
 export const TABLET_HEIGHT = 768;
@@ -9,7 +11,7 @@ export const ROOMS_IDS = {
     LIVING_ROOM: '38197016',
     KITCHEN: '27108823',
     BEDROOM: '36198138',
-    BATHROOM: '13718462',
+    BATHROOM: '61097711-4866',
     DINING_ROOM: '73601367',
-    CLASS_ROOM: '38197016'
+    CLASS_ROOM: '17886285-1875'
 }

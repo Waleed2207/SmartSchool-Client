@@ -169,7 +169,9 @@ const fadeIn = keyframes`
     height: 35%; /* Final height value */
   }
 `;
-
+export const SomeAnimatedComponent = styled.div`
+  animation: ${fadeIn} 1s ease-out;
+`;
 const ChooseRoomModalFadeIn = keyframes`
 0% {
   opacity: 0;

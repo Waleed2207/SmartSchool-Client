@@ -9,19 +9,28 @@ import {
   faBath,
   faBroadcastTower,
   faConciergeBell,
-  faHandshake
+  faHandshake,
+  faDesktop,
+  faVideo,
+  faLaptop,
+  faHome,
+  faSchool,
+  faChalkboardTeacher,
+  faBook
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faWind,
   faFan,
   faTshirt,
+  faSnowflake,
   faTemperatureHigh,
   faLightbulb,
-  faSeedling
+  faSeedling,faPlug, faToggleOn, 
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTint,
   faThermometerHalf,
+  faQuestionCircle,
   faRuler,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -36,13 +45,21 @@ import HouseMapLoading from "../Spinner/HouseMapLoading";
 
 
 const ICON_MAPPING = {
-  AC: faWind,
+  AC: faSnowflake,
+  home: faHome,
   fan: faFan,
   laundry: faTshirt,
   heater: faTemperatureHigh,
   lights: faLightbulb,
   pump: faSeedling,
-  default: faHandshake
+  plug: faVideo,     
+  Bulb:   faLightbulb,  // Assuming faPlug is the icon for the plug
+  switch: faToggleOn,   // Assuming faToggleOn is the icon for the switch
+  default: faHandshake,
+  computer: faDesktop,
+  projector: faVideo,
+  TV:   faLaptop,
+  ClassRoom: faChalkboardTeacher
 };
 
 
@@ -68,10 +85,14 @@ const SENSOR_ICON_MAPPING = {
 Modal.setAppElement("#root");
 const iconMapper = {
   couch: <FontAwesomeIcon icon={faCouch} size="1x" />,
+  Home: <FontAwesomeIcon icon={faHome} size="1x" />,
+  School: <FontAwesomeIcon icon={faSchool} size="1x" />,
   "bread-slice": <FontAwesomeIcon icon={faUtensils} size="1x" />,
   bed: <FontAwesomeIcon icon={faBed} size="1x" />,
   bath: <FontAwesomeIcon icon={faBath} size="1x" />, // map other icons...
   utensils: <FontAwesomeIcon icon={faConciergeBell} size="1x" />,
+  ClassRoom: <FontAwesomeIcon icon={faChalkboardTeacher} size="1x" />,
+
 };
 
 const Item = ({ device }) => {
@@ -89,56 +110,71 @@ const Item = ({ device }) => {
   );
 };
 
-const ItemsList = ({ devices }) => {
+const ItemsList = ({ devices,spaceId }) => {
   return devices.map((device) => {
-    return <Item device={device} />;
+    return <Item key={device.device_id} device={device} spaceId={spaceId}/>;
   });
 };
 
-const HouseMap = ({ onClose }) => {
+const HouseMap = ({ onClose,spaceId }) => {
   const [rooms, setRooms] = useState([]);
   const [roomsWithDevices, setRoomsWithDevices] = useState([]);
   const [sensors, setSensors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMapReady, setMapReady] = useState(false);
-    const roomsRef = useRef(rooms);
+  const roomsRef = useRef(rooms);
 
 
 
   useEffect(() => {
     const getRooms = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/rooms`);
+        if (!spaceId) {
+          console.error("No spaceId provided.");
+          setIsLoading(false);
+          return [];  // Exit if no spaceId is provided and return an empty array
+        }
+        const response = await axios.get(`${SERVER_URL}/api-room/rooms/space/${spaceId}`);
         console.log(response.data);
         const roomsWithMotion = response.data.map((room) => ({
           ...room,
-          // Check if `motionDetected` is already specified in the response; if not, default to false
           motionDetected: room.motionDetected !== undefined ? room.motionDetected : false,
         }));
         return roomsWithMotion;
       } catch (err) {
-        console.log("There was a problem fetching room data:", err);
+        console.error("There was a problem fetching room data:", err);
+        return [];  // Return an empty array in case of error
       }
     };
   
-
     const getSensors = async () => {
-      const response = await axios.get(`${SERVER_URL}/sensors`);
-      return response.data;
+      try {
+        const response = await axios.get(`${SERVER_URL}/api-sensors/sensors`);
+        return response.data;
+      } catch (err) {
+        console.error("There was a problem fetching sensor data:", err);
+        return [];  // Return an empty array in case of error
+      }
+      
     };
-
+  
     Promise.all([getRooms(), getSensors()])
       .then(([roomsData, sensorsData]) => {
-        setRooms(roomsData);
-        setSensors(sensorsData);
-        setMapReady(true);  // Set isMapReady to true when data is loaded
-        // delay setting isLoading to false by 500ms to give spinner time to fade out
-        // setTimeout(() => setIsLoading(false), 500);
-        // delay setting isLoading to false by 2 seconds to give map time to render
-        setTimeout(() => setIsLoading(false), 2000);
-
+        if (roomsData && sensorsData) {  // Check if data is not null or undefined
+          setRooms(roomsData);
+          setSensors(sensorsData);
+          setMapReady(true);
+          setTimeout(() => setIsLoading(false), 2000);  // Use a timeout to delay setting isLoading to false
+        }
+      })
+      .catch(error => {
+        console.error("Failed to fetch data:", error);
+        setIsLoading(false);  // Ensure loading state is disabled on error
+        setMapReady(false);  // Set map readiness to false on error
       });
-  }, []);
+  
+  }, [spaceId]);  // Dependency array includes spaceId to re-run the effect when it changes
+  
 
 
   // useEffect(() => {
@@ -174,20 +210,31 @@ const HouseMap = ({ onClose }) => {
     };
 
 
-  const getSensorActivationStatus = (sensorId) => {
-    const sensor = sensors.find((s) => s._id === sensorId);
-    console.log(JSON.stringify(sensor));
-    if (sensor) {
-      return sensor.activated;
-    }
-    return "off";
-  };
-  // const getSensorActivationStatus = (sensorId) => {
-  //   const hardcodedId = "65be6d119968d8fcc0868af2";
-  //   const sensor = sensors.find((s) => s._id === hardcodedId);
-  //   console.log("Hardcoded lookup Found sensor:", sensor ? JSON.stringify(sensor) : 'Not found');
-  //   return sensor ? sensor.activated : "off";
-  // };
+    const getSensorActivationStatus = (sensorId) => {
+      console.log("Searching for sensorId:", sensorId);  // Debug: log the sensorId being queried
+      console.log("Current sensors array:", JSON.stringify(sensors));  // Debug: log the full array
+    
+      const sensor = sensors.find(s => {
+        const formattedDbId = s._id?.toString().trim();
+        const formattedSensorId = s.sensor_id?.toString().trim();
+        return formattedDbId === sensorId.trim() || formattedSensorId === sensorId.trim();
+      });
+    
+      console.log("Found sensor:", sensor);  // Debug: log the found sensor object or undefined
+      return sensor && sensor.activated === 'on' ? 'on' : 'off';
+    };
+    
+    
+
+    //   // Example using React useEffect to ensure data is loaded
+    // useEffect(() => {
+    //   if (sensors.length > 0) {
+    //     const activationStatus = getSensorActivationStatus(sensorId);
+    //     console.log("Activation Status:", activationStatus);
+    //   }
+    // }, [sensors]);  // Depend on sensors to re-run when sensors change
+
+
 // Simplified useEffect for motion events
     useEffect(() => {
       const handleMotionDetected = (roomId) => {
@@ -219,55 +266,51 @@ const HouseMap = ({ onClose }) => {
     useEffect(() => {
       roomsRef.current = rooms; // Update the ref after rooms state changes
     }, [rooms]);
-
+    const getRoomDevices = async (spaceId) => {
+      try {
+        const urls = [
+          `${SERVER_URL}/api-device/device/space/${spaceId}`,
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM}`,
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.LIVING_ROOM}`,
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.BATHROOM}`,
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.DINING_ROOM}`,
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.BEDROOM}`,
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM}` // Correctly added as seventh endpoint
+        ];
+    
+        const responses = await Promise.all(urls.map(url => axios.get(url)));
+        const devices = Array.isArray(responses[0].data) ? responses[0].data : [];
+        const devicesMap = devices.reduce((acc, device) => {
+          acc[device.device_id] = device.name;
+          return acc;
+        }, {});
+    
+        const roomDevicesMap = {
+          [ROOMS_IDS.KITCHEN]: responses[1]?.data?.data || [],
+          [ROOMS_IDS.CLASS_ROOM]: responses[6]?.data?.data || [], // Correctly using index 6 for CLASS_ROOM
+          [ROOMS_IDS.LIVING_ROOM]: responses[2]?.data?.data || [],
+          [ROOMS_IDS.BATHROOM]: responses[3]?.data?.data || [],
+          [ROOMS_IDS.DINING_ROOM]: responses[4]?.data?.data || [],
+          [ROOMS_IDS.BEDROOM]: responses[5]?.data?.data || []
+        };
+    
+        const roomsWithDevices = rooms.map((room) => {
+          return { ...room, actualDevices: roomDevicesMap[room.id] };
+        });
+    
+        setRoomsWithDevices(roomsWithDevices);
+      } catch (error) {
+        console.error("Failed to fetch devices:", error);
+      }
+    };
+    
+    
 
   useEffect(() => {
-    const getRoomDevices = async (roomId) => {
-      const devicesResponse = await axios.get(`${SERVER_URL}/devices`);
-      const devices = devicesResponse.data;
-      const devicesMap = devices.reduce((acc, device) => {
-        acc[device.device_id] = device.name;
-        return acc;
-      }, {});
-      const kitchenDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.CLASS_ROOM}`
-      );
-      const livingRoomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.LIVING_ROOM}`
-      );
-      const bathroomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.BATHROOM}`
-      );
-      const diningRoomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.DINING_ROOM}`
-      );
-      const bedroomDevicesResponse = await axios.get(
-        `${SERVER_URL}/room-devices/${ROOMS_IDS.BEDROOM}`
-      );
-
-      const kitchenDevices = kitchenDevicesResponse.data.data;
-      console.log(JSON.stringify(kitchenDevices));
-      const livingRoomDevices = livingRoomDevicesResponse.data.data;
-      const bathroomDevices = bathroomDevicesResponse.data.data;
-      const diningRoomDevices = diningRoomDevicesResponse.data.data;
-      const bedroomDevices = bedroomDevicesResponse.data.data;
-
-      const roomDevicesMap = {
-        [ROOMS_IDS.KITCHEN]: kitchenDevices,
-        [ROOMS_IDS.LIVING_ROOM]: livingRoomDevices,
-        [ROOMS_IDS.BATHROOM]: bathroomDevices,
-        [ROOMS_IDS.DINING_ROOM]: diningRoomDevices,
-        [ROOMS_IDS.BEDROOM]: bedroomDevices,
-      };
-
-      const roomsWithDevices = rooms.map((room) => {
-        return { ...room, actualDevices: roomDevicesMap[room.id] };
-      });
-
-      setRoomsWithDevices(roomsWithDevices);
-    };
-    getRoomDevices();
-  }, [rooms]);
+    if (rooms.length > 0 && spaceId) {
+      getRoomDevices(spaceId);
+    }
+  }, [rooms, spaceId]);
 
   return (
     <div className={styles["house-map-container"]}>
@@ -297,34 +340,34 @@ const HouseMap = ({ onClose }) => {
                   {iconMapper[room.icon]}
                 </div>
                 <div className={styles.devices}>
-                  <ItemsList devices={room.actualDevices} />
+                  <ItemsList devices={room.actualDevices} spaceId={spaceId} />
                 </div>
                 <div className={styles.sensors}>
-                  {Object.entries(room.sensors).map(
-                    ([sensorId, sensorName], index) => {
-                      const isActive = getSensorActivationStatus(sensorId) === "on";
-                      const color = isActive ? "green" : "red";
-                      return (
-                        <div
-                          key={index}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            height: "30px",
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={SENSOR_ICON_MAPPING[sensorName]}
-                            color={color}
-                            className={isActive ? styles.animatedIcon : ""}
-                          />
-                          <p style={{ marginRight: "10px", marginLeft: "10px" }}>
-                            {sensorName}
-                          </p>
-                        </div>
-                      );
-                    }
-                  )}
+                {Object.entries(room.sensors).map(([sensorId, sensorName], index) => {
+                    const isActive = getSensorActivationStatus(sensorId) === "on";
+                    const color = isActive ? "green" : "red";
+                    console.log(sensorName, 'isActive:', isActive, 'Color:', color); // Log to debug
+
+                    return (
+                      <div
+                        key={sensorId}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          height: "30px",
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={SENSOR_ICON_MAPPING[sensorName] || faQuestionCircle}
+                          color={color}
+                          className={isActive ? styles.animatedIcon : ""}
+                        />
+                        <p style={{ marginRight: "10px", marginLeft: "10px" }}>
+                          {sensorName}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
                 {room.motionDetected && (
                   <div className={styles.motionIcon}>

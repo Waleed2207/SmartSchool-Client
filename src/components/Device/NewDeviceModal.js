@@ -16,9 +16,10 @@ export const NameInput = styled.input`
   //   display: ${(props) => (props.editing ? "block" : "none")};
   width: 80%;
   height: 30px;
+  text-align: center;
   border-radius: 30px;
   border-style: solid;
-  padding-left: 30px;
+  padding: 5px;
 `;
 
 const ModalContent = styled.div`
@@ -55,23 +56,27 @@ export const ButtonStyledNew = styled.div`
   }
   color: #3b5998;
 `;
-
-const NameSection = ({ setName }) => {
+const NameSection = ({ spaceId, setName }) => {
   return (
     <>
-      Name: <NameInput onChange={(e) => setName(e.currentTarget.value)} />
+      <div>
+        Name: <NameInput type="text" onChange={(e) => setName(e.currentTarget.value)} />
+      </div>
+      <div>
+        spaceId: <NameInput type="text" value={spaceId} readOnly />
+      </div>
     </>
   );
 };
-
-export const NewDeviceModal = ({ setIsModalOpen, roomId, fetchRoomDevices }) => {
+export const NewDeviceModal = ({ setIsModalOpen, spaceId, roomId, fetchRoomDevices }) => {
   const [name, setName] = useState("");
 
   const handleAdd = async () => {
-    await axios.post(`${SERVER_URL}/devices`, {
+    await axios.post(`${SERVER_URL}/api-device/devices`, {
       device: {
         name,
       },
+      space_id: spaceId,
       room_id: roomId,
     });
     setIsModalOpen(false);
@@ -82,7 +87,7 @@ export const NewDeviceModal = ({ setIsModalOpen, roomId, fetchRoomDevices }) => 
     <NewDeviceModalContainer>
       {/* <ModalContent> */}
 
-      <NameSection setName={setName} />
+      <NameSection spaceId={spaceId} setName={setName} />
       <ModalButtonsContainer>
         <ButtonStyledNew onClick={handleAdd}>Add</ButtonStyledNew>
         <ButtonStyledNew onClick={() => setIsModalOpen(false)}>

@@ -1,141 +1,177 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { Button, IconButton } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "font-awesome/css/font-awesome.min.css";
-import { SERVER_URL } from "../../consts";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save"; // Import Save icon
+import CancelIcon from "@mui/icons-material/Cancel"; // Import Cancel icon
+import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
+import { RuleSwitch } from "../UI/Switch/RuleSwitch";
 import classes from "./RulesTable.module.scss";
-import {Circle, ActiveCellStyled} from "./rules.styles"
+import {
+  TableStyled,
+  ThStyled,
+  TitleStyled,
+  TableContainer
+} from "../Suggestions/suggestions.styles";
+import { ActionContainer, ActionTdStyled, ActiveCellStyled, Circle, RuleCell, TrStyled } from "./rules.styles";
+import { SERVER_URL } from "../../consts";
 
-const RulesTable = ({ searchText }) => {
-  const [rules, setRules] = useState([]);
+const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
+  const [currentRules, setCurrentRules] = useState(rules);
   const [editRuleId, setEditRuleId] = useState(null);
-  const [editRuleValue, setEditRuleValue] = useState("");
+  const [editValue, setEditValue] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ruleToDelete, setRuleToDelete] = useState(null);
 
-  // Standalone fetchRules function
-  const fetchRules = async () => {
-    try {
-      const response = await axios.get(`${SERVER_URL}/rules`, {
-      
-      });
-      setRules(response.data);
-      toast.info("Rules fetched successfully!");
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log("Request canceled:", error.message);
-      } else {
-        console.error("Failed to fetch rules:", error);
-        toast.error("Failed to fetch rules.");
-      }
-    }
+  console.log("RulesTable rendered with rules:", rules);
 
+  const handleEditClick = (rule) => {
+    setEditRuleId(rule.id);
+    setEditValue(rule.description);
+    console.log(`Editing rule ${rule.id}`);
   };
 
-  useEffect(() => {
-    fetchRules();
-    // No clean-up function needed since there's no cancel token being used
-  }, []);
-
   const handleEditChange = (event) => {
-    setEditRuleValue(event.target.value);
+    setEditValue(event.target.value);
+    console.log("Edit value changed:", event.target.value);
   };
 
   const handleSaveEdit = async (ruleId) => {
+    console.log(`Saving edit for rule ${ruleId} with new description:`, editValue);
     try {
-      await axios.put(`${SERVER_URL}/rules/${ruleId}`, { rule: editRuleValue });
-      toast.success("Rule updated successfully!");
-      setEditRuleId(null);
-      setEditRuleValue("");
-      fetchRules(); // Optionally, refetch the rules list to reflect the update
+      const response = await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { description: editValue });
+      if (response.status === 200) {
+        toast.success("Rule updated successfully!");
+        const updatedRules = currentRules.map(rule => rule.id === ruleId ? { ...rule, description: editValue } : rule);
+        setCurrentRules(updatedRules);
+        setEditRuleId(null); // Exit edit mode
+        console.log("Edit saved successfully.");
+      } else {
+        toast.error("Failed to update rule.");
+        console.log("Failed to save edit due to non-200 status code.");
+      }
     } catch (error) {
       console.error("Failed to update rule:", error);
       toast.error("Failed to update rule.");
     }
   };
 
-  const handleDeleteRule = async (ruleId) => {
+  const handleCancelEdit = () => {
+    setEditRuleId(null); // Exit edit mode without saving
+    setEditValue(""); // Reset edit value
+    console.log("Edit cancelled.");
+  };
+
+  const promptDeleteRule = (id) => {
+    setIsModalOpen(true);
+    setRuleToDelete(id);
+    console.log(`Prompting to delete rule ${id}`);
+  };
+
+  const confirmDeleteRule = async () => {
+    console.log(`Confirming delete for rule ${ruleToDelete}`);
+    if (ruleToDelete === null) return;
     try {
-      await axios.delete(`${SERVER_URL}/rules/${ruleId}`);
-      toast.success("Rule deleted successfully!");
-      fetchRules(); // Refresh the list
-    } catch (error) {
-      console.error("Failed to delete rule:", error);
+      const response = await axios.delete(`${SERVER_URL}/api-rule/rules/${ruleToDelete}`);
+      if (response.status === 200) {
+        const newRules = currentRules.filter((rule) => rule.id !== ruleToDelete);
+        setCurrentRules(newRules);
+        toast.success("Rule has been deleted.");
+        console.log("Rule deleted successfully.");
+      }
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to delete rule.");
+    } finally {
+      setIsModalOpen(false);
+      setRuleToDelete(null);
     }
   };
 
   return (
     <div className={classes.TableContainer}>
-      <h2>Rules</h2>
-      <table className={classes.TableStyled}>
-        <thead>
-          <tr>
-            <th>Active</th>
-            <th></th>
-            <th>Rule</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-       
-        <tbody>
-  {rules
-    .filter(rule => {
-      const ruleLowercased = rule.rule && rule.rule.toLowerCase();
-      const searchTextLowercased = searchText && searchText.toLowerCase();
-      return ruleLowercased && searchTextLowercased 
-        ? ruleLowercased.includes(searchTextLowercased)
-        : true; // If searchText is undefined, all rules pass the filter
-    })
-    .map((rule) => (          
-        <tr key={rule.id}>
-              <ActiveCellStyled>
-                <Circle color={rule.isActive ? "green" : "red"} />
-              </ActiveCellStyled>
-              <td>
-                {editRuleId === rule.id ? (
-                  <input
-                    type="text"
-                    value={editRuleValue}
-                    onChange={handleEditChange}
-                  />
-                ) : (
-                  rule.rule
-                )}
-              </td>
-              <td>
-              <td>
-          {editRuleId === rule.id ? (
-            <input
-              type="text"
-              value={editRuleValue}
-              onChange={handleEditChange}
-            />
-          ) : (
-            rule.description // Display the rule description here
-          )}
-        </td>
-              </td>
-              <td>
-                {editRuleId === rule.id ? (
-                  <>
-                    <Button size="small" onClick={() => handleSaveEdit(rule.id)}>Save</Button>
-                    <Button size="small" onClick={() => { setEditRuleId(null); setEditRuleValue(""); }}>Cancel</Button>
-                  </>
-                ) : (
-                  <>
-                    <IconButton size="small" onClick={() => { setEditRuleId(rule.id); setEditRuleValue(rule.rule); }}><EditIcon /></IconButton>
-                    <IconButton size="small" onClick={() => handleDeleteRule(rule.id)}><DeleteIcon /></IconButton>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <ToastContainer />
+      <TableContainer>
+        <TitleStyled>Rules</TitleStyled>
+        <TableStyled className={classes.RulesTable}>
+          <thead>
+            <TrStyled>
+              <ThStyled>Active</ThStyled>
+              <ThStyled>Rule</ThStyled>
+              <ThStyled>Action</ThStyled>
+            </TrStyled>
+          </thead>
+          <tbody>
+            {currentRules.map((rule) => (
+              !rule.isHidden && (
+                <TrStyled
+                  key={rule.id}
+                  onClick={() => onRuleClick(rule.id)}
+                  isSelected={rule.id === selectedRule}
+                >
+                  <ActiveCellStyled>
+                    <Circle color={rule.isActive ? "green" : "red"} />
+                  </ActiveCellStyled>
+                  <RuleCell>
+                    {editRuleId === rule.id ? (
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <input
+                          type="text"
+                          value={editValue}
+                          onChange={handleEditChange}
+                          style={{ flexGrow: 1 }}
+                        />
+                        <SaveIcon
+                          onClick={() => handleSaveEdit(rule.id)}
+                          style={{ cursor: "pointer", marginLeft: "8px" }}
+                        />
+                        <CancelIcon
+                          onClick={handleCancelEdit}
+                          style={{ cursor: "pointer", marginLeft: "8px" }}
+                        />
+                      </div>
+                    ) : (
+                      <span>{rule.description}</span>
+                    )}
+                  </RuleCell>
+                  <ActionTdStyled>
+                    <ActionContainer>
+                      <RuleSwitch isActive={rule.isActive} id={rule.id} rule={rule.rule} currentRules={currentRules} setCurrentRules={setCurrentRules} />
+                      <i
+                        className="fa fa-trash"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent the row click event
+                          promptDeleteRule(rule.id);
+                        }}
+                        style={{
+                          cursor: "pointer",
+                          color: "red",
+                          fontSize: "20px",
+                          marginRight: "8px",
+                        }}
+                      />
+                      <EditIcon
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent row selection
+                          handleEditClick(rule);
+                        }}
+                      />
+                    </ActionContainer>
+                  </ActionTdStyled>
+                </TrStyled>
+              )
+            ))}
+          </tbody>
+        </TableStyled>
+      </TableContainer>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDeleteRule}
+        message="Are you sure you want to delete this rule?"
+      />
     </div>
   );
 };

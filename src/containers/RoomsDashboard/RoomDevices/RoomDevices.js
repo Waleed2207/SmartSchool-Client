@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   fetchRoomDevices,
-  toggleDeviceSwitch,
-  updateDeviceControlValue,
 } from "./../../../store/devices/devices.actions";
 import { NavLink } from "react-router-dom";
 import { useParams } from "react-router";
@@ -71,10 +69,35 @@ const DevicesSection = styled.div`
   flex-wrap: wrap;
   // padding: 10px;
   gap: 2rem;
+  @media (max-width: 912px) {
+    justify-content: center
+
+  }
+  // Media query for mobile devices
+  @media (max-width: 480px) {
+    justify-content: center
+
+  }
+
 `;
 
 const RoomContainer = styled.div`
   padding: 30px;
+  margin-right: 5rem;
+  margin-left: 5rem;
+  @media (max-width: 768px) {
+    justify-content: center
+    padding: 15px;
+    margin-right: 2rem;
+    margin-left: 2rem;
+  }
+  // Media query for mobile devices
+  @media (max-width: 480px) {
+    padding: 10px;
+    margin-right: 1rem;
+    justify-content: center
+    margin-left: 1rem;
+  }
 `;
 
 const NavLinkStyled = styled(NavLink)`
@@ -142,6 +165,10 @@ const RoomDevices = () => {
   const [pumpState, setPumpState] = useState('OFF');
   const [pumpDuration, setPumpDuration] = useState(0.05);
 
+  const { id,spaceId } = useParams();
+  console.log("spacseID:"+ spaceId);
+
+
   const fetchLaundryDetails = async () => {
     try {
       const response = await axios.get(`${SERVER_URL}/laundry/details/`);
@@ -161,7 +188,7 @@ const RoomDevices = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const devicesFromDB = await axios.get(`${SERVER_URL}/devices`);
+        const devicesFromDB = await axios.get(`${SERVER_URL}/api-device/devices`);
         setDevices(devicesFromDB.data);
       } catch (error) {
         console.error(error);
@@ -171,11 +198,10 @@ const RoomDevices = () => {
     fetchData();
   }, []);
 
-  const { id } = useParams();
 
   const fetchRoomData = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/rooms/${id}`);
+      const response = await axios.get(`${SERVER_URL}/api-room/rooms/${id}`);
       setRoom(response.data);
     } catch (e) {
       console.error(e);
@@ -184,7 +210,7 @@ const RoomDevices = () => {
 
   const fetchRoomDevices = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/room-devices/${id}`);
+      const response = await axios.get(`${SERVER_URL}/api-device/room-devices/${id}`);
       setRoomDevices(_.get(response, "data.data", []));
     } catch (err) {
       console.error(err);
@@ -214,7 +240,7 @@ const RoomDevices = () => {
 
   return (
     <RoomContainer>
-      <NavLinkStyled to="/" className={classes.BackLink}>
+      <NavLinkStyled to={`/spaces/${spaceId}/rooms-dashboard`} className={classes.BackLink}>
         <FontAwesomeIcon icon={faChevronLeft} />
         <span>Back to Rooms</span>
       </NavLinkStyled>
@@ -244,7 +270,7 @@ const RoomDevices = () => {
 
       {isModalOpen &&
         <ModalStyled isOpen={isModalOpen}>
-          <NewDeviceModal setIsModalOpen={setIsModalOpen} roomId={id} fetchRoomDevices={fetchRoomDevices} />
+          <NewDeviceModal setIsModalOpen={setIsModalOpen} spaceId={spaceId} roomId={id} fetchRoomDevices={fetchRoomDevices} />
         </ModalStyled>
       }
     </RoomContainer>

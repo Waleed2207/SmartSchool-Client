@@ -9,9 +9,25 @@
 
   .HeaderContainer {
     display: flex;
-    align-items: center; // Add this line
+    flex-direction: column; // Stacks items vertically by default
+    align-items: flex-start;
     max-width: $MAX_WIDTH;
     margin: auto;
+  }
+
+  .TopBar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @include mobile-view {
+      display: contents; // Changes to 'contents' on mobile, consider if this meets your design goals
+
+      &.open {
+        display: flex; // Ensures flex layout when 'open'
+      }
+    }
   }
 
   .AppName {
@@ -26,7 +42,24 @@
   }
 
   .Navigation {
-    margin-top: 0.2rem;
+    display: block; // Shows by default
+
+    @include mobile-view {
+      display: none; // Hides navigation on mobile
+
+      &.open {
+        display: block; // Shows navigation when 'open' class is added on mobile
+      }
+    }
+  }
+
+  .MenuBtn {
+    display: none; // Hides by default
+
+    @include mobile-view {
+      display: block; // Shows the menu button on mobile
+      margin-left: auto;
+    }
   }
 
   .UserGreeting {
@@ -37,66 +70,23 @@
     font-weight: bold;
   }
 
+  // Define mixins for mobile views directly in utils or globally if used across multiple components
+  @mixin mobile-view {
+    @media (max-width: 768px) {
+      @content;
+    }
+  }
+
+  // Additional styles for Modal, motionIcon, and ActiveNavLink can be defined here if necessary
   .Modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  border-radius: 4px;
-  width: 80%;
-  height: 80%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  padding: 20px;
-  z-index: 1000;
-  overflow: auto;
-}
-
-
-.motionIcon {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-}
-
-
-  // Header.module.scss
-
-.ActiveNavLink   {
-  color:  #00bcd4; // Choose the color you want for the active link
-  font-weight: bold;
-
-  // Add the animation
-  animation: activeNavLinkAnimation 0.5s;
-
-  @keyframes activeNavLinkAnimation {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.1);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-}
-
-
-
-
-  .MenuBtn {
-    display: none;
-    margin-left: auto;
+    // Modal styles...
   }
 
-  @include mobile-view {
-    .Navigation {
-      display: none;
-    }
+  .motionIcon {
+    // Motion icon styles...
+  }
 
-    .MenuBtn {
-      display: block;
-    }
+  .ActiveNavLink {
+    // Active navigation link styles...
   }
 }

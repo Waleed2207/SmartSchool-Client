@@ -8,6 +8,9 @@
   box-sizing: border-box;
   color: #000;
   cursor: pointer;
+  @include mobile-view {
+    padding: 20px 10px;
+  }
 
   .Title {
     font-size: 1.1rem;

@@ -1,6 +1,6 @@
-import { Button, Tooltip } from "@material-ui/core";
+import { Button, Tooltip } from "@mui/material";
 import Modal from "react-modal";
-import Pagination from "@material-ui/lab/Pagination";
+import Pagination from "@mui/material/Pagination";
 import React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -12,7 +12,8 @@ import {
 import styled from "styled-components";
 import { RuleCell } from "./RuleCell";
 
-import "font-awesome/css/font-awesome.min.css";
+// Adjust the import path according to the actual package installed
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import {
   ButtonStyled,
@@ -73,7 +74,7 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
   };
 
   const mlTrigger = () => {
-    const response = axios.post(`${SERVER_URL}/test`);
+    const response = axios.post(`${SERVER_URL}/api-suggestion/test`);
   }
 
 
@@ -90,11 +91,11 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
   }, []);
 
   useEffect(() => {
-    setNewSuggestionsCount(0);
+    setNewSuggestionsCount(0); // Assuming this is intended to reset some state
     if (suggestions) {
       updateSuggestions();
     }
-  }, [suggestions]);
+  }, [suggestions, setNewSuggestionsCount]); 
 
   // Function to handle page change
   const handlePageChange = (event, value) => {
@@ -113,6 +114,7 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
       <TableStyled>
         <thead>
           <tr>
+             <ThStyled>User</ThStyled>
             <ThStyled>Device</ThStyled>
             <ThStyled>Suggested Rule</ThStyled>
             <ThStyled>Actions</ThStyled>
@@ -124,6 +126,9 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
             const { is_new: isNew } = suggestion;
             return (
               <tr key={idx}>
+                <TdStyled>
+                    IEC
+                </TdStyled>
                 <TdStyled>
                   <DeviceCellContent>
                     {suggestion.device}
@@ -145,24 +150,25 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
                     onClick={() => {
                       setIsChooseRoomModalOpen(true);
                       setSelectedRule(rule);
-                      onDeleteSuggestion(
-                        suggestion.id,
-                        suggestions,
-                        setSuggestions
-                      )
-                    }}
+                      // onDeleteSuggestion(
+                      //   suggestion.id,
+                      //   suggestions,
+                      //   setSuggestions
+                      // )
+                    }
+                  }
                   >
                     <i className="fa fa-plus" aria-hidden="true"></i> Add
                   </ButtonStyled>
                   <ButtonStyled
                     className="custom-button"
-                    onClick={() =>
-                      onDeleteSuggestion(
-                        suggestion.id,
-                        suggestions,
-                        setSuggestions
-                      )
-                    }
+                    // onClick={() =>
+                    //   onDeleteSuggestion(
+                    //     suggestion.id,
+                    //     suggestions,
+                    //     setSuggestions
+                    //   )
+                    // }
                   >
                     <i className="fa fa-trash" aria-hidden="true"></i> Delete
                   </ButtonStyled>

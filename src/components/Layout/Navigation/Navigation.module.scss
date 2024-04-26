@@ -1,25 +1,34 @@
-@import "../../../styles/utils/utils";
+@import "../../../styles/utils/utils"; // Ensure this path is correct
 
 .Nav {
   display: flex;
+  flex-direction: row; // Default flex direction for larger screens
+  align-items: center; // Center items for larger screens
 
   ul {
     display: flex;
     padding: 0;
-    flex-direction: row;
+    flex-direction: row; // Default for non-mobile views
     margin: auto auto 0 0;
     list-style: none;
 
     li {
-      margin: 0 10px;
+      margin: 0 10px; // Spacing between menu items
     }
   }
 
   @include mobile-view {
+    flex-direction: column; // Stack .Nav items vertically in mobile view
+    align-items: flex-start; // Align items to the start in mobile view
+
     ul {
-      flex-direction: column;
-      li{
-        margin: 10px 0;
+      flex-direction: column; // Stack list items vertically in mobile view
+      align-items: flex-start; // Align list items to the start in mobile view
+      width: 100%; // Make the ul take the full width
+
+      li {
+        width: 100%; // Make list items take the full width
+        margin: 10px 0; // Adjust margins for stacked items
       }
     }
   }

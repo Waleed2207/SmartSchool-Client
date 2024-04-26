@@ -1,15 +1,10 @@
-// import Switch from '@mui/material/Switch';
-// import { Button, CircularProgress, Snackbar, MuiAlert } from '@material-ui/core';
-import { Button } from "@material-ui/core";
+
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { Temperature } from "./Controls/CustomControls/Temperature";
 import { SnackBar } from "../Snackbar/SnackBar";
 import Switch from "../UI/Switch/Switch";
-import ModeControl from "./Controls/Mode/ModeControl";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import { MenuItem, Select } from "@material-ui/core";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { SERVER_URL } from "../../consts";
 import { AcControls } from "./Controls/CustomControls/AcControls";
@@ -40,46 +35,6 @@ const ControlContainer = styled.div`
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
 `;
 
-const TestBox = styled.div`
-  width: 100px;
-  height: 100px;
-  background: red;
-  transition: width 2s;
-
-  &:hover {
-    width: 300px;
-  }
-`;
-
-// const DeviceCard = styled.div`
-//   width: 100%;
-//   background-color: white;
-//   border: 1px solid;
-//   padding: 1rem;
-//   border-radius: 10px;
-//   border-color: #e4e6eb;
-//   min-height: 8rem;
-//   overflow: hidden;
-//   transition: height 0.3s ease-in-out;
-
-//   &.expanded {
-//     height: auto;
-//   }
-// `;
-
-const DeviceContainer = styled.div`
-  display: flex;
-  width: 18rem;
-  height: 50rem;
-  gap: 1rem;
-  flex-direction: column;
-`;
-
-const AcControlsSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  // flex-wrap: wrap;
-`;
 
 const TopRow = styled.div`
   display: flex;
@@ -88,27 +43,6 @@ const TopRow = styled.div`
   margin-bottom: 1rem;
 `;
 
-const Controls = styled.div`
-  display: flex;
-`;
-
-const StyledSwitch = styled(Switch)`
-  && {
-    color: blue;
-
-    &:hover {
-      background-color: green;
-    }
-
-    &.Mui-checked {
-      color: blue;
-    }
-
-    &.Mui-checked:hover {
-      background-color: yellow;
-    }
-  }
-`;
 
 const ShowControlsContainer = styled.div`
   width: 12rem;
@@ -185,7 +119,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
   useEffect(() => {
     const fetchAcState = async () => {
       try {
-        const response = await axios.get(`${SERVER_URL}/sensibo`);
+        const response = await axios.get(`${SERVER_URL}/api-sensors/sensibo`);
         console.log("Response from /sensibo:", response.data);
   
         if (response.data?.mode) {
@@ -211,23 +145,19 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
     }
   }, [isAcDevice]); // Make sure SERVER_URL and other dependencies are correctly listed if needed
   
-  
 
 // -----------------------------motion-dected----------------------------------
 useEffect(() => {
   const fetchMotionState = async () => {
     try {
-      const response = await axios.get(`${SERVER_URL}/motion-state`);
+      const response = await axios.get(`${SERVER_URL}/api-sensors/motion-state`);
       const isMotionDetected = response.data.motionDetected;
       if (isMotionDetected !== motionDetected) {
         setMotionDetected(isMotionDetected);
-        // Show success snackbar when motion is detected, else failure snackbar
-        setOpenSuccessSnackbar(isMotionDetected);
-        setOpenFailureSnackbar(!isMotionDetected);
       }
     } catch (error) {
       console.error('Error fetching motion state:', error);
-      setOpenFailureSnackbar(true);
+      setOpenFailureSnackbar(true); // Generic failure notification
     }
   };
   const intervalId = setInterval(fetchMotionState, 2000);
@@ -239,83 +169,83 @@ useEffect(() => {
     const lightState = motionDetected ? 'on' : 'off';
     setState(motionDetected);
     setcolor(motionDetected ? "green" : "red");
-    // You can also make an API call here if you want to reflect the state change in the backend
+
+    if (motionDetected) {
+      setOpenSuccessSnackbar(true);
+      setOpenFailureSnackbar(false);  // Ensure to hide failure snackbar when motion is detected
+    } else {
+      // Failure snackbar for no motion detected and light turned off
+      setOpenSuccessSnackbar(false);
+      setOpenFailureSnackbar(true);
+    }
   }
 }, [motionDetected, device.device_name]);
 
 
+// -------------------------------------DeviceChange---------------------------------------------
+      
+    const onDeviceChange = async (device, e) => {
+      const newState = e.target.checked;
+      console.log(device, newState);
+      setState(newState); 
+      setcolor(newState ? "green" : "red");
+      const deviceId = device.id.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
+      // console.log(deviceId);
 
-// -------------------------------------waleed---------------------------------------------
-  
-  const onDeviceChange = async (device, e) => {
-    const newState = e.target.checked;
-    console.log(device, newState);
-    setState(newState); // Update local state immediately for better user feedback
-    setcolor(newState ? "green" : "red");
-    const deviceId = device.id.includes("YNahUQcM") ? "YNahUQcM" : "4ahpAkJ9";
-    console.log(deviceId);
+      try {
+        let requests = [];
+        const basePayload = { state: newState, id: deviceId };
+        if (device.device_name.toLowerCase() === 'ac') {
+          console.log("is here");
+          requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, basePayload));
 
-    try {
-      if (device.device_name.toLowerCase() === 'ac' ) {
-  
-        // Prepare the requests
-        const requests = [
-          axios.post(`${SERVER_URL}/sensibo`, { state: newState, id: deviceId }),
-        ];
-    
-        // If both newState is true and temperature is set, add the temperature update request
-        if (newState && temperature) {
-          requests.push(axios.post(`${SERVER_URL}/sensibo`, { state: newState,temperature, id: deviceId }));
+          if (newState && typeof temperature !== 'undefined') {
+            requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, { ...basePayload, temperature }));
+          }
+        } else if (device.device_name.toLowerCase() === 'light') {
+          console.log('Light is turn on:', newState ? "ON" : "OFF");
+          requests.push(axios.post(`${SERVER_URL}/api-sensors/motion-detected`, { state: newState ? 'on' : 'off' }));
         }
-    
-        // Execute all the requests in parallel
-        const results = await Promise.all(requests);
-    
+        else if (device.device_name.toLowerCase() === 'tv') {
+          console.log(device.device_name);
+          console.log('TV is turned:', newState ? "ON" : "OFF");
+          // Adjust the payload to match the expected API format
+          const payloadForPlug = {  deviceId: '5', state: newState };
+                  requests.push(axios.post(`${SERVER_URL}/api-mindolife/change-feature-state`, payloadForPlug));
+        }
+        else if (device.device_name.toLowerCase() === 'bulb') {
+          console.log(device.device_name);
+          console.log('Plug is turned:', newState ? "ON" : "OFF");
+          // Adjust the payload to match the expected API format
+          const payloadForPlug = {  deviceId: '4', state: newState };
+                  requests.push(axios.post(`${SERVER_URL}/api-mindolife/change-feature-state`, payloadForPlug));
+        }
+        
+        const results = await Promise.allSettled(requests);
         let allSuccessful = true;
         results.forEach(result => {
-          console.log(result.data); // Log the response from each request
-          if (result.status !== 200) {
+          if (result.status === 'fulfilled' && result.value.status === 200) {
+            console.log(result.value.data); // Log successful response
+          } else {
             allSuccessful = false;
+            if (result.reason && result.reason.response) {
+              console.error('Request failed:', result.reason.response.data);
+            } else {
+              console.error('Request failed with no server response');
+            }
           }
         });
-    
-        // Check if all requests were successful
+
         if (allSuccessful) {
           setOpenSuccessSnackbar(true);
         } else {
           setOpenFailureSnackbar(true);
         }
-      } else if (device.device_name.toLowerCase() === 'light') {
-        // If the device is a light, log to the console and possibly toggle its state
-        console.log('Light is turn on:', newState ? "ON" : "OFF");
-        try {
-          const response = await axios.post(`${SERVER_URL}/motion-detected`, {
-            state: newState ? 'on' : 'off'
-          });
-          console.log(response);
-    
-          // Check if the request was successful
-          if (response.status === 200) {
-            console.log(`Light turned ${newState ? "on" : "off"}, request received successfully`);
-            setOpenSuccessSnackbar(true);
-            // Optionally, update the UI to reflect the new state
-          } else {
-            setOpenFailureSnackbar(true);
-          }
-        } catch (error) {
-          console.error('Error turning light on/off:', error);
-          setOpenFailureSnackbar(true);
-        }
+      } catch (error) {
+        console.error('Error updating device state or temperature:', error);
+        setOpenFailureSnackbar(true);
       }
-  
-      // Add additional else if blocks for other device types as needed
-  
-    } catch (error) {
-      console.error('Error updating device state or temperature:', error);
-      setOpenFailureSnackbar(true);
-    }
-  };
-  
+    };
 
 
 
@@ -324,7 +254,7 @@ useEffect(() => {
   
     try {
       // Perform the POST request to the server to update the temperature
-      const response = await axios.post(`${SERVER_URL}/sensibo`, {
+      const response = await axios.post(`${SERVER_URL}/api-sensors/sensibo`, {
         state: state,
         temperature: newTemperature,
         id: device.id,

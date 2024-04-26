@@ -32,7 +32,7 @@ const LocationDashboard = ({user}) => {
         const getDistance = async () => {
             try {
                 if (location.lat != null && location.lng != null) {
-                    const response = await axios.post(`${SERVER_URL}/location`, {
+                    const response = await axios.post(`${SERVER_URL}/api-login/location`, {
                         location,
                         user
                     });
