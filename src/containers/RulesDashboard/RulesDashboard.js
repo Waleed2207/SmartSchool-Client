@@ -79,7 +79,7 @@ const RulesDashboard = () => {
 
  const fetchRules = async () => {
   try {
-    const response = await axios.get(`${SERVER_URL}/api-rule/rules`);
+    const response = await axios.get(`${SERVER_URL}/api-rules/rules`);
     // Assuming the response.data is the array of rules you're expecting
     // No need to setRules here, we will return the data and let the caller handle it
     toast.info("Rules fetched successfully!");
