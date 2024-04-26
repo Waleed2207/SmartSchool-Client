@@ -1,22 +1,49 @@
 @import "../../styles/utils/utils";
-
-.Row {
+.Container {
   display: flex;
   flex-wrap: wrap;
-  margin-right: 10rem;
-  margin-left: 10rem;
+  flex-direction: column;
+  margin-right: 5rem;
+  margin-left: 5rem;
+  padding: 30px;
 
-  .Column {
-    width: 50%;
-    padding: 10px;
-    box-sizing: border-box;
-
-    @include mobile-view {
-      width: 100%;
-    }
+  @include mobile-view {
+    margin-right: 0rem;
+    margin-left: 0rem;
   }
 }
 
+.BackLink {
+  text-decoration: none;
+  font-size: .9rem; 
+  margin-left: 10px;
+  margin-bottom: 10px;
+  span {
+    margin-left: 3px;
+    font-weight: bold;
+  }
+}
+
+.RoomsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  // Default to centering the cards
+  width: 100%;
+}
+
+.RoomsContainerStart {
+  justify-content: flex-start;  // Aligns items to the start
+}
+
+.Column {
+  margin: 10px;
+  flex: 1 1 200px;  // Flex-grow, flex-shrink, and flex-basis for multiple rooms
+}
+
+.ColumnSingle {
+  margin: 10px;
+  flex: 0 0 50%;  // Fixed width for a single room
+}
 .Link {
   text-decoration: none;
 }

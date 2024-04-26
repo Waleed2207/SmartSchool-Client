@@ -2,6 +2,8 @@
 
 .Nav {
   display: flex;
+  flex-direction: row; // Default flex direction for larger screens
+  align-items: center; // Center items for larger screens
 
   ul {
     display: flex;
@@ -15,20 +17,17 @@
     }
   }
 
-  // Assuming the mobile-view mixin is defined like this:
-  // @mixin mobile-view {
-  //   @media (max-width: $mobile-width) { // where $mobile-width is a predefined width
-  //     @content;
-  //   }
-  // }
   @include mobile-view {
-    flex-direction: column;
-    align-items: center; // Center items in mobile view
+    flex-direction: column; // Stack .Nav items vertically in mobile view
+    align-items: flex-start; // Align items to the start in mobile view
 
     ul {
       flex-direction: column; // Stack list items vertically in mobile view
+      align-items: flex-start; // Align list items to the start in mobile view
+      width: 100%; // Make the ul take the full width
 
       li {
+        width: 100%; // Make list items take the full width
         margin: 10px 0; // Adjust margins for stacked items
       }
     }
