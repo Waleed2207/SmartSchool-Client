@@ -166,7 +166,7 @@ const RoomDevices = () => {
   const [pumpDuration, setPumpDuration] = useState(0.05);
 
   const { id,spaceId } = useParams();
-  console.log("spacseID:"+ spaceId);
+  // console.log("spacseID:"+ spaceId);
 
 
   const fetchLaundryDetails = async () => {
@@ -252,6 +252,7 @@ const RoomDevices = () => {
           return (
             <div key={device_id} className={classes.Column}>
               <Device
+                spaceId={spaceId}
                 device={device}
                 onToggleDeviceSwitch={
                   device.device_name === 'pump' ?

@@ -3,16 +3,17 @@ import React, { useState } from 'react';
 import classes from './AddRuleComponent.module.scss'; // Ensure the corresponding CSS module is present
 import { toast } from 'react-toastify'; // Assuming react-toastify is used for notifications
 import { SERVER_URL } from '../../consts'; // Assuming SERVER_URL is defined in your constants
+import Space from '../Spaces/Space';
 
-const AddRuleComponent = ({ onSuccess }) => {
+const AddRuleComponent = ({ onSuccess, spaceId }) => {
   // State hooks for form fields
   const [temperature, setTemperature] = useState('');
   const [selectedOperator, setSelectedOperator] = useState('is above');
   const [acTemperature, setAcTemperature] = useState(22); // Default starting value
   const [acMode, setAcMode] = useState('cool');
   const [acState, setAcState] = useState('ON');
+  const [acSpace_ID, setAcSpaceID] = useState(spaceId);
   const [isSubmitting, setIsSubmitting] = useState(false); // Track submission status
-
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +27,8 @@ const AddRuleComponent = ({ onSuccess }) => {
         operator: selectedOperator,
         value: parseInt(temperature, 10),
       },
-      action: `Turn AC ${acState} to ${acMode} mode at ${acTemperature}`
+      action: `Turn AC ${acState} to ${acMode} mode at ${acTemperature}`,
+      space_id: acSpace_ID
     };
 
     try {
@@ -162,6 +164,20 @@ const AddRuleComponent = ({ onSuccess }) => {
           <option value="OFF">Off</option>
         </select>
       </div>
+        {/* AC state selection */}
+        <div className={classes.formRow}>
+          <label htmlFor="acSpace_ID" className={classes.labelColumn}>Space ID:</label>
+          <input
+            id="acSpace_ID"
+            name="acSpace_ID"
+            type="text"
+            value={acSpace_ID} 
+            readOnly 
+            required
+            className={classes.inputColumn}
+            aria-label="Space ID"
+          />
+        </div>
 
       {/* Submit button with dynamic label based on submission status */}
       <div className={classes.formRow}>
@@ -171,6 +187,11 @@ const AddRuleComponent = ({ onSuccess }) => {
       </div>
     </form>
   );
+};
+
+
+AddRuleComponent.defaultProps = {
+  spaceId: '', // Provide a default value for Space_ID if not provided
 };
 
 export default AddRuleComponent;

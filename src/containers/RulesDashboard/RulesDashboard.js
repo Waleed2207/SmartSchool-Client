@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent';
 import AddDetectionRuleComponent from '../../components/AddDetectionRuleComponent/AddDetectionRuleComponent';
 import { Button } from "@mui/material"; // Updated import path
+import { useParams } from 'react-router-dom';
+import { useSpace } from './../../contexts/SpaceContext';
 
 const ErrorMessage = styled.p`
   color: red;
@@ -42,9 +44,16 @@ const RulesDashboard = () => {
 
   const [acState, setacState] = useState('Cool');
   const [acTemperature, setAcTemperature] = useState(26);
-  
+
   const { user } = useContext(UserContext);
   const userRole = user?.role || "User"; // Default role to "User" if user object is not available
+  const { spaceId } = useSpace(); // Retrieve the current space ID from context
+
+  // const space_id = user?.space_id 
+  // console.log(userRole);
+
+  // const { spaceId } = useParams();
+  console.log("Current Space ID:", spaceId);
 
   // const inverseSeasonMap = {
   //   1: "winter",
@@ -76,47 +85,30 @@ const RulesDashboard = () => {
   //   );
   //   return transformedInput;
   // };
-
- const fetchRules = async () => {
-  try {
-    const response = await axios.get(`${SERVER_URL}/api-rule/rules`);
-    // Assuming the response.data is the array of rules you're expecting
-    // No need to setRules here, we will return the data and let the caller handle it
-    toast.info("Rules fetched successfully!");
-    return response.data; // Return the fetched data
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      console.log("Request canceled:", error.message);
-    } else {
+ 
+  const fetchRules = async (spaceId) => {
+    try {
+      const response = await axios.get(`${SERVER_URL}/api-rule/rules/${spaceId}`);
+      toast.info("Rules fetched successfully!");
+      return response.data;  // Assuming the response.data contains the rules array
+    } catch (error) {
       console.error("Failed to fetch rules:", error);
       toast.error("Failed to fetch rules.");
+      return []; // Return default empty array in case of error
     }
-    return []; // Return an empty array in case of error to ensure the caller always receives an array
-  }
-};
-
-
+  };
+  
   useEffect(() => {
     const fetchAllRules = async () => {
-      let fetchedRules = await fetchRules();
-      
-      // Check if fetchedRules is not an array, then set it to an empty array
-      if (!Array.isArray(fetchedRules)) {
-        console.error('fetchedRules is not an array:', fetchedRules);
-        fetchedRules = [];
+      if (spaceId) { // Check if spaceId is available
+        const fetchedRules = await fetchRules(spaceId);
+        setRules(fetchedRules); // Update the state with fetched rules
       }
-  
-      // Transform fetched rules
-      fetchedRules = fetchedRules.map((rule) => {
-       // rule.rule = transformRuleInput(rule.rule);
-        return rule;
-      });
-  
-      setRules(fetchedRules);
     };
-  
+    
     fetchAllRules();
-  }, []);
+  }, [spaceId]); // Dependency array to re-run useEffect when user.space_id changes
+  
   
 
   const onSearchInputChange = (event) => {
@@ -273,6 +265,7 @@ const RulesDashboard = () => {
                   setAcMode={setAcMode}
                   acState={acState}
                   setacState={setacState}
+                  spaceId={spaceId}
                 />
               )}
               {componentToShow === 'Light' && <AddDetectionRuleComponent />}

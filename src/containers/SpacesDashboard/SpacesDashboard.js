@@ -14,6 +14,7 @@ import { NewSpace } from '../../components/Spaces/NewSpace';
 import { NewSpaceModal } from "../../components/Spaces/NewSpaceModal";
 
 import Modal from "react-modal";
+import { useSpace } from './../../contexts/SpaceContext'; // Path to your SpaceContext file
 
 const fadeIn = keyframes`
   0% {
@@ -72,10 +73,11 @@ export const ModalStyled = styled(Modal)`
   animation: ${fadeIn} 0.3s ease-in-out forwards;
 `;
 
-const SpacesDashboard = () => {
+const SpacesDashboard = ({ spaceId }) => {
   const [spaces, setSpaces] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const { setSpaceId } = useSpace();
+  const navigate = useNavigate();
 
     const getSpaces = async () => {
       try {
@@ -95,13 +97,13 @@ const SpacesDashboard = () => {
     getSpaces();
   }, []);
 
-  const navigate = useNavigate();
   // const { id } = useParams();
   const onClickRoomHandler = (space_id) => {
-      navigate(`/spaces/${space_id}/rooms`);
-      // navigate(`/rooms/${roomId}`);
-
+    setSpaceId(space_id);
+    navigate(`/spaces/${space_id}/rooms`);
+    // navigate(`/spaces/${space_id}/rules`); if you want to navigate to rules
   };
+  
 
   return (
     <div className={classes.Row}>

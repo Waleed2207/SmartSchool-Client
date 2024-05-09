@@ -17,9 +17,11 @@ const NavLinkStyled = styled(NavLink)`
   color: green;
   // padding: 10rem;
 `;
+
 const RoomsDashboard = () => {
     const [roomsTest, setRoomsTest] = useState([]);
     const { spaceId } = useParams();
+    
     console.log(spaceId);
     useEffect(() => {
         const getRooms = async () => {
@@ -39,7 +41,7 @@ const RoomsDashboard = () => {
             }
         };
         getRooms();
-    }, []);
+    }, [spaceId]);
 
     const navigate = useNavigate();
 

@@ -25,16 +25,15 @@ const ModeContainer = styled.div`
   margin: 10px;
 `;
 
-export const ModeControl = ({ acState, device_room_idds }) => {
+export const ModeControl = ({ acState, device_room_idds, raspberryPiIP, device_id }) => {
   const [acInternalState, setAcInternalState] = useState(acState);
   const [mode, setMode] = useState("cool");
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const fetchCurrentMode = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${SERVER_URL}/api-sensors/sensibo`);
+        const response = await axios.get(`${SERVER_URL}/api-sensors/sensibo?rasp_ip=${encodeURIComponent(raspberryPiIP)}`);
         if (response.data && response.data.mode) {
           setMode(response.data.mode);
         } else {
@@ -51,19 +50,19 @@ export const ModeControl = ({ acState, device_room_idds }) => {
     fetchCurrentMode();
   }, [device_room_idds]);
 
-  const updateMode = async (newMode) => {
+  const updateMode = async (newMode, raspberryPiIP, device_id) => {
     try {
-      const deviceId = "4ahpAkJ9"; // Example device ID
-      await axios.post(`${SERVER_URL}/api-sensors/sensibo/mode`, { deviceId, mode: newMode });
+      // const deviceId = "4ahpAkJ9"; // Example device ID
+      await axios.post(`${SERVER_URL}/api-sensors/sensibo/mode`, { deviceId: device_id, mode: newMode , rasp_ip: raspberryPiIP });
       console.log("Mode updated successfully");
     } catch (error) {
       console.error("Error updating mode:", error);
     }
   };
 
-  const onModeChange = async (newMode) => {
+  const onModeChange = async (newMode, raspberryPiIP, device_id) => {
     setMode(newMode);
-    await updateMode(newMode);
+    await updateMode(newMode, raspberryPiIP, device_id);
   };
 
   const modes = [
@@ -84,7 +83,7 @@ export const ModeControl = ({ acState, device_room_idds }) => {
             <ModeButton
               color={acInternalState && mode === id ? color : "grey"}
               onClick={() => {
-                onModeChange(id);
+                onModeChange(id,raspberryPiIP, device_id );
                 setAcInternalState(!acInternalState);
               }}
             >

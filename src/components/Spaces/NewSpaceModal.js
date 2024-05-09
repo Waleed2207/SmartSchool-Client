@@ -3,6 +3,29 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { SERVER_URL } from "../../consts";
 
+const SelectorContainer = styled.div`
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 10px;
+    align-items: center;
+`;
+
+const Select = styled.select`
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding: 0 10px;
+`;
+
+const Option = styled.option`
+  font-size: 14px;
+`;
+
+const Label = styled.label`
+//   font-weight: bold;
+  margin-bottom: 5px;
+`;
 export const NewDeviceModalContainer = styled.div`
   display: flex;
   align-items: center;
@@ -69,34 +92,50 @@ export const NewSpaceModal = ({ setIsModalOpen, refreshSpaces }) => {
   
     const handleAdd = async () => {
         const spaceDetails = {
-            spaceDetails: {  
-              type,
-              icon,
-              rasp_ip: raspIp
-            }
-          };     
+          spaceDetails: {
+            type,
+            icon,
+            rasp_ip: raspIp
+          }
+        };     
+        
         try {
-        const response = await axios.post(`${SERVER_URL}/api-space/spaces`, spaceDetails);
-        console.log('Space added:', response.data);
-        setIsModalOpen(false);
-        if (refreshSpaces) {
+          const response = await axios.post(`${SERVER_URL}/api-space/spaces`, spaceDetails);
+          console.log('Space added:', response.data);
+          setIsModalOpen(false);
+          if (refreshSpaces) {
             refreshSpaces();  // Refresh the list of spaces after adding a new one
           }
-      } catch (error) {
-        console.error('Error adding space:', error.response ? error.response.data : error);
-    }
-    };
+        } catch (error) {
+          console.error('Error adding space:', error.response ? error.response.data : error);
+        }
+      };
+      
   
     return (
-      <NewDeviceModalContainer>
+        <NewDeviceModalContainer>
         <NameSection label="Type" value={type} onChange={setType} />
-        <NameSection label="Icon" value={icon} onChange={setIcon} />
+            <SelectorContainer>
+            <Label>Icon:</Label>
+            <Select
+                value={icon}
+                onChange={(e) => setIcon(e.target.value)}
+            >
+                <Option value="">Select Icon</Option>
+                <Option value="school">school</Option>
+                <Option value="home">home</Option>
+                <Option value="other">other</Option>
+                {/* Add more options as needed */}
+            </Select>
+            </SelectorContainer>
+        
         <NameSection label="Raspberry Pi IP" value={raspIp} onChange={setRaspIp} />
         
         <ModalButtonsContainer>
-          <ButtonStyledNew onClick={handleAdd}>Add</ButtonStyledNew>
-          <ButtonStyledNew onClick={() => setIsModalOpen(false)}>Close</ButtonStyledNew>
+            <ButtonStyledNew onClick={handleAdd}>Add</ButtonStyledNew>
+            <ButtonStyledNew onClick={() => setIsModalOpen(false)}>Close</ButtonStyledNew>
         </ModalButtonsContainer>
-      </NewDeviceModalContainer>
+        </NewDeviceModalContainer>
+
     );
   };
