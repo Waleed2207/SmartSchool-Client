@@ -16,16 +16,15 @@ import {
   faHome,
   faSchool,
   faChalkboardTeacher,
-  faBook
+  
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  faWind,
   faFan,
   faTshirt,
   faSnowflake,
   faTemperatureHigh,
   faLightbulb,
-  faSeedling,faPlug, faToggleOn, 
+  faSeedling, faToggleOn, 
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faTint,
@@ -40,7 +39,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Notification } from "../Notification/Notification";
 import { eventEmitter } from "../../WebSocket/ws.js";
 import _ from "lodash";
-import Spinner from '../Spinner/Spinner';
+// import Spinner from '../Spinner/Spinner';
 import HouseMapLoading from "../Spinner/HouseMapLoading";
 
 
@@ -110,9 +109,9 @@ const Item = ({ device }) => {
   );
 };
 
-const ItemsList = ({ devices,spaceId }) => {
+const ItemsList = ({ devices }) => {
   return devices.map((device) => {
-    return <Item key={device.device_id} device={device} spaceId={spaceId}/>;
+    return <Item key={device.device_id} device={device} />;
   });
 };
 
@@ -211,8 +210,8 @@ const HouseMap = ({ onClose,spaceId }) => {
 
 
     const getSensorActivationStatus = (sensorId) => {
-      console.log("Searching for sensorId:", sensorId);  // Debug: log the sensorId being queried
-      console.log("Current sensors array:", JSON.stringify(sensors));  // Debug: log the full array
+      // console.log("Searching for sensorId:", sensorId);  // Debug: log the sensorId being queried
+      // console.log("Current sensors array:", JSON.stringify(sensors));  // Debug: log the full array
     
       const sensor = sensors.find(s => {
         const formattedDbId = s._id?.toString().trim();
@@ -266,16 +265,20 @@ const HouseMap = ({ onClose,spaceId }) => {
     useEffect(() => {
       roomsRef.current = rooms; // Update the ref after rooms state changes
     }, [rooms]);
+    
+    useEffect(() => {
     const getRoomDevices = async (spaceId) => {
       try {
         const urls = [
           `${SERVER_URL}/api-device/device/space/${spaceId}`,
-          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM}`,
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM_1}`,
           `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.LIVING_ROOM}`,
           `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.BATHROOM}`,
           `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.DINING_ROOM}`,
           `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.BEDROOM}`,
-          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM}` // Correctly added as seventh endpoint
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM_1}`, 
+          `${SERVER_URL}/api-device/room-devices/${ROOMS_IDS.CLASS_ROOM_2}`, 
+
         ];
     
         const responses = await Promise.all(urls.map(url => axios.get(url)));
@@ -287,11 +290,13 @@ const HouseMap = ({ onClose,spaceId }) => {
     
         const roomDevicesMap = {
           [ROOMS_IDS.KITCHEN]: responses[1]?.data?.data || [],
-          [ROOMS_IDS.CLASS_ROOM]: responses[6]?.data?.data || [], // Correctly using index 6 for CLASS_ROOM
+          [ROOMS_IDS.CLASS_ROOM_1]: responses[6]?.data?.data || [], // Correctly using index 6 for CLASS_ROOM
           [ROOMS_IDS.LIVING_ROOM]: responses[2]?.data?.data || [],
           [ROOMS_IDS.BATHROOM]: responses[3]?.data?.data || [],
           [ROOMS_IDS.DINING_ROOM]: responses[4]?.data?.data || [],
-          [ROOMS_IDS.BEDROOM]: responses[5]?.data?.data || []
+          [ROOMS_IDS.BEDROOM]: responses[5]?.data?.data || [],
+          [ROOMS_IDS.CLASS_ROOM_2]: responses[7]?.data?.data || []
+
         };
     
         const roomsWithDevices = rooms.map((room) => {
@@ -303,10 +308,7 @@ const HouseMap = ({ onClose,spaceId }) => {
         console.error("Failed to fetch devices:", error);
       }
     };
-    
-    
 
-  useEffect(() => {
     if (rooms.length > 0 && spaceId) {
       getRoomDevices(spaceId);
     }
@@ -346,8 +348,6 @@ const HouseMap = ({ onClose,spaceId }) => {
                 {Object.entries(room.sensors).map(([sensorId, sensorName], index) => {
                     const isActive = getSensorActivationStatus(sensorId) === "on";
                     const color = isActive ? "green" : "red";
-                    console.log(sensorName, 'isActive:', isActive, 'Color:', color); // Log to debug
-
                     return (
                       <div
                         key={sensorId}

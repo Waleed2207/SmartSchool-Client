@@ -25,7 +25,7 @@ function Room(props) {
 Room.propTypes = {
   id: PropTypes.string,
   name: PropTypes.string,
-  icon: PropTypes.string,
+  icon: PropTypes.object,
   devicesCount: PropTypes.number
 };
 

@@ -25,7 +25,7 @@ import { getSuggestions } from "./components/Suggestions/suggestions.service";
 import UserContext from "./contexts/UserContext";
 import HouseMap from "./components/HouseMap/HouseMap";
 import RoomsPage from "./containers/RoomPage/RoomsPage";
-
+import { SpaceProvider } from './contexts/SpaceContext';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -67,7 +67,7 @@ const getUserFromCookie = () => {
       const fetchUserRole = async () => {
         try {
           const response = await axios.post('/api-login/login', { email: user.email, password: user.password });
-          setUser({ ...user, role: response.data.user.role });
+          setUser({ ...user, role: response.data.user.role, space_id: response.data.user.space_id });
         } catch (error) {
           console.error('Error fetching user role:', error);
         }
@@ -96,6 +96,7 @@ const getUserFromCookie = () => {
   return (
     <>
       <UserContext.Provider value={{ user, setUser }}>
+      <SpaceProvider>
         <Header
           user={user}
           onLogout={handleLogout}
@@ -158,12 +159,7 @@ const getUserFromCookie = () => {
               isAuthenticated ? <LocationDashboard user={user} /> : <Navigate to="/login" />
             }
           />
-          <Route
-            path="/rules"
-            element={
-              isAuthenticated ? <RulesDashboard user={user} /> : <Navigate to="/login" />
-            }
-          />
+           <Route path="/spaces/:spaceId/rules" element={isAuthenticated ? <RulesDashboard /> : <Navigate to="/login" />} />
           <Route
             path="/spaces/:spaceId/rooms-dashboard/room/:id"
             element={isAuthenticated ? <RoomDevices /> : <Navigate to="/login" />}
@@ -191,6 +187,8 @@ const getUserFromCookie = () => {
           />
         </Routes>
         {isHouseMapVisible && <HouseMap onClose={() => setIsHouseMapVisible(false)} />}
+        </SpaceProvider>
+
       </UserContext.Provider>
     </>
   );
