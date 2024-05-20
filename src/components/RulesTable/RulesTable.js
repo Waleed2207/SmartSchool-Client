@@ -41,7 +41,7 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
   const handleSaveEdit = async (ruleId) => {
     console.log(`Saving edit for rule ${ruleId} with new description:`, editValue);
     try {
-      const response = await axios.put(`${SERVER_URL}/api-rules/rules/${ruleId}`, { description: editValue });
+      const response = await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { description: editValue });
       if (response.status === 200) {
         toast.success("Rule updated successfully!");
         const updatedRules = currentRules.map(rule => rule.id === ruleId ? { ...rule, description: editValue } : rule);
@@ -74,7 +74,7 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
     console.log(`Confirming delete for rule ${ruleToDelete}`);
     if (ruleToDelete === null) return;
     try {
-      const response = await axios.delete(`${SERVER_URL}/api-rules/rules/${ruleToDelete}`);
+      const response = await axios.delete(`${SERVER_URL}/api-rule/rules/${ruleToDelete}`);
       if (response.status === 200) {
         const newRules = currentRules.filter((rule) => rule.id !== ruleToDelete);
         setCurrentRules(newRules);
