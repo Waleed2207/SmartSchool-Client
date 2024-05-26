@@ -8,6 +8,40 @@
   box-sizing: border-box;
   color: #000;
   cursor: pointer;
+
+  .ActivityContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .ActivityLabel {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  .ActivityDropdown {
+    padding: 5px;
+    font-size: 16px;
+  }
+
+  .NewActivityForm {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+
+  .NewActivityForm input {
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .NewActivityForm button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
   @include mobile-view {
     padding: 20px 10px;
   }
