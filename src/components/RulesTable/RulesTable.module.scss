@@ -1,29 +1,67 @@
-// .RulesTable {
-//     border-collapse: collapse;
-//     width: 80%;
-//     margin-bottom: 1rem;
-//     padding: 3rem;
-//   }
-  
-//   .RulesTable th,
-//   .RulesTable td {
-//     border: 1px solid #ccc;
-//     padding: 0.5rem 1.5rem;
-//     text-align: left;
-//   }
-  
-//   .RulesTable th {
-//     background-color: #f2f2f2;
-//     font-weight: bold;
-//   }
-
-//   .selected {
-//     background-color: lightgrey;
-//   }
 .strict {
-    color: red;
-  }
-  
-  
-  
-  
+  color: red;
+}
+
+.ModalBody {
+  margin-top: 10px;
+}
+
+.RuleTypeButtons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.TableContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.TableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.Button {
+  background-color: #4cabf1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.Button:hover {
+  background-color: #3999e3;
+}
+
+
+/* Additional Styles for Modal Buttons */
+.RuleTypeButton {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.RuleTypeButton:hover {
+  background-color: #e0e0e0;
+}
+
+.RuleTypeButton.Active {
+  background-color: #4cabf1;
+  color: white;
+  border-color: #3999e3;
+}
+

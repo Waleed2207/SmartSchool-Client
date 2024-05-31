@@ -199,7 +199,6 @@
 
 import React, { useEffect, useState, useContext } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import "./App.module.scss";
 import RoomsDashboard from "./containers/RoomsDashboard/RoomsDashboard";
 import SpacesDashboard from "./containers/SpacesDashboard/SpacesDashboard";
 import WelcomeDashboard from "./containers/WelcomeDashboard/WelcomeDashboard";
@@ -254,11 +253,11 @@ const AppContent = ({
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <SpaceProvider>
-               <Header
+        <Header
           user={user}
           onLogout={handleLogout}
           newSuggestionsCount={newSuggestionsCount}
-         />
+        />
         <Notification
           setNewSuggestionsCount={setNewSuggestionsCount}
           newSuggestionsCount={newSuggestionsCount}
@@ -289,12 +288,12 @@ const AppContent = ({
             element={<SignUp onSignUpSuccess={handleSignIn} />}
           />
           <Route path="/spaces" element={isAuthenticated ? <SpacesDashboard /> : <Navigate to="/login" />} />
-          <Route path="/spaces/:spaceId/rooms" element={isAuthenticated ? <RoomsPage /> : <Navigate to="/login" />} />
+          <Route path="/spaces/:spaceId/rooms" element={isAuthenticated ? <RoomsPage token={user?.token} /> : <Navigate to="/login" />} />
           <Route path="/spaces/:spaceId/rooms-dashboard" element={isAuthenticated ? <RoomsDashboard /> : <Navigate to="/login" />} />
           <Route
             path="/rooms"
             element={
-              isAuthenticated ? <RoomsPage /> : <Navigate to="/login" />
+              isAuthenticated ? <RoomsPage token={user?.token} /> : <Navigate to="/login" />
             }
           />
           <Route

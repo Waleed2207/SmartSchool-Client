@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
-    Cookies.get("isAuthenticated") === "true" || false
+    Cookies.get("isAuthenticated") === "true"
   );
   const [user, setUser] = useState(() => {
     const userData = Cookies.get("user");
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   const handleSignIn = (token, userData) => {
     setIsAuthenticated(true);
     setUser({ ...userData, token });
-    Cookies.set("isAuthenticated", true, { expires: 1 }); // 1 day expiration
+    Cookies.set("isAuthenticated", "true", { expires: 1 });
     Cookies.set("user", JSON.stringify({ ...userData, token }), { expires: 1 });
   };
 
@@ -39,8 +39,12 @@ export const AuthProvider = ({ children }) => {
     if (user && !user.role) {
       const fetchUserRole = async () => {
         try {
-          const response = await axios.post("/api-login/login", { email: user.email, password: user.password });
+          const response = await axios.post("/api-login/login", {
+            email: user.email,
+            password: user.password
+          });
           setUser({ ...user, role: response.data.user.role, space_id: response.data.user.space_id });
+          Cookies.set("user", JSON.stringify({ ...user, role: response.data.user.role, space_id: response.data.user.space_id }), { expires: 1 });
         } catch (error) {
           console.error("Error fetching user role:", error);
         }
