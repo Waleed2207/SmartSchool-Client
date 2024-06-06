@@ -77,6 +77,21 @@ const Header = ({ toggleSideDrawer, user, onLogout, newSuggestionsCount }) => {
                     </NavigationItem>
                   );
                 }
+                if (item === "spaces"  && hasEnteredSpace) {
+                  items.push(
+                    <NavigationItem
+                      key="Calendar"
+                      to={`/spaces/${spaceId}/Calendar`}
+                      activeClassName={classes.ActiveNavLink}
+                      className={isCurrentPage(`/spaces/${spaceId}/Calendar`) ? classes.ActiveNavLink : ""}
+                      onClick={handleNavItemClick}
+                    >
+                      <NavigationItemContainer>
+                        Calendar
+                      </NavigationItemContainer>
+                    </NavigationItem>
+                  );
+                }
                 
                 return items;
               })}

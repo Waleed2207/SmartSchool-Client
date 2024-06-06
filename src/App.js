@@ -196,7 +196,6 @@
 
 // export default App;
 
-
 import React, { useEffect, useState, useContext } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import RoomsDashboard from "./containers/RoomsDashboard/RoomsDashboard";
@@ -206,6 +205,7 @@ import SignIn from "./containers/SignIn/SignIn";
 import SignUp from "./containers/SignUp/SignUp";
 import LocationDashboard from "./containers/LocationDashboard/LocationDashboard";
 import RulesDashboard from "./containers/RulesDashboard/RulesDashboard";
+import CalendarDashboard from "./containers/CalendarDashboard/CalendarDashboard";
 import Header from "./containers/Header/Header";
 import RoomDevices from "./containers/RoomsDashboard/RoomDevices/RoomDevices";
 import { Notification } from "./components/Notification/Notification";
@@ -315,6 +315,7 @@ const AppContent = ({
               isAuthenticated ? <LocationDashboard user={user} /> : <Navigate to="/login" />
             }
           />
+          <Route path="/spaces/:spaceId/Calendar" element={isAuthenticated ? <CalendarDashboard token={user?.token} /> : <Navigate to="/login" />} />
           <Route path="/spaces/:spaceId/rules" element={isAuthenticated ? <RulesDashboard /> : <Navigate to="/login" />} />
           <Route path="/spaces/:spaceId/rooms-dashboard/room/:id" element={isAuthenticated ? <RoomDevices /> : <Navigate to="/login" />} />
           <Route path="/room/:id" element={isAuthenticated ? <RoomDevices /> : <Navigate to="/login" />} />

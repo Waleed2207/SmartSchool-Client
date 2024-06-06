@@ -1,0 +1,55 @@
+.UpdateActivityForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  .ActivityDropdown {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .ClockContainer {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .ClockLabel {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .addActivityButton {
+    background-color: #4cabf1;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 5px 0;
+    transition: background-color 0.3s;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .addActivityButton:hover {
+    background-color: #3999e3;
+  }
+  
+  .Error {
+    color: red;
+    margin-bottom: 15px;
+  }
+  

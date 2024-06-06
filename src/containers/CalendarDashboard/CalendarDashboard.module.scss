@@ -1,0 +1,62 @@
+.CalendarDashboard {
+  font-family: Arial, sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.SearchContainer {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.SearchInput {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.FilteredEvents {
+  margin-top: 10px;
+}
+
+.FilteredEvent {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.FilteredEvent:hover {
+  background-color: #f0f0f0;
+}
+
+.addButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.addButton:hover {
+  background-color: #218838;
+}
+
+.NewEventForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.DateTimeContainer {
+  margin-top: 10px;
+}
+
+.DateTimeLabel {
+  font-weight: bold;
+  margin-bottom: 5px;
+}

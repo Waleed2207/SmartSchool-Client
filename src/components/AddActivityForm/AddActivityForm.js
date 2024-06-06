@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { SERVER_URL } from "../../consts";
 import classes from "./AddActivityForm.module.scss";
-
+import { toast } from "react-toastify";
 const AddActivityForm = ({ token, onActivityAdded }) => {
   const [newActivityName, setNewActivityName] = useState("");
   const [newActivityStartTime, setNewActivityStartTime] = useState(dayjs());
@@ -29,6 +29,7 @@ const AddActivityForm = ({ token, onActivityAdded }) => {
       await axios.post(`${SERVER_URL}/api-activities/add-activity`, newActivity, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      toast.info("activity added successfully!");
       onActivityAdded();
       setNewActivityName("");
       setNewActivityStartTime(dayjs());
@@ -52,26 +53,6 @@ const AddActivityForm = ({ token, onActivityAdded }) => {
           <option key={activity} value={activity}>{activity}</option>
         ))}
       </select>
-      <div className={classes.ClockContainer} onClick={(e) => e.stopPropagation()}>
-        <div className={classes.ClockLabel}>Start Time</div>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <TimePicker
-            value={newActivityStartTime}
-            onChange={(newValue) => setNewActivityStartTime(newValue)}
-            renderInput={(params) => <TextField {...params} onClick={(e) => e.stopPropagation()} fullWidth />}
-          />
-        </LocalizationProvider>
-      </div>
-      <div className={classes.ClockContainer} onClick={(e) => e.stopPropagation()}>
-        <div className={classes.ClockLabel}>End Time</div>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <TimePicker
-            value={newActivityEndTime}
-            onChange={(newValue) => setNewActivityEndTime(newValue)}
-            renderInput={(params) => <TextField {...params} onClick={(e) => e.stopPropagation()} fullWidth />}
-          />
-        </LocalizationProvider>
-      </div>
       <button type="submit" className={classes.addActivityButton} onClick={(e) => e.stopPropagation()}>Add Activity</button>
     </form>
   );

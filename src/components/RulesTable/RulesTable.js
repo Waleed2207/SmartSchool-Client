@@ -420,22 +420,61 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
     setEditValue(event.target.value);
   };
 
+  // const handleSaveEdit = async (ruleId) => {
+  //   try {
+  //     const response = await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { description: editValue });
+  //     if (response.status === 200) {
+  //       toast.success("Rule updated successfully!");
+  //       const updatedRules = currentRules.map(rule => rule.id === ruleId ? { ...rule, description: editValue } : rule);
+  //       setCurrentRules(updatedRules);
+  //       setEditRuleId(null);
+  //     } else {
+  //       toast.error("Failed to update rule.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to update rule.");
+  //   }
+  // };
+
+
   const handleSaveEdit = async (ruleId) => {
     try {
-      const response = await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { description: editValue });
+      // Construct the updateFields object
+      const updateFields = {
+        description: editValue.description,
+        condition: Array.isArray(editValue.condition) ? editValue.condition : [editValue.condition],
+        action: Array.isArray(editValue.action) ? editValue.action : [editValue.action],
+        space_id: editValue.space_id,
+        // Add other fields here if necessary
+      };
+  
+      console.log("Updating rule with fields:", updateFields);
+  
+      // Send PUT request to update the rule
+      const response = await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, updateFields);
+  
       if (response.status === 200) {
         toast.success("Rule updated successfully!");
-        const updatedRules = currentRules.map(rule => rule.id === ruleId ? { ...rule, description: editValue } : rule);
+  
+        // Update the currentRules state with the updated rule
+        const updatedRules = currentRules.map(rule =>
+          rule.id === ruleId ? { ...rule, ...updateFields } : rule
+        );
+  
+        console.log("Updated rules:", updatedRules);
+  
         setCurrentRules(updatedRules);
         setEditRuleId(null);
       } else {
         toast.error("Failed to update rule.");
       }
     } catch (error) {
+      console.error("Failed to update rule:", error);
       toast.error("Failed to update rule.");
     }
   };
-
+  
+  
   const handleCancelEdit = () => {
     setEditRuleId(null);
     setEditValue("");

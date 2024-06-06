@@ -1,0 +1,77 @@
+// /* src/components/EventsTable/EventsTable.module.scss */
+
+// .EventsTable {
+//     margin-top: 20px;
+//   }
+  
+//   .EventRow {
+//     border: 1px solid #ddd;
+//     padding: 10px;
+//     margin-bottom: 10px;
+//     border-radius: 5px;
+//     cursor: pointer;
+//   }
+  
+//   .EventRow:hover {
+//     background-color: #f0f0f0;
+//   }
+  
+//   .Selected {
+//     background-color: #d0f0d0;
+//   }
+  
+
+
+
+
+.TableContainer {
+    width: 100%;
+  }
+  
+  .EventsTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .EventRow {
+    cursor: pointer;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .Selected {
+    background-color: #f1f1f1;
+  }
+  
+  .FilteredEvent {
+    cursor: pointer;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .EventsTable input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  .Actions {
+    display: flex;
+    align-items: center;
+    width: 135px;
+    margin-inline: 1rem;
+    justify-content: space-between;
+  }
+  
+  .fa-trash {
+    cursor: pointer;
+    color: red;
+    font-size: 20px;
+  }
+  
+  .MuiSvgIcon-root {
+    cursor: pointer;
+    color: black;
+    margin-right: 8px;
+  }
+  
