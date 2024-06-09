@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 2rem;
+  // margin-top: 2rem;
   padding: 2rem;
 }
 
@@ -15,17 +15,16 @@
 .RulesDashboardInputLabel {
   font-size: 1.5rem;
   font-weight: bold;
-  
 }
 
 .RulesDashboardInputContainer {
   display: flex;
   flex-direction: column;
-  align-items: center; // Align children (labels and inputs) at the start
+  align-items: center;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
   padding: 2rem;
   border-radius: 1rem;
-  text-align: left; // Ensure text aligns to the left
+  text-align: left;
   width: 100%;
   max-width: 500px;
   margin: auto;
@@ -36,8 +35,7 @@
   border-radius: 0.4rem;
   padding: 0.5rem 1.5rem;
   margin: 0.5rem;
-  flex-grow: 1;
-  width: 80%; /* add this line to make the input wider */
+  width: 80%;
 }
 
 .RulesDashboardButton {
@@ -48,12 +46,9 @@
   border-radius: 0.4rem;
   font-size: 1.1rem;
   cursor: pointer;
-  width: auto;
   margin: 1rem auto;
   display: block;
 }
-
-
 
 .BackButton {
   background-color: transparent;
@@ -86,7 +81,7 @@
   border-radius: 0.4rem;
   padding: 0.5rem 3.5rem 0.5rem 0.5rem;
   width: 100%;
-  text-align: left; // Add this line to align the text to the left
+  text-align: left;
 }
 
 .SearchIcon {
@@ -119,94 +114,197 @@
     background-color: #f1f1f1;
   }
 }
-/* If using SCSS modules */
+
 .formRow {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 1rem; /* Adjust as needed */
+  margin-bottom: 1rem;
 }
 
 .labelColumn {
-  min-width: 150px; /* Adjust the width of the label column */
-  margin-right: 1rem; /* Space between label and input */
+  min-width: 150px;
+  margin-right: 1rem;
 }
 
 .inputColumn {
-  width: 140px; /* Sets the width of the inputs to 100px */
-  padding:5px;
-  margin: 0 auto; /* Centers the inputs in the container if the container has a defined width */
-  display: block; /* Makes the inputs into block elements, which enables margin auto to work */
+  width: 140px;
+  padding: 5px;
+  margin: 0 auto;
+  display: block;
 }
-
-
 
 .rulesDashboard__formRow {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 1rem; /* Adjust as needed */
+  margin-bottom: 1rem;
 }
 
 .rulesDashboard__labelColumn {
-  min-width: 150px; /* Adjust the width of the label column */
-  margin-right: 1rem; /* Space between label and input */
+  min-width: 150px;
+  margin-right: 1rem;
 }
 
 .rulesDashboard__inputColumn {
-  flex: 1; /* Allows select to take up the remaining space */
+  flex: 1;
 }
 
 .formContainer {
-  width: 100%; // Use the full width of the parent container
-  max-width: 500px; // Adjust this as needed
-  // margin: auto; // This centers the form container
-
+  width: 100%;
+  max-width: 500px;
   margin-top: 10px;
 
   h2 {
-    text-align: center; // Center the title
-    margin-bottom: 20px; // Space below the title
+    text-align: center;
+    margin-bottom: 20px;
   }
 }
 
 .formGroup {
-  display: block; // Stack the label and select vertically
-  margin-bottom: 10px; // Space between each form group
+  display: block;
+  margin-bottom: 10px;
 
   .formLabel {
-    display: block; // Ensures the label takes up the full width
-    margin-bottom: 5px; // Space between label and select
+    display: block;
+    margin-bottom: 5px;
   }
 
   .formSelect {
-    width: 100%; // Select takes up the full width
-    padding: 8px; // Padding inside the select
-    border: 1px solid #ccc; // Border for the select
-    border-radius: 4px; // Rounded corners for the select
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
   }
 }
 
 .submitButton {
-  width: 100%; // Button takes up the full width
-  padding: 10px 15px; // Padding inside the button
-  background-color: #007bff; // Example background color
-  color: white; // Text color for the button
-  border: none; // No border for the button
-  border-radius: 4px; // Rounded corners for the button
-  cursor: pointer; // Cursor for the button
-  margin-top: 20px; // Space above the button
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
 .button-container {
   display: flex;
-  justify-content: center; /* Center children horizontally */
-  align-items: center;     /* Center children vertically (if needed) */
-  gap: 10px;              /* Optional: space between buttons */
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .toggle-button {
-  padding: 10px 20px;      /* Size of buttons */
-  font-size: 1em;          /* Text size inside buttons */
-  /* Additional styles for button appearance */
+  padding: 10px 20px;
+  font-size: 1em;
+}
+
+.Button {
+  background-color: #4cabf1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+.Button:hover {
+  background-color: #3999e3;
+}
+
+.AddButton {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.RuleTypeButton {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.RuleTypeButton:hover {
+  background-color: #e0e0e0;
+}
+
+.RuleTypeButton.Active {
+  background-color: #4cabf1;
+  color: white;
+  border-color: #3999e3;
+}
+
+.ModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.Modal {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.ModalHeader {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.CloseButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.ModalBody {
+  margin-top: 10px;
+}
+
+.RuleTypeButtons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.SelectContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.TableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.TableContainer {
+  width: 100%;
+  max-width: 1200px;
 }

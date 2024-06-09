@@ -9,10 +9,34 @@
   box-sizing: border-box;
   color: #000;
   cursor: pointer;
+  align-items: center;
 
   .Title {
     font-size: 1.1rem;
     font-weight: bold;
+    flex-grow: 1; // Ensures the title takes up the available space
+  }
+
+  .Container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.8rem;
+  }
+
+  .City, .IP {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+    font-size: 0.9rem;
+
+    .CityIcon, .IPIcon {
+      margin-right: 10px;
+      // font-size: 1.2rem;
+    }
+  }
+
+  .CityText {
+    // Additional styling for city text if needed
   }
 
   .Icon {
@@ -20,12 +44,20 @@
     font-size: 8rem;
     color: #00bcd4;
 
-    @include tablet-view {
+    @media (max-width: 768px) {
       font-size: 5rem;
     }
 
-    @include mobile-view {
+    @media (max-width: 480px) {
       font-size: 4rem;
     }
+  }
+
+  @media (max-width: 768px) {
+    padding: 5px 15px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 5px 15px;
   }
 }

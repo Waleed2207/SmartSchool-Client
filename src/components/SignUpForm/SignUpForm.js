@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import classes from "./SignUpForm.module.scss";
 import { SERVER_URL } from "../../consts";
+import Cookies from "js-cookie";
 
 const SignUpForm = ({ onSignUpSuccess = () => { } }) => {
   const [fullName, setFullName] = useState("");
@@ -10,8 +11,31 @@ const SignUpForm = ({ onSignUpSuccess = () => { } }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("User");
+  const [space_id, setSpaceID] = useState("61097711");
+  const [space_name, setSpaceName] = useState("SmartHome");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    Cookies.get("isAuthenticated") === "true" || false
+  );
+
+const getUserFromCookie = () => {
+  const userData = Cookies.get("user");
+  if (userData) {
+    try {
+      return JSON.parse(userData);
+    } catch (error) {
+      console.error('Failed to parse user data:', error);
+      // Handle the error as needed, e.g., clear the invalid cookie
+      Cookies.remove("user");
+      return null;
+    }
+  }
+  return null;
+};
+
+  // Use the getUserFromCookie function to initialize the 'user' state
+  const [user, setUser] = useState(getUserFromCookie()); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,18 +50,25 @@ const SignUpForm = ({ onSignUpSuccess = () => { } }) => {
         email,
         password,
         role,
+        space_name,
+        space_id,
       });
 
       console.log(response);
 
       if (response.status === 201) {
         alert("Sign up successful");
-        onSignUpSuccess(response.data);
-        navigate('/rooms-dashboard');
+        setIsAuthenticated(false);
+        setUser(null);
+        Cookies.remove("isAuthenticated");
+        Cookies.remove("user");
+        navigate('/'); 
+      } else {
+        setErrorMessage("Sign up failed with status: " + response.status);
       }
     } catch (error) {
-      console.error("Sign up failed:", error);
-      setErrorMessage("Sign up failed");
+  console.error("Sign up failed:", error);
+    setErrorMessage(error.response?.data?.message || "Sign up failed");
     }
   };
 
@@ -102,6 +133,33 @@ const SignUpForm = ({ onSignUpSuccess = () => { } }) => {
             <option value="Admin">Admin</option>
             <option value="User">User</option>
             <option value="Owner">Owner</option>
+          </select>
+        </div>
+        <div className={classes.form_group}>
+          <label htmlFor="space_name" className={classes.label}>Space Name:</label>
+          <select
+            className={classes.input}
+            id="space_name"
+            value={space_name}
+            onChange={(e) => setSpaceName(e.target.value)}
+            required
+          >
+            <option value="SmartSchool">SmartSchool</option>
+            <option value="SmartHome">SmartHome</option>
+            <option value="All">All</option>
+          </select>
+        </div>
+        <div className={classes.form_group}>
+          <label htmlFor="space_id" className={classes.label}>Space ID:</label>
+          <select
+            className={classes.input}
+            id="space_id"
+            value={space_id}
+            onChange={(e) => setSpaceID(e.target.value)}
+            required
+          >
+            <option value="61097711">61097711</option>
+            <option value="17886285">17886285</option>
           </select>
         </div>
         <div className={classes.subContainer}>
