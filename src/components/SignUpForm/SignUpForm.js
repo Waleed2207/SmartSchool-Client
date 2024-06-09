@@ -12,7 +12,7 @@ const SignUpForm = ({ onSignUpSuccess = () => { } }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("User");
   const [space_id, setSpaceID] = useState("61097711");
-
+  const [space_name, setSpaceName] = useState("SmartHome");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -50,6 +50,7 @@ const getUserFromCookie = () => {
         email,
         password,
         role,
+        space_name,
         space_id,
       });
 
@@ -132,6 +133,20 @@ const getUserFromCookie = () => {
             <option value="Admin">Admin</option>
             <option value="User">User</option>
             <option value="Owner">Owner</option>
+          </select>
+        </div>
+        <div className={classes.form_group}>
+          <label htmlFor="space_name" className={classes.label}>Space Name:</label>
+          <select
+            className={classes.input}
+            id="space_name"
+            value={space_name}
+            onChange={(e) => setSpaceName(e.target.value)}
+            required
+          >
+            <option value="SmartSchool">SmartSchool</option>
+            <option value="SmartHome">SmartHome</option>
+            <option value="All">All</option>
           </select>
         </div>
         <div className={classes.form_group}>

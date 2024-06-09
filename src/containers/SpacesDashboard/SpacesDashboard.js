@@ -1,5 +1,5 @@
 // SpacesDashboard.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ import { SERVER_URL } from "../../consts";
 import iconMapping from './../../utils/fontawesome.icons';
 import { NewSpace } from '../../components/Spaces/NewSpace';
 import { NewSpaceModal } from "../../components/Spaces/NewSpaceModal";
-
+import UserContext from '../../contexts/UserContext';
 import Modal from "react-modal";
 import { useSpace } from './../../contexts/SpaceContext'; // Path to your SpaceContext file
 
@@ -60,6 +60,7 @@ export const ModalStyled = styled(Modal)`
   height: 35%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   margin: 1rem;
+  padding: 4rem;
   overflow: auto;
   display: flex;
   justify-content: center;
@@ -78,29 +79,43 @@ const SpacesDashboard = ({ spaceId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { setSpaceId } = useSpace();
   const navigate = useNavigate();
-
-    const getSpaces = async () => {
-      try {
-        const response = await axios.get(`${SERVER_URL}/api-space/spaces`);
-
-        console.log(response.data);
-        // Check if the response data is an array; if not, wrap it in an array
-        const data = Array.isArray(response.data) ? response.data : [response.data];
-        setSpaces(data);  // Assume the API returns an object with a spaces array
-      } catch (error) {
-        console.error('Failed to fetch spaces:', error);
-        setSpaces([]);
-      }
-    };
+  const { user } = useContext(UserContext);
+  const spaceName = user ? user.space_name : 'Default';
+  console.log("Space name: " + spaceName);
 
   useEffect(() => {
-    getSpaces();
-  }, []);
+    getSpaces(); 
+  }, [spaceName]); // Add spaceName as a dependency
+  
+  const getSpaces = async () => {
+    try {
+      let url = `${SERVER_URL}/api-space/spaces`;
+      if (spaceName && spaceName !== 'All') {
+        url = `${SERVER_URL}/api-space/spaces/name/${spaceName}`;
+      }
+      const response = await axios.get(url);
+      console.log("Response status:", response.status); // Log response status
+      console.log("Fetched Spaces Data:", response.data);
+  
+      // Extracting the data array from the response object
+      const spacesData = response.data.data || response.data;
+      console.log("Spaces Array:", spacesData); // Log the actual spaces array
+  
+      // Check if spacesData is an array; if not, wrap it in an array
+      const data = Array.isArray(spacesData) ? spacesData : [spacesData];
+      setSpaces(data);
+    } catch (error) {
+      console.error('Failed to fetch spaces:', error);
+      setSpaces([]); // Setting an empty array in case of error
+    }
+  };
+  
+  
 
   // const { id } = useParams();
   const onClickRoomHandler = (space_id) => {
     setSpaceId(space_id);
-    navigate(`/spaces/${space_id}/rooms`);
+    navigate(`/spaces/${space_id}/rooms-dashboard`);
     // navigate(`/spaces/${space_id}/rules`); if you want to navigate to rules
   };
   
@@ -108,17 +123,19 @@ const SpacesDashboard = ({ spaceId }) => {
   return (
     <div className={classes.Row}>
       <SpacesSection>
-          {spaces.map((space) => (
+          {spaces.map((space,index) => (
             <div
               data-test={`room-card-${space.space_id}`}
-              key={space.space_id}
+              key={space.space_id || index}
               className={classes.Column}
               onClick={() => onClickRoomHandler(space.space_id)}
               >
               <Space
                   id={space.space_id}
+                  space_name={space.space_name}
                   type={space.type} // Assuming name is a property of the room object
                   icon={iconMapping[space.icon]} // Assuming icon is a property of the room object
+                  city={space.city}
                   rasp_ip={space.rasp_ip}
               />
               </div>
@@ -128,7 +145,7 @@ const SpacesDashboard = ({ spaceId }) => {
           </NewSpaceItem>
           {isModalOpen &&
             <ModalStyled isOpen={isModalOpen}>
-              <NewSpaceModal setIsModalOpen={setIsModalOpen}refreshSpaces={getSpaces}   />
+              <NewSpaceModal setIsModalOpen={setIsModalOpen}refreshSpaces={getSpaces} spaceName={spaceName}   />
             </ModalStyled>
           }
         </SpacesSection>
@@ -138,6 +155,7 @@ const SpacesDashboard = ({ spaceId }) => {
 };
 SpacesDashboard.propTypes = {
   fetchSpace: PropTypes.func,
+  spaceId: PropTypes.string,
   space: PropTypes.object,
 };
 export default SpacesDashboard;

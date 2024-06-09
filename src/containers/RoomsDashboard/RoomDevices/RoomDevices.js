@@ -20,7 +20,11 @@ import { NewDevice } from "../../../components/Device/NewDevice";
 import Modal from "react-modal";
 import { NewDeviceModal } from "../../../components/Device/NewDeviceModal";
 import pumpService from '../../../services/pump.service';
+import RoomMap from '../../..//components/RoomMap/RoomMap';
+import iconMapping from './../../../utils/fontawesome.icons';
+import houseMapClasses from '../../../components/RoomMap/RoomMap.module.scss';
 
+Modal.setAppElement('#root') 
 
 const fadeIn = keyframes`
   0% {
@@ -51,6 +55,7 @@ export const ModalStyled = styled(Modal)`
   height: 35%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   margin: 1rem;
+  padding: 2rem
   overflow: auto;
   display: flex;
   justify-content: center;
@@ -128,6 +133,7 @@ const togglePump = async (state, duration) => {
 const laundryToggle = async ({ state, id }) => {
   try {
     const response = await axios.post(`${SERVER_URL}/smartthings/toggle`, {
+      
       state,
       deviceId: id,
     });
@@ -164,9 +170,15 @@ const RoomDevices = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pumpState, setPumpState] = useState('OFF');
   const [pumpDuration, setPumpDuration] = useState(0.05);
-
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+    
+    
+  const openHouseMap = () => {
+      setModalIsOpen(true);
+  };
+  
   const { id,spaceId } = useParams();
-  // console.log("spacseID:"+ spaceId);
+  console.log("ID:"+ id);
 
 
   const fetchLaundryDetails = async () => {
@@ -244,6 +256,17 @@ const RoomDevices = () => {
         <FontAwesomeIcon icon={faChevronLeft} />
         <span>Back to Rooms</span>
       </NavLinkStyled>
+      <div className={classes.RoomsPage}>
+            <button className={classes.RoomsPageButton} onClick={openHouseMap}>Home Map</button>
+          </div>
+          <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                contentLabel="Home Map"
+                className={houseMapClasses.Modal}
+            >
+                <RoomMap onClose={() => setModalIsOpen(false)} spaceId={spaceId} id={id} />
+          </Modal>
       <H1>{_.get(room, "name")}</H1>
       <DevicesSection>
         {roomDevices.map((device) => {

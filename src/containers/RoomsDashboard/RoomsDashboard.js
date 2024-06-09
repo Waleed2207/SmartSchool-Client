@@ -12,15 +12,74 @@ import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import iconMapping from './../../utils/fontawesome.icons';
+import Modal from 'react-modal';
+import HouseMap from '../../components/HouseMap/HouseMap';
+import AddActivityForm from '../../components/AddActivityForm/AddActivityForm';
+import RulesModal from "../../components/RulesModal/RulesModal";
+import houseMapClasses from '../../components/HouseMap/HouseMap.module.scss';
+import {jwtDecode} from 'jwt-decode'; // Correct import
+import { ReactTyped as Typed } from 'react-typed';
+import {LabelHeader } from '../RoomsDashboard/style'
 
 const NavLinkStyled = styled(NavLink)`
   color: green;
   // padding: 10rem;
 `;
-
-const RoomsDashboard = () => {
+Modal.setAppElement('#root') 
+const RoomsDashboard = ({ token }) => {
     const [roomsTest, setRoomsTest] = useState([]);
     const { spaceId } = useParams();
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [openAddActivityModal, setOpenAddActivityModal] = useState(false);
+    const [tokenError, setTokenError] = useState(null);
+    
+
+    const navigate = useNavigate();
+
+    const checkToken = (token) => {
+        try {
+            const decodedToken = jwtDecode(token);
+            console.log('Decoded Token:', decodedToken);
+            return decodedToken;
+        } catch (error) {
+            console.error('Invalid token:', error);
+            setTokenError('Invalid token');
+            return null;
+        }
+    };
+    useEffect(() => {
+        if (token) {
+            const decoded = checkToken(token);
+            if (!decoded) {
+                setTokenError('Invalid token');
+                console.error('Invalid token');
+                // Uncomment the line below to redirect to login page
+                // navigate('/login');
+            }
+        } else {
+            setTokenError('Token not provided');
+            console.error('Token not provided');
+            // Uncomment the line below to redirect to login page
+            // navigate('/login');
+        }
+    }, [token, navigate]);
+
+    const handleOpenAddActivityModal = (e) => {
+        e.stopPropagation();
+        setOpenAddActivityModal(true);
+    };
+
+    const handleCloseAddActivityModal = () => {
+        setOpenAddActivityModal(false);
+    };
+
+    const handleActivityAdded = () => {
+        // Define this function or provide functionality if needed
+        // Example: Refresh the activities list
+    };
+    const openHouseMap = () => {
+        setModalIsOpen(true);
+    };
     
     console.log(spaceId);
     useEffect(() => {
@@ -43,7 +102,6 @@ const RoomsDashboard = () => {
         getRooms();
     }, [spaceId]);
 
-    const navigate = useNavigate();
 
     const onClickRoomHandler = (roomId) => {
           // navigate(`/room/${roomId}`);
@@ -53,10 +111,42 @@ const RoomsDashboard = () => {
 
   return (
       <div className={classes.Container}>
-          <NavLinkStyled to={`/spaces/${spaceId}/rooms`} className={classes.BackLink}>
+          <NavLinkStyled to={`/spaces`} className={classes.BackLink}>
               <FontAwesomeIcon icon={faChevronLeft} />
-              <span>Back to Rooms Dashboard</span>
+              <span>Back to Space</span>
           </NavLinkStyled>
+          <div className={classes.RoomsHeader}>
+            <div className="hero-container" data-aos="fade-in" >
+                <LabelHeader>
+                    <Typed
+                        className={classes.LabelHeader}
+                        strings={['Welcome to the Rooms Dashboard']}
+                        typeSpeed={40}
+                        backSpeed={50}
+                        loop
+                    />
+                </LabelHeader>
+                </div> 
+          </div>
+          <div className={classes.RoomsPage}>
+            <button className={classes.RoomsPageButton} onClick={openHouseMap}>Home Map</button>
+            <button className={classes.RoomsPageButton} onClick={handleOpenAddActivityModal}>Activity</button>
+          </div>
+            <RulesModal show={openAddActivityModal} onCloseModal={handleCloseAddActivityModal} title="Activity">
+                {token ? (
+                    <AddActivityForm token={token} onActivityAdded={handleActivityAdded} />
+                ) : (
+                    <p>{tokenError || 'Loading...'}</p>
+                )}
+            </RulesModal>
+          <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                contentLabel="Home Map"
+                className={houseMapClasses.Modal}
+            >
+                <HouseMap onClose={() => setModalIsOpen(false)} spaceId={spaceId} />
+            </Modal>
           <div className={roomsTest.length === 1 ? `${classes.RoomsContainer} ${classes.RoomsContainerStart}` : classes.RoomsContainer}>
               {roomsTest.map((roomData) => (
                   <div
@@ -82,6 +172,9 @@ const RoomsDashboard = () => {
 RoomsDashboard.propTypes = {
   fetchRooms: PropTypes.func,
   rooms: PropTypes.object,
+  token: PropTypes.string.isRequired, 
 };
-
+RoomsDashboard.defaultProps = {
+    token: "", // Default to an empty string
+};
 export default RoomsDashboard;

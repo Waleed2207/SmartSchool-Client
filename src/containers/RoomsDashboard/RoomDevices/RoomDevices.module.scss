@@ -18,11 +18,78 @@
 
 .BackLink {
   text-decoration: none;
-  color: #000;
   font-size: .8rem;
 
   span {
     margin-left: 5px;
     font-weight: bold;
+  }
+}
+.RoomsPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.RoomsPageButton {
+  background-color: #00bcd4;
+  color: white;
+  padding: 0.4rem 1.5rem;
+  border: none;
+  border-radius: 0.4rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  // margin: 1rem;
+  height: 50px;
+  // width: 10%;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .RoomsPageButton {
+    padding: 0.3rem 1rem;
+    font-size: 1rem;
+    width: auto;
+  }
+
+  .RoomsPageHeader {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .RoomsPageHeader {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .RoomsPageButton {
+    padding: 0.2rem 0.8rem;
+    font-size: 0.9rem;
+    width: auto;
+  }
+
+  .RoomsPageInputContainer {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .RoomsPageInput {
+    padding: 0.3rem 1rem;
+    width: 90%;
+  }
+
+  .SearchIcon {
+    left: 18rem;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
+  .RoomsPageButton {
+    font-size: 1.2rem;
   }
 }

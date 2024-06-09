@@ -5,8 +5,8 @@ import styled from 'styled-components'
 
 
 const NewSpaceCard = styled.div`
-  width: 18rem;
-  min-width: 18rem;
+  width: 16rem;
+  min-width: 16rem;
   height: 8rem;
   border: 1px solid;
   padding: 1rem;

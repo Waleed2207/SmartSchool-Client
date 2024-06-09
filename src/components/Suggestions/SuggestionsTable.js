@@ -35,7 +35,7 @@ import { SERVER_URL, TABLET_HEIGHT, TABLET_WIDTH } from "../../consts";
 import ChooseRoomModal from "./ChooseRoomModal";
 import axios from "axios";
 import { eventEmitter } from "../../WebSocket/ws";
-
+import ICE from '../../assets/IEC2.png'; 
 
 const itemsPerPage = 7; // Define how many items you want per page
 export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
@@ -127,7 +127,7 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
             return (
               <tr key={idx}>
                 <TdStyled>
-                    IEC
+                    < img src={ICE} alt={"ICE"} height={'40px'}/>
                 </TdStyled>
                 <TdStyled>
                   <DeviceCellContent>

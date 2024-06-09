@@ -3,7 +3,7 @@
 .Header {
   box-shadow: 0 2px 12px 0 $LIGHT_SHADOW;
   background: #fff;
-  padding: 25px 15px;
+  padding: 20px 120px;
   margin: auto;
   box-sizing: border-box;
 
@@ -33,17 +33,25 @@
   .AppName {
     font-weight: bold;
     font-size: 1.3rem;
+    display: flex;
+    align-items: center;
 
     &::after {
       content: "";
       margin-left: 10px;
       border-right: 1px solid #000;
+      height: 35px; // Adjust height as necessary to align with the text
+    }
+
+    .Logo {
+      width: 40px; // Adjust the width as necessary
+      height: auto; // Maintains aspect ratio
+      margin-right: 10px; // Space between the logo and label
     }
   }
 
   .Navigation {
     display: block; // Shows by default
-
     @include mobile-view {
       display: none; // Hides navigation on mobile
 
@@ -75,6 +83,13 @@
     @media (max-width: 768px) {
       @content;
     }
+  }
+  @media (max-width: 768px) {
+    padding: 20px 50px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px;
   }
 
   // Additional styles for Modal, motionIcon, and ActiveNavLink can be defined here if necessary

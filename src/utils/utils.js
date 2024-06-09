@@ -15,6 +15,22 @@ export function getGreeting() {
     return greeting;
   }
 
+  export function getGreeting_rule() {
+    const currentHour = new Date().getHours();
+    let greeting;
+  
+    if (currentHour >= 5 && currentHour < 12) {
+      greeting = "morning";
+    } else if (currentHour >= 12 && currentHour < 18) {
+      greeting = "afternoon";
+    } else if (currentHour >= 18 && currentHour < 22) {
+      greeting = "evening";
+    } else {
+      greeting = "night";
+    }
+  
+    return greeting;
+  }
   export const getMonthlyData = (data) => {
     const monthlyData = {};
   

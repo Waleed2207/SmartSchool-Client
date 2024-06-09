@@ -23,13 +23,13 @@ export const TableStyled = styled.table`
 
 export const ThStyled = styled.th`
   padding: 0.5rem 1.5rem;
-  text-align: left;
+  text-align: center;
 `;
 
 export const TdStyled = styled.td`
   max-width: 100px;
   padding: 0.5rem 1.5rem;
-  text-align: left;
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -75,15 +75,16 @@ export const TdStyled = styled.td`
 `;
 
 export const DeviceCellContent = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
+  // display: flex;
+  // width: 100%;
+  // flex-direction: row;
+  // justify-content: space-between;
 `;
 
 export const TitleStyled = styled.p`
   font-size: 1.5rem;
   padding-top: 2rem;
+  margin-left: 70px;
 `;
 
 export const TableContent = styled.div`

@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect,useContext  } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save"; // Import Save icon
-import CancelIcon from "@mui/icons-material/Cancel"; // Import Cancel icon
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 import { RuleSwitch } from "../UI/Switch/RuleSwitch";
+import RulesModal from "../../components/RulesModal/RulesModal";
+import AddRuleComponent from '../../components/AddRuleComponent/AddRuleComponent';
 import classes from "./RulesTable.module.scss";
 import {
   TableStyled,
@@ -17,6 +19,8 @@ import {
 } from "../Suggestions/suggestions.styles";
 import { ActionContainer, ActionTdStyled, ActiveCellStyled, Circle, RuleCell, TrStyled } from "./rules.styles";
 import { SERVER_URL } from "../../consts";
+import { useSpace } from '../../contexts/SpaceContext';
+import UserContext from "../../contexts/UserContext";
 
 const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
   const [currentRules, setCurrentRules] = useState(rules);
@@ -24,54 +28,52 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
   const [editValue, setEditValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ruleToDelete, setRuleToDelete] = useState(null);
+  const [openAddRuleModal, setOpenAddRuleModal] = useState(false);
+  const { spaceId } = useSpace();
+  const { user } = useContext(UserContext);
+  const fullName = user?.fullName || "";
 
-  console.log("RulesTable rendered with rules:", rules);
+  
+  useEffect(() => {
+    setCurrentRules(rules);
+  }, [rules]);
 
   const handleEditClick = (rule) => {
     setEditRuleId(rule.id);
     setEditValue(rule.description);
-    console.log(`Editing rule ${rule.id}`);
   };
 
   const handleEditChange = (event) => {
     setEditValue(event.target.value);
-    console.log("Edit value changed:", event.target.value);
   };
 
   const handleSaveEdit = async (ruleId) => {
-    console.log(`Saving edit for rule ${ruleId} with new description:`, editValue);
     try {
       const response = await axios.put(`${SERVER_URL}/api-rule/rules/${ruleId}`, { description: editValue });
       if (response.status === 200) {
         toast.success("Rule updated successfully!");
         const updatedRules = currentRules.map(rule => rule.id === ruleId ? { ...rule, description: editValue } : rule);
         setCurrentRules(updatedRules);
-        setEditRuleId(null); // Exit edit mode
-        console.log("Edit saved successfully.");
+        setEditRuleId(null);
       } else {
         toast.error("Failed to update rule.");
-        console.log("Failed to save edit due to non-200 status code.");
       }
     } catch (error) {
-      console.error("Failed to update rule:", error);
       toast.error("Failed to update rule.");
     }
   };
 
   const handleCancelEdit = () => {
-    setEditRuleId(null); // Exit edit mode without saving
-    setEditValue(""); // Reset edit value
-    console.log("Edit cancelled.");
+    setEditRuleId(null);
+    setEditValue("");
   };
 
   const promptDeleteRule = (id) => {
     setIsModalOpen(true);
     setRuleToDelete(id);
-    console.log(`Prompting to delete rule ${id}`);
   };
 
   const confirmDeleteRule = async () => {
-    console.log(`Confirming delete for rule ${ruleToDelete}`);
     if (ruleToDelete === null) return;
     try {
       const response = await axios.delete(`${SERVER_URL}/api-rule/rules/${ruleToDelete}`);
@@ -79,10 +81,8 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
         const newRules = currentRules.filter((rule) => rule.id !== ruleToDelete);
         setCurrentRules(newRules);
         toast.success("Rule has been deleted.");
-        console.log("Rule deleted successfully.");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Failed to delete rule.");
     } finally {
       setIsModalOpen(false);
@@ -90,10 +90,30 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
     }
   };
 
+  const handleOpenAddRuleModal = () => {
+    setOpenAddRuleModal(true);
+  };
+
+  const handleCloseAddRuleModal = () => {
+    setOpenAddRuleModal(false);
+  };
+
   return (
     <div className={classes.TableContainer}>
-      <TableContainer>
+      <div className={classes.TableHeader}>
         <TitleStyled>Rules</TitleStyled>
+        <button className={classes.Button} onClick={handleOpenAddRuleModal}>
+          Add Rule
+        </button>
+        <RulesModal show={openAddRuleModal} onCloseModal={handleCloseAddRuleModal}>
+          <h2>Add Rule</h2>
+          <AddRuleComponent spaceId={spaceId} fullName={fullName} onSuccess={() => {
+            setOpenAddRuleModal(false);
+            // Optionally refresh the list of rules here
+          }} />
+        </RulesModal>
+      </div>
+      <TableContainer>
         <TableStyled className={classes.RulesTable}>
           <thead>
             <TrStyled>
@@ -141,7 +161,7 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
                       <i
                         className="fa fa-trash"
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent the row click event
+                          e.stopPropagation();
                           promptDeleteRule(rule.id);
                         }}
                         style={{
@@ -154,7 +174,7 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
                       <EditIcon
                         style={{ cursor: "pointer" }}
                         onClick={(e) => {
-                          e.stopPropagation(); // Prevent row selection
+                          e.stopPropagation();
                           handleEditClick(rule);
                         }}
                       />
