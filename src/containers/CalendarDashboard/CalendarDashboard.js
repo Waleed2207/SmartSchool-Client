@@ -7,7 +7,6 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import EventsTable from "../../components/EventTable/EventTable";
 import classes from "./CalendarDashboard.module.scss";
 import { SERVER_URL } from "../../consts";
-import { useSpace } from "../../contexts/SpaceContext";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -15,24 +14,46 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import TextField from "@mui/material/TextField";
 import { toast } from "react-toastify";
 import RulesModal from "../../components/RulesModal/RulesModal";
+import { useSpace } from "../../contexts/SpaceContext";
+import {jwtDecode} from "jwt-decode";
 
 const localizer = momentLocalizer(moment);
 
 const CalendarDashboard = ({ token }) => {
+  const { spaceId } = useSpace();
   const [events, setEvents] = useState([]);
   const [openAddEventModal, setOpenAddEventModal] = useState(false);
   const [search, setSearch] = useState("");
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const { spaceId } = useSpace();
+  const [tokenError, setTokenError] = useState(null);
 
   const [newEventName, setNewEventName] = useState("");
   const [newEventDescription, setNewEventDescription] = useState("");
-  const [newEventStartTime, setNewEventStartTime] = useState(dayjs());
-  const [newEventEndTime, setNewEventEndTime] = useState(dayjs());
+  const [newEventTime, setNewEventTime] = useState(dayjs());
   const [newEventType, setNewEventType] = useState("");
 
-  const fetchEvents = async () => {
+  const checkToken = (token) => {
+    try {
+      const decodedToken = jwtDecode(token);
+      console.log('Decoded Token:', decodedToken);
+      return decodedToken;
+    } catch (error) {
+      console.error('Invalid token:', error);
+      setTokenError('Invalid token');
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (spaceId) {
+      fetchEvents(spaceId);
+    } else {
+      console.error("spaceId is null");
+    }
+  }, [spaceId, token]);
+
+  const fetchEvents = async (spaceId) => {
     try {
       const url = `${SERVER_URL}/api-calendar/get-all-events/${spaceId}`;
       const response = await axios.get(url, {
@@ -46,18 +67,13 @@ const CalendarDashboard = ({ token }) => {
     }
   };
 
-  useEffect(() => {
-    if (spaceId) {
-      fetchEvents();
-    }
-  }, [spaceId]);
-
   const onSearchInputChange = (event) => {
-    const value = event.target.value;
+    const { value } = event.target;
     setSearch(value);
+
     if (value) {
       const filtered = events.filter((event) =>
-        event.title && event.title.toLowerCase().includes(value.toLowerCase())
+        event.title?.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredEvents(filtered);
     } else {
@@ -72,10 +88,9 @@ const CalendarDashboard = ({ token }) => {
     const newEvent = {
       title: newEventName,
       description: newEventDescription,
-      start: newEventStartTime.toISOString(),
-      end: newEventEndTime.toISOString(),
+      time: newEventTime.toISOString(), // Ensure this is "time"
       eventType: newEventType,
-      space_id: spaceId // Include the spaceId in the new event data
+      space_id: spaceId
     };
 
     try {
@@ -83,15 +98,32 @@ const CalendarDashboard = ({ token }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.info("Calendar Event Added successfully!");
-      fetchEvents(); // Refresh the events list
+      fetchEvents(spaceId);
       setNewEventName("");
       setNewEventDescription("");
-      setNewEventStartTime(dayjs());
-      setNewEventEndTime(dayjs());
+      setNewEventTime(dayjs());
       setNewEventType("");
-      setOpenAddEventModal(false); // Close the modal after adding the event
+      setOpenAddEventModal(false);
     } catch (error) {
       console.error("Error adding new event:", error.response ? error.response.data : error);
+    }
+  };
+
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      const response = await axios.delete(`${SERVER_URL}/api-calendar/delete-event/${eventId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 204) {
+        toast.info("Event deleted successfully!");
+        setEvents(events.filter(event => event._id !== eventId));
+      } else {
+        throw new Error("Failed to delete event");
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error.response ? error.response.data : error);
+      toast.error("Failed to delete event.");
     }
   };
 
@@ -105,6 +137,7 @@ const CalendarDashboard = ({ token }) => {
 
   return (
     <div className={classes.CalendarDashboard}>
+
       <div className={classes.SearchContainer}>
         <input
           type="text"
@@ -113,21 +146,22 @@ const CalendarDashboard = ({ token }) => {
           placeholder="Search for an event..."
           className={classes.SearchInput}
         />
-        <button onClick={handleOpenAddEventModal} className={classes.addButton}>Add Event</button>
+            <button onClick={handleOpenAddEventModal} className={classes.addButton}>Add Event</button>
+
+        {filteredEvents.length > 0 && (
+          <div className={classes.FilteredEvents}>
+            {filteredEvents.map((event) => (
+              <div
+                key={event._id}
+                className={classes.FilteredEvent}
+                onClick={() => setSelectedEvent(event._id)}
+              >
+                {event.title}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      {filteredEvents.length > 0 && (
-        <div className={classes.FilteredEvents}>
-          {filteredEvents.map((event) => (
-            <div
-              key={event._id}
-              className={classes.FilteredEvent}
-              onClick={() => setSelectedEvent(event._id)}
-            >
-              {event.title}
-            </div>
-          ))}
-        </div>
-      )}
       
       <RulesModal show={openAddEventModal} onCloseModal={handleCloseAddEventModal} title="Add Calendar Event">
         <form onSubmit={handleNewEventSubmit} className={classes.NewEventForm}>
@@ -147,6 +181,7 @@ const CalendarDashboard = ({ token }) => {
             margin="normal"
           />
           <TextField
+           
             value={newEventType}
             onChange={(e) => setNewEventType(e.target.value)}
             required
@@ -161,27 +196,15 @@ const CalendarDashboard = ({ token }) => {
             <option value="weekend">Weekend</option>
             <option value="lecture">Lecture</option>
           </TextField>
-          <div className={classes.DatePostion}>
-            <div className={classes.DateTimeContainer}>
-                <div className={classes.DateTimeLabel}>Start Time</div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                    value={newEventStartTime}
-                    onChange={(newValue) => setNewEventStartTime(newValue)}
-                    slots={{ textField: TextField }}
-                />
-                </LocalizationProvider>
-            </div>
-            <div className={classes.DateTimeContainer}>
-                <div className={classes.DateTimeLabel}>End Time</div>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateTimePicker
-                    value={newEventEndTime}
-                    onChange={(newValue) => setNewEventEndTime(newValue)}
-                    slots={{ textField: TextField }}
-                />
-                </LocalizationProvider>
-            </div>
+          <div className={classes.DateTimeContainer}>
+            <div className={classes.DateTimeLabel}>Time</div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                value={newEventTime}
+                onChange={(newValue) => setNewEventTime(newValue)}
+                renderInput={(params) => <TextField {...params} fullWidth />}
+              />
+            </LocalizationProvider>
           </div>
           <div className={classes.DatePostion}>
              <button type="submit" className={classes.addEventButton}>Add Event</button>
@@ -193,8 +216,8 @@ const CalendarDashboard = ({ token }) => {
         localizer={localizer}
         events={events.map(event => ({
           ...event,
-          start: new Date(event.start),
-          end: new Date(event.end)
+          start: new Date(event.time), // Ensure to use "time" instead of "start"
+          end: new Date(event.time) // Ensure to use "time" instead of "end"
         }))}
         startAccessor="start"
         endAccessor="end"
@@ -202,6 +225,7 @@ const CalendarDashboard = ({ token }) => {
         onSelectEvent={(event) => setSelectedEvent(event._id)}
       />
 
+    
       {spaceId && (
         <EventsTable
           events={filteredEvents.length > 0 ? filteredEvents : events}

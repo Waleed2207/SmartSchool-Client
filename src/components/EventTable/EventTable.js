@@ -1,3 +1,38 @@
+// import React from "react";
+// import PropTypes from "prop-types";
+// import classes from "./EventsTable.module.scss";
+
+// const EventsTable = ({ events, onEventClick, selectedEvent }) => {
+//   return (
+//     <div className={classes.EventsTable}>
+//       {events.map((event) => (
+//         <div
+//           key={event._id}
+//           className={`${classes.EventRow} ${selectedEvent === event._id ? classes.Selected : ""}`}
+//           onClick={() => onEventClick(event._id)}
+//         >
+//           <h3>{event.title}</h3>
+//           <p>{event.description}</p>
+//           <p>{new Date(event.start).toLocaleTimeString()} - {new Date(event.end).toLocaleTimeString()}</p>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// EventsTable.propTypes = {
+//   events: PropTypes.array.isRequired,
+//   onEventClick: PropTypes.func.isRequired,
+//   selectedEvent: PropTypes.string,
+// };
+
+// export default EventsTable;
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import classes from "./EventsTable.module.scss";
@@ -58,6 +93,7 @@ const EventsTable = ({ events, onEventClick, selectedEvent, token, spaceId, fetc
 
   const confirmDeleteEvent = async () => {
     if (eventToDelete === null) return;
+  
     try {
       const response = await axios.delete(`${SERVER_URL}/api-calendar/events/${eventToDelete}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -123,7 +159,7 @@ const EventsTable = ({ events, onEventClick, selectedEvent, token, spaceId, fetc
                   )}
                 </TdStyled>
                 <TdStyled>
-                  {new Date(event.start).toLocaleTimeString()} - {new Date(event.end).toLocaleTimeString()}
+                  {new Date(event.time).toLocaleString()}
                 </TdStyled>
                 <TdStyled>
                   {editEventId === event._id ? (

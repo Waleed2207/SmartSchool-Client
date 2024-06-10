@@ -13,8 +13,7 @@ import { toast } from "react-toastify";
 const CalendarForm = ({ token, onEventAdded, spaceId }) => {
   const [newEventName, setNewEventName] = useState("");
   const [newEventDescription, setNewEventDescription] = useState("");
-  const [newEventStartTime, setNewEventStartTime] = useState(dayjs());
-  const [newEventEndTime, setNewEventEndTime] = useState(dayjs());
+  const [newEventTime, setNewEventTime] = useState(dayjs());
   const [newEventType, setNewEventType] = useState("");
 
   const handleNewEventSubmit = async (event) => {
@@ -24,8 +23,7 @@ const CalendarForm = ({ token, onEventAdded, spaceId }) => {
     const newEvent = {
       title: newEventName,
       description: newEventDescription,
-      start: newEventStartTime.toISOString(),
-      end: newEventEndTime.toISOString(),
+      time: newEventTime.toISOString(), // Ensure to use "time" instead of "Time"
       eventType: newEventType,
       space_id: spaceId // Include the spaceId in the new event data
     };
@@ -38,11 +36,11 @@ const CalendarForm = ({ token, onEventAdded, spaceId }) => {
       onEventAdded();
       setNewEventName("");
       setNewEventDescription("");
-      setNewEventStartTime(dayjs());
-      setNewEventEndTime(dayjs());
+      setNewEventTime(dayjs());
       setNewEventType("");
     } catch (error) {
       console.error("Error adding new event:", error.response ? error.response.data : error);
+      toast.error("Failed to add event.");
     }
   };
 
@@ -64,6 +62,7 @@ const CalendarForm = ({ token, onEventAdded, spaceId }) => {
         margin="normal"
       />
       <TextField
+       
         value={newEventType}
         onChange={(e) => setNewEventType(e.target.value)}
         required
@@ -79,22 +78,12 @@ const CalendarForm = ({ token, onEventAdded, spaceId }) => {
         <option value="lecture">Lecture</option>
       </TextField>
       <div className={classes.DateTimeContainer}>
-        <div className={classes.DateTimeLabel}>Start Time</div>
+        <div className={classes.DateTimeLabel}>Time</div>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateTimePicker
-            value={newEventStartTime}
-            onChange={(newValue) => setNewEventStartTime(newValue)}
-            slots={{ textField: TextField }}
-          />
-        </LocalizationProvider>
-      </div>
-      <div className={classes.DateTimeContainer}>
-        <div className={classes.DateTimeLabel}>End Time</div>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            value={newEventEndTime}
-            onChange={(newValue) => setNewEventEndTime(newValue)}
-            slots={{ textField: TextField }}
+            value={newEventTime}
+            onChange={(newValue) => setNewEventTime(newValue)}
+            renderInput={(params) => <TextField {...params} fullWidth />}
           />
         </LocalizationProvider>
       </div>
