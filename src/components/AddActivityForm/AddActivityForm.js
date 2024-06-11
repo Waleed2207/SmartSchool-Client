@@ -15,7 +15,7 @@ const AddActivityForm = ({ token, onActivityAdded }) => {
   const [newActivityName, setNewActivityName] = useState("");
   const [newActivityStartTime, setNewActivityStartTime] = useState(dayjs());
   const [newActivityEndTime, setNewActivityEndTime] = useState(dayjs());
-  const predefinedActivities = ["Studying", "Sleeping", "Watching TV", "Eating", "Cooking", "Playing", "Outside"];
+  const predefinedActivities = ["Studying", "Sleeping", "watching_tv", "Eating", "Cooking", "Playing", "Outside"];
   const anchorElRef = useRef(null);
 
   const handleNewActivitySubmit = async (event) => {

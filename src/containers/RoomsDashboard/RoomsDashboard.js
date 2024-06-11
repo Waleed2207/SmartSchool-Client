@@ -120,7 +120,7 @@ const RoomsDashboard = ({ token }) => {
                 <LabelHeader>
                     <Typed
                         className={classes.LabelHeader}
-                        strings={['Welcome to the Rooms Dashboard']}
+                        strings={['Welcome to the Rooms Dashboard...']}
                         typeSpeed={40}
                         backSpeed={50}
                         loop
@@ -129,7 +129,7 @@ const RoomsDashboard = ({ token }) => {
                 </div> 
           </div>
           <div className={classes.RoomsPage}>
-            <button className={classes.RoomsPageButton} onClick={openHouseMap}>Home Map</button>
+            <button className={classes.RoomsPageButton} onClick={openHouseMap}>Rooms Map</button>
             <button className={classes.RoomsPageButton} onClick={handleOpenAddActivityModal}>Activity</button>
           </div>
             <RulesModal show={openAddActivityModal} onCloseModal={handleCloseAddActivityModal} title="Activity">
@@ -142,7 +142,7 @@ const RoomsDashboard = ({ token }) => {
           <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
-                contentLabel="Home Map"
+                contentLabel="Rooms Map"
                 className={houseMapClasses.Modal}
             >
                 <HouseMap onClose={() => setModalIsOpen(false)} spaceId={spaceId} />

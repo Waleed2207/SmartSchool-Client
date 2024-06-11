@@ -122,7 +122,7 @@ const RoomMap = ({ onClose, id, spaceId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMapReady, setMapReady] = useState(false);
   const roomsRef = useRef(rooms);
-    console.log("RoomMap" +id);
+  console.log("RoomMap" +id);
 
 
   useEffect(() => {
