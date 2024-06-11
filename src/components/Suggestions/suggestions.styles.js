@@ -83,10 +83,14 @@ export const DeviceCellContent = styled.div`
 
 export const TitleStyled = styled.p`
   font-size: 1.5rem;
+  // padding-top: 2rem;
+  margin-left: 30px;
+`;
+export const TitleStyled2 = styled.p`
+  font-size: 1.5rem;
   padding-top: 2rem;
   margin-left: 70px;
 `;
-
 export const TableContent = styled.div`
   width: 100%;
   justify-content: center;

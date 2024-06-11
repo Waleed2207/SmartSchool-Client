@@ -178,7 +178,6 @@ const RoomDevices = () => {
   };
   
   const { id,spaceId } = useParams();
-  console.log("ID:"+ id);
 
 
   const fetchLaundryDetails = async () => {
@@ -257,12 +256,12 @@ const RoomDevices = () => {
         <span>Back to Rooms</span>
       </NavLinkStyled>
       <div className={classes.RoomsPage}>
-            <button className={classes.RoomsPageButton} onClick={openHouseMap}>Home Map</button>
+            <button className={classes.RoomsPageButton} onClick={openHouseMap}>Rooms Map</button>
           </div>
           <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
-                contentLabel="Home Map"
+                contentLabel="Rooms Map"
                 className={houseMapClasses.Modal}
             >
                 <RoomMap onClose={() => setModalIsOpen(false)} spaceId={spaceId} id={id} />
