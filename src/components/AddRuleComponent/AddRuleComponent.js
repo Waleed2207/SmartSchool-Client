@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { SERVER_URL } from '../../consts';
 import { getGreeting_rule } from '../../utils/utils';
 
-const predefinedActivities = ["Studying", "Sleeping", "Watching TV", "Eating", "Cooking", "Playing", "Outside"];
+const predefinedActivities = ["Studying", "Sleeping", "watching_tv", "Eating", "Cooking", "Playing", "Outside"];
 const predefinedSeasons = ["Spring", "Summer", "Fall", "Winter"];
 const conditionKeywords = ["in", "not in"];
 const conditionTypes = ["motion", "temperature", "time"];

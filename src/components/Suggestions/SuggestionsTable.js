@@ -25,7 +25,7 @@ import {
   TableStyled,
   TdStyled,
   ThStyled,
-  TitleStyled,
+  TitleStyled2,
   ModalStyled,
   ChooseRoomModalStyled,
   RuleModalStyled
@@ -110,7 +110,7 @@ export const SuggestionsTable = ({ setNewSuggestionsCount }) => {
 
   return (
     <TableContainer>
-      <TitleStyled>Suggestions</TitleStyled>
+      <TitleStyled2>Suggestions</TitleStyled2>
       <TableStyled>
         <thead>
           <tr>
