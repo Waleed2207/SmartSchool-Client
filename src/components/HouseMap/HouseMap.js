@@ -96,6 +96,10 @@ const Item = ({ device }) => {
 };
 
 const ItemsList = ({ devices }) => {
+  if (!devices || devices.length === 0) {
+    return <p>No devices available</p>;
+  }
+
   return devices.map((device) => {
     return <Item key={device.device_id} device={device} />;
   });
@@ -117,7 +121,6 @@ const HouseMap = ({ onClose, spaceId }) => {
       if (response.data && response.data.data && response.data.data.rasp_ip) {
         const rasp_ip = response.data.data.rasp_ip;
         setRaspberryPiIP(rasp_ip);
-        // console.log("Ras_IP: " + rasp_ip, "spaceId: " + spaceId);
         return rasp_ip; // Return the Raspberry Pi IP
       } else {
         console.error("Raspberry Pi IP not found in response:", response.data);
@@ -133,19 +136,20 @@ const HouseMap = ({ onClose, spaceId }) => {
 
   useEffect(() => {
     if (spaceId) {
-      fetchRaspberryPiIP(spaceId);
-      getSensiboSensors();
+      fetchRaspberryPiIP(spaceId).then(rasp_ip => {
+        if (rasp_ip) {
+          getSensiboSensors(rasp_ip);
+        }
+      });
     }
   }, [spaceId]);
 
-  const getSensiboSensors = async () => {
+  const getSensiboSensors = async (rasp_pi) => {
     try {
-      const url = `${SERVER_URL}/api-sensors/temperature`;
+      const url = `${SERVER_URL}/api-sensors/temperature?rasp_pi=${rasp_pi}`;
 
-      // Send a GET request to the Flask app
       const response = await axios.get(url);
 
-      // Check if the response has the necessary fields
       if (response.data) {
         const { temperature, humidity } = response.data;
         console.log(temperature, humidity);
@@ -156,7 +160,7 @@ const HouseMap = ({ onClose, spaceId }) => {
         return null; // Return null to indicate no data found
       }
     } catch (err) {
-      console.error("Error fetching sensor data from Flask:", err.message);
+      console.error("Error fetching sensor data:", err.message);
       return null; // Return null to indicate failure
     }
   };
@@ -195,7 +199,6 @@ const HouseMap = ({ onClose, spaceId }) => {
     Promise.all([getRooms(), getSensors()])
       .then(([roomsData, sensorsData]) => {
         if (roomsData && sensorsData) {
-          // Check if data is not null or undefined
           setRooms(roomsData);
           setSensors(sensorsData);
           setMapReady(true);
@@ -207,21 +210,8 @@ const HouseMap = ({ onClose, spaceId }) => {
         setIsLoading(false); // Ensure loading state is disabled on error
         setMapReady(false); // Set map readiness to false on error
       });
-  }, [spaceId]); // Dependency array includes spaceId to re-run the effect when it changes
+  }, [spaceId]);
 
-  // useEffect(() => {
-  //   const handleMotionDetected = (roomId) => {
-  //     showPersonIcon(roomId);
-  //   };
-
-  //   eventEmitter.on("motionDetected", handleMotionDetected);
-
-  //   return () => {
-  //     eventEmitter.off("motionDetected", handleMotionDetected);
-  //   };
-  // }, [rooms]);
-
-  // Handles showing the person icon when motion is detected
   const showPersonIcon = (roomId) => {
     console.log(`Showing person icon in room: ${roomId}`);
     setRooms((currentRooms) =>
@@ -247,11 +237,9 @@ const HouseMap = ({ onClose, spaceId }) => {
       return formattedDbId === sensorId.trim() || formattedSensorId === sensorId.trim();
     });
 
-    // console.log("Found sensor:", sensor); // Debug: log the found sensor object or undefined
     return sensor && sensor.activated === "on" ? "on" : "off";
   };
 
-  // Simplified useEffect for motion events
   useEffect(() => {
     const handleMotionDetected = (roomId) => {
       console.log(`Motion detected in room: ${roomId}`);
@@ -279,6 +267,7 @@ const HouseMap = ({ onClose, spaceId }) => {
       eventEmitter.off("motionCleared", handleMotionCleared);
     };
   }, []);
+  
   useEffect(() => {
     roomsRef.current = rooms; // Update the ref after rooms state changes
   }, [rooms]);
@@ -337,79 +326,86 @@ const HouseMap = ({ onClose, spaceId }) => {
           <button className={styles.closeButton} onClick={onClose}>
             <FontAwesomeIcon icon={faTimes} />
           </button>
-          {roomsWithDevices.map((room) => {
-            return (
-              <div
-                className={`${styles.room} ${styles[room.name.toLowerCase().replace(/\s/g, "-")]
-                  }`}
-                key={room.id}
-              >
-                <div className={styles.roomHeader}>
-                  <p
-                    style={{
-                      marginRight: "10px",
-                      marginLeft: "10px",
-                      fontSize: "20px",
-                    }}
-                  >
-                    {room.name}
-                  </p>
-                  {iconMapper[room.icon]}
-                </div>
-                <div className={styles.devices}>
-                   <p style={{fontFamily: "monospace", fontSize: "17px", fontWeight: "lighter"}}>Actuators</p>
-                  <ItemsList devices={room.actualDevices} spaceId={spaceId} />
-                </div>
-                <div className={styles.sensors}>
-                <p style={{fontFamily: "monospace", fontSize: "17px", fontWeight: "lighter"}}>Sensors</p>
-                {Object.entries(room.sensors).map(([sensorId, sensorName], index) => {
-                    const isActive = getSensorActivationStatus(sensorId) === "on";
-                    const color = isActive ? "#006CFF" : "red";
-                    return (
-                      <div
-                        key={sensorId}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          height: "30px",
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={SENSOR_ICON_MAPPING[sensorName] || faQuestionCircle}
-                          color={color}
-                          className={isActive ? styles.animatedIcon : ""}
-                        />
-                        <p style={{ marginRight: "10px", marginLeft: "10px" , width: "90px"}}>
-                          {sensorName}
-                        </p>
-                        {sensorName === "temperature" && (
-                          <p style={{ marginRight: "10px", marginLeft: "10px", color: "grey"}}>
-                            {sensorData.temperature}°
-                          </p>
-                        )}
-                        {sensorName === "humidity" && (
-                        <p style={{ marginRight: "10px", marginLeft: "10px", color: "grey" }}>
-                        {sensorData.humidity}%
-                          </p>
-                        )}
-                      </div>
-                    );
-                })}
-
-                </div>
-                {room.motionDetected && (
-                  <div className={styles.motionIcon}>
-                    <FontAwesomeIcon
-                      icon={faUser}
-                      size="2x"
-                      color="red"
-                      className={styles.flicker}
-                    />
+          {roomsWithDevices.length > 0 ? (
+            roomsWithDevices.map((room) => {
+              return (
+                <div
+                  className={`${styles.room} ${styles[room.name.toLowerCase().replace(/\s/g, "-")]}`}
+                  key={room.id}
+                >
+                  <div className={styles.roomHeader}>
+                    <p
+                      style={{
+                        marginRight: "10px",
+                        marginLeft: "10px",
+                        fontSize: "20px",
+                        color: "#006C88"
+                      }}
+                    >
+                      {room.name}
+                    </p>
+                    {iconMapper[room.icon]}
                   </div>
-                )}
-              </div>
-            );
-          })}
+                  <div className={styles.devices}>
+                    <p style={{ fontFamily: "monospace", fontSize: "17px", fontWeight: "normal", color: "#006C88" }}>Actuators</p>
+                    <ItemsList devices={room.actualDevices} spaceId={spaceId} />
+                  </div>
+                  <div className={styles.sensors}>
+                    <p style={{ fontFamily: "monospace", fontSize: "17px", fontWeight: "normal", color: "#006C88" }}>Sensors</p>
+                    {room.sensors && Object.entries(room.sensors).length > 0 ? (
+                      Object.entries(room.sensors).map(([sensorId, sensorName], index) => {
+                        const isActive = getSensorActivationStatus(sensorId) === "on";
+                        const color = isActive ? "#006CFF" : "red";
+                        return (
+                          <div
+                            key={sensorId}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              height: "30px",
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              icon={SENSOR_ICON_MAPPING[sensorName] || faQuestionCircle}
+                              color={color}
+                              className={isActive ? styles.animatedIcon : ""}
+                            />
+                            <p style={{ marginRight: "10px", marginLeft: "10px", width: "90px" }}>
+                              {sensorName}
+                            </p>
+                            {sensorName === "temperature" && (
+                              <p style={{ marginRight: "10px", marginLeft: "10px", color: "grey" }}>
+                                {sensorData.temperature}°
+                              </p>
+                            )}
+                            {sensorName === "humidity" && (
+                              <p style={{ marginRight: "10px", marginLeft: "10px", color: "grey" }}>
+                                {sensorData.humidity}%
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p>No sensors available</p>
+                    )}
+                  </div>
+                  {room.motionDetected && (
+                    <div className={styles.motionIcon}>
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        size="2x"
+                        color="red"
+                        className={styles.flicker}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            <p>No devices or sensors available</p>
+          )}
           <Notification showPersonIcon={showPersonIcon} hidePersonIcon={hidePersonIcon} />
         </div>
       )}
