@@ -339,7 +339,7 @@ const HouseMap = ({ onClose, spaceId }) => {
                         marginRight: "10px",
                         marginLeft: "10px",
                         fontSize: "20px",
-                        color: "#006C88"
+                        color: "#225E5C"
                       }}
                     >
                       {room.name}
@@ -347,11 +347,11 @@ const HouseMap = ({ onClose, spaceId }) => {
                     {iconMapper[room.icon]}
                   </div>
                   <div className={styles.devices}>
-                    <p style={{ fontFamily: "monospace", fontSize: "17px", fontWeight: "normal", color: "#006C88" }}>Actuators</p>
+                    <p style={{ fontFamily: "monospace", fontSize: "17px", fontWeight: "normal", color: "#225E5C" }}>Actuators</p>
                     <ItemsList devices={room.actualDevices} spaceId={spaceId} />
                   </div>
                   <div className={styles.sensors}>
-                    <p style={{ fontFamily: "monospace", fontSize: "17px", fontWeight: "normal", color: "#006C88" }}>Sensors</p>
+                    <p style={{ fontFamily: "monospace", fontSize: "17px", fontWeight: "normal", color: "#225E5C" }}>Sensors</p>
                     {room.sensors && Object.entries(room.sensors).length > 0 ? (
                       Object.entries(room.sensors).map(([sensorId, sensorName], index) => {
                         const isActive = getSensorActivationStatus(sensorId) === "on";
@@ -374,12 +374,12 @@ const HouseMap = ({ onClose, spaceId }) => {
                               {sensorName}
                             </p>
                             {sensorName === "temperature" && (
-                              <p style={{ marginRight: "10px", marginLeft: "10px", color: "grey" }}>
-                                {sensorData.temperature}°
+                              <p style={{ marginRight: "10px", marginLeft: "10px", color: "#3885A3" }}>
+                                {sensorData.temperature}°C
                               </p>
                             )}
                             {sensorName === "humidity" && (
-                              <p style={{ marginRight: "10px", marginLeft: "10px", color: "grey" }}>
+                              <p style={{ marginRight: "10px", marginLeft: "10px", color: "#3885A3" }}>
                                 {sensorData.humidity}%
                               </p>
                             )}

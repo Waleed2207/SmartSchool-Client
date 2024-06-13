@@ -110,11 +110,11 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
       }`;
     } else if (conditionType === 'temperature') {
       if (includeTemperature && includeHumidity) {
-        condition = `If temperature in ${roomName} is ${temperatureCondition} ${temperatureValue} ${operatorBefore} humidity is ${humidityCondition} ${humidityValue}%`;
+        condition = `If temperature in ${roomName} ${temperatureCondition} ${temperatureValue} ${operatorBefore} humidity ${humidityCondition} ${humidityValue}`;
       } else if (includeTemperature) {
-        condition = `If temperature in ${roomName} is ${temperatureCondition} ${temperatureValue}`;
+        condition = `If temperature in ${roomName} ${temperatureCondition} ${temperatureValue}`;
       } else if (includeHumidity) {
-        condition = `If humidity in ${roomName} is ${humidityCondition} ${humidityValue}%`;
+        condition = `If humidity in ${roomName} ${humidityCondition} ${humidityValue}`;
       }
     } else if (conditionType === 'time') {
       condition = `If hour ${conditionKeyword} ${roomName} is ${timePeriod} ${operatorBefore} temperature is ${temperatureCondition} ${temperatureValue}`;
