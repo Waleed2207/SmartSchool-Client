@@ -117,8 +117,17 @@ const DEVICES_IDS_MAP = {
   PUMP: "061751378caab5219d33"
 };
 
+
 const H1 = styled.p`
   font-size: 2rem;
+
+  @media (max-width: 768px) { /* Tablet view */
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: 480px) { /* Mobile view */
+    font-size: 1.5rem;
+  }
 `;
 
 const togglePump = async (state, duration) => {

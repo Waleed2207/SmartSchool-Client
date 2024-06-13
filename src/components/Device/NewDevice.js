@@ -16,6 +16,21 @@ const NewDeviceCard = styled.div`
   display: flex;
   justify-content: center;
   cursor: pointer;
+  
+  @media (max-width: 768px) { /* Tablet view */
+  width: 18rem;
+  min-width: 18rem
+  min-height: 6rem;
+  height: 6rem;
+}
+
+  @media (max-width: 480px) { /* Mobile view */
+  width: 16rem;
+  min-width: 16rem;
+    min-height: 6rem;
+    height: 6rem;
+
+  }
 
 `;
 
