@@ -28,6 +28,21 @@ const DeviceCard = styled.div`
     height: 300px;
     width: ${({ isLaundryDevice }) => (isLaundryDevice ? "30rem" : "18rem")};
   }
+
+  @media (max-width: 768px) { /* Tablet view */
+  width: 18rem;
+  min-width: 18rem
+  min-height: 7rem;
+  height: 7rem;
+}
+
+  @media (max-width: 480px) { /* Mobile view */
+  width: 16rem;
+  min-width: 16rem;
+    min-height: 7rem;
+    height: 7rem;
+
+  }
 `;
 
 const ControlContainer = styled.div`
@@ -41,6 +56,14 @@ const TopRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) { /* Tablet view */
+   margin-bottom: 0rem;
+}
+
+  @media (max-width: 480px) { /* Mobile view */
+    margin-bottom: 0rem;
+  }
 `;
 
 

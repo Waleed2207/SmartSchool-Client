@@ -15,6 +15,12 @@
     font-size: 1.1rem;
     font-weight: bold;
     flex-grow: 1; // Ensures the title takes up the available space
+
+    @media (max-width: 768px) {
+      font-size: 1rem;    }
+
+    @media (max-width: 480px) {
+      font-size: 1rem;    }
   }
 
   .Container {
