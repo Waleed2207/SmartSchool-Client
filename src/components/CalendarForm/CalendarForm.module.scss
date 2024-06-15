@@ -43,4 +43,19 @@
   .EventTypeField {
     margin-top: 1rem;
   }
+  .sectionTitle {
+    text-align: left;
+    margin: 20px 0 20px;
+  }
+  .deviceRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .deviceCheckbox {
+    flex: 1 1 auto;
+  }
+  
   
