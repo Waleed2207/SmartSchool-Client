@@ -27,7 +27,6 @@ const CalendarDashboard = ({ token }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     if (!spaceId) {
       console.error("spaceId is null");
