@@ -266,7 +266,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
         let requests = [];
         const ACPayload = { state: newState, id: device_id, rasp_ip: raspberryPiIP };
         const basePayload = { state: newState, deviceId: device_id, rasp_ip: raspberryPiIP };
-        const LIGHTPayload = {  id: device_id, rasp_ip: raspberryPiIP};
+        const LIGHTPayload = {  id: device_id, rasp_ip: raspberryPiIP , Control: 'manual' };
         if (device.device_name.toLowerCase() === 'ac') {
           console.log("is here");
           requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, ACPayload));
