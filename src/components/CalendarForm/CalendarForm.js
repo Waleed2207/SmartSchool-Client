@@ -19,9 +19,8 @@ const CalendarForm = ({ token, onEventAdded, spaceId, rooms }) => {
   const [roomName, setRoomName] = useState("");
   const [devices, setDevices] = useState([]);
   const [selectedDevices, setSelectedDevices] = useState({});
-  const [acTemperature, setAcTemperature] = useState(25);
-  const [acMode, setAcMode] = useState('cool');
-  const [acState, setAcState] = useState('on');
+  const [repeat, setRepeat] = useState("none");
+  const [repeatCount, setRepeatCount] = useState(0);
 
   useEffect(() => {
     const fetchDevices = async () => {
@@ -74,7 +73,9 @@ const CalendarForm = ({ token, onEventAdded, spaceId, rooms }) => {
       eventType: newEventType,
       space_id: spaceId,
       roomName: roomName,
-      roomDevices: Object.keys(selectedDevices).filter(deviceId => selectedDevices[deviceId])
+      roomDevices: Object.keys(selectedDevices).filter(deviceId => selectedDevices[deviceId]),
+      repeat: repeat, // Ensure repeat is included
+      repeatCount: repeatCount // Add repeatCount
     };
 
     try {
@@ -89,6 +90,8 @@ const CalendarForm = ({ token, onEventAdded, spaceId, rooms }) => {
       setNewEventType("");
       setRoomName("");
       setSelectedDevices({});
+      setRepeat("none");
+      setRepeatCount(0);
     } catch (error) {
       console.error("Error adding new event:", error.response ? error.response.data : error);
       toast.error("Failed to add event.");
@@ -147,9 +150,33 @@ const CalendarForm = ({ token, onEventAdded, spaceId, rooms }) => {
         <MenuItem value="weekend">Weekend</MenuItem>
         <MenuItem value="lecture">Lecture</MenuItem>
       </TextField>
+      <TextField
+        select
+        label="Repeat"
+        value={repeat}
+        onChange={(e) => setRepeat(e.target.value)}
+        required
+        fullWidth
+        margin="normal"
+        className={classes.RepeatField}
+      >
+        <MenuItem value="none">
+          <em>None</em>
+        </MenuItem>
+        <MenuItem value="daily">Daily</MenuItem>
+        <MenuItem value="weekly">Weekly</MenuItem>
+        <MenuItem value="monthly">Monthly</MenuItem>
+      </TextField>
+      <TextField
+        label="Repeat Count"
+        type="number"
+        value={repeatCount}
+        onChange={(e) => setRepeatCount(e.target.value)}
+        fullWidth
+        margin="normal"
+      />
       <h3 className={classes.sectionTitle}>Devices</h3>
       <div className={classes.deviceRow}>
-
         {devices.map((device, index) => (
           <div key={index} className={classes.deviceCheckbox}>
             <label htmlFor={`device_${device}`} className={classes.deviceLabel}>
@@ -171,7 +198,7 @@ const CalendarForm = ({ token, onEventAdded, spaceId, rooms }) => {
           <DateTimePicker
             value={newEventTime}
             onChange={(newValue) => setNewEventTime(newValue)}
-            renderInput={(params) => <TextField {...params} fullWidth />}
+            slotProps={{ textField: { fullWidth: true } }} // Updated this line
           />
         </LocalizationProvider>
       </div>
