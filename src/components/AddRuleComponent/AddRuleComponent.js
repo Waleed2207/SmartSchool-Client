@@ -618,11 +618,6 @@
 // export default AddRuleComponent;
 
 
-
-
-
-
-
 import React, { useState, useEffect } from 'react';
 import classes from './AddRuleComponent.module.scss';
 import { toast } from 'react-toastify';
@@ -636,7 +631,7 @@ const conditionTypes = ["motion", "temperature", "time"];
 const timePeriods = ["morning", "afternoon", "evening", "night"];
 const operators = ["and", "or"];
 
-const AddRuleComponent = ({ onSuccess, spaceId, fullName, onAddRule }) => {
+const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
   const greeting = getGreeting_rule();
   const [conditionType, setConditionType] = useState('motion');
   const [person, setPerson] = useState(fullName);
@@ -663,21 +658,23 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName, onAddRule }) => {
   const [includeTemperature, setIncludeTemperature] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
+    let isMounted = true; // Track if the component is mounted
 
     const fetchRooms = async () => {
       try {
         const response = await fetch(`${SERVER_URL}/api-room/rooms/space/${spaceId}`);
-        if (!cancelled && response.ok) {
+        if (response.ok) {
           const data = await response.json();
-          const roomNames = data.map(room => room.name);
-          setRooms(roomNames);
-        } else if (!cancelled) {
+          if (isMounted) {
+            const roomNames = data.map(room => room.name);
+            setRooms(roomNames);
+          }
+        } else {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
       } catch (error) {
-        if (!cancelled) {
-          console.error('Failed to fetch rooms:', error);
+        console.error('Failed to fetch rooms:', error);
+        if (isMounted) {
           toast.error(`Failed to fetch rooms. ${error.message}`);
         }
       }
@@ -686,26 +683,28 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName, onAddRule }) => {
     fetchRooms();
 
     return () => {
-      cancelled = true;
+      isMounted = false; // Cleanup function to set isMounted to false
     };
   }, [spaceId]);
 
   useEffect(() => {
-    let cancelled = false;
+    let isMounted = true; // Track if the component is mounted
 
     const fetchDevices = async () => {
       if (roomName) {
         try {
           const response = await fetch(`${SERVER_URL}/api-device/device/space/${spaceId}/${encodeURIComponent(roomName)}`);
-          if (!cancelled && response.ok) {
+          if (response.ok) {
             const data = await response.json();
-            setDevices(data);
-          } else if (!cancelled) {
+            if (isMounted) {
+              setDevices(data);
+            }
+          } else {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
         } catch (error) {
-          if (!cancelled) {
-            console.error('Failed to fetch devices:', error);
+          console.error('Failed to fetch devices:', error);
+          if (isMounted) {
             toast.error(`Failed to fetch devices. ${error.message}`);
           }
         }
@@ -715,7 +714,7 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName, onAddRule }) => {
     fetchDevices();
 
     return () => {
-      cancelled = true;
+      isMounted = false; // Cleanup function to set isMounted to false
     };
   }, [roomName, spaceId]);
 
@@ -783,9 +782,6 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName, onAddRule }) => {
         const data = await response.json();
         console.log(data);
         toast.success('Rule added successfully!');
-        if (onAddRule) {
-          onAddRule(data); // Call the callback function with the new rule
-        }
       } else {
         const textResponse = await response.text();
         console.log(textResponse);
@@ -987,6 +983,7 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName, onAddRule }) => {
                   <option value="is equal to">Is Equal to</option>
                   <option value="is below">Is Below</option>
                   <option value="is less">Is Less</option>
+
                 </select>
               </div>
 
@@ -1054,10 +1051,10 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName, onAddRule }) => {
               required
               className={classes.inputColumn}
             >
-              <option value="is above">Is Above</option>
-              <option value="is equal to">Is Equal to</option>
-              <option value="is below">Is Below</option>
-              <option value="is less">Is Less</option>
+                <option value="is above">Is Above</option>
+                <option value="is equal to">Is Equal to</option>
+                <option value="is below">Is Below</option>
+                <option value="is less">Is Less</option>
             </select>
           </div>
 
@@ -1259,3 +1256,5 @@ AddRuleComponent.defaultProps = {
 };
 
 export default AddRuleComponent;
+
+

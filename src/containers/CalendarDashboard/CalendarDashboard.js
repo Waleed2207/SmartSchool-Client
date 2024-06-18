@@ -15,9 +15,7 @@ import { toast } from "react-toastify";
 import RulesModal from "../../components/RulesModal/RulesModal";
 import { useSpace } from "../../contexts/SpaceContext";
 import CalendarForm from "../../components/CalendarForm/CalendarForm";
-
 const localizer = momentLocalizer(moment);
-
 const CalendarDashboard = ({ token }) => {
   const { spaceId } = useSpace();
   const [events, setEvents] = useState([]);
@@ -27,12 +25,12 @@ const CalendarDashboard = ({ token }) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (!spaceId) {
       console.error("spaceId is null");
       return;
     }
-
     const fetchRooms = async () => {
       try {
         const response = await axios.get(`${SERVER_URL}/api-room/rooms/space/${spaceId}`);
@@ -46,16 +44,14 @@ const CalendarDashboard = ({ token }) => {
         toast.error(`Failed to fetch rooms. ${error.message}`);
       }
     };
-
     fetchRooms();
   }, [spaceId]);
-
   useEffect(() => {
     if (spaceId) {
       fetchEvents(spaceId);
     }
   }, [spaceId, token]);
-
+  
   const fetchEvents = async (spaceId) => {
     try {
       const url = `${SERVER_URL}/api-calendar/get-all-events/${spaceId}`;

@@ -35,7 +35,7 @@
     "react-leaflet": "^4.2.1",
     "react-modal": "^3.16.1",
     "react-redux": "^7.1.0",
-    "react-router-dom": "^6.10.0",
+    "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
     "react-spinners": "^0.13.8",
