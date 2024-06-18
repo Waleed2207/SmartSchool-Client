@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import classes from './AddRuleComponent.module.scss';
 import { toast } from 'react-toastify';
@@ -38,44 +39,64 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
   const [includeTemperature, setIncludeTemperature] = useState(true);
 
   useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
+
     const fetchRooms = async () => {
       try {
         const response = await fetch(`${SERVER_URL}/api-room/rooms/space/${spaceId}`);
         if (response.ok) {
           const data = await response.json();
-          const roomNames = data.map(room => room.name);
-          setRooms(roomNames);
+          if (isMounted) {
+            const roomNames = data.map(room => room.name);
+            setRooms(roomNames);
+          }
         } else {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
       } catch (error) {
         console.error('Failed to fetch rooms:', error);
-        toast.error(`Failed to fetch rooms. ${error.message}`);
+        if (isMounted) {
+          toast.error(`Failed to fetch rooms. ${error.message}`);
+        }
       }
     };
 
     fetchRooms();
+
+    return () => {
+      isMounted = false; // Cleanup function to set isMounted to false
+    };
   }, [spaceId]);
 
   useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
+
     const fetchDevices = async () => {
       if (roomName) {
         try {
           const response = await fetch(`${SERVER_URL}/api-device/device/space/${spaceId}/${encodeURIComponent(roomName)}`);
           if (response.ok) {
             const data = await response.json();
-            setDevices(data);
+            if (isMounted) {
+              setDevices(data);
+            }
           } else {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
         } catch (error) {
           console.error('Failed to fetch devices:', error);
-          toast.error(`Failed to fetch devices. ${error.message}`);
+          if (isMounted) {
+            toast.error(`Failed to fetch devices. ${error.message}`);
+          }
         }
       }
     };
 
     fetchDevices();
+
+    return () => {
+      isMounted = false; // Cleanup function to set isMounted to false
+    };
   }, [roomName, spaceId]);
 
   const handleSubmit = async (e) => {

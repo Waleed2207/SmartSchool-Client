@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -21,27 +25,20 @@ const RulesDashboard = () => {
   const { user } = useContext(UserContext);
   const { spaceId } = useSpace();
   
-  const fetchRules = async (spaceId) => {
+  const fetchRules = async () => {
+    if (!spaceId) return;
     try {
       const response = await axios.get(`${SERVER_URL}/api-rule/rules/${spaceId}`);
-      console.log(response);
+      setRules(response.data);
       toast.info("Rules fetched successfully!");
-      return response.data;
     } catch (error) {
       console.error("Failed to fetch rules:", error);
       toast.error("Failed to fetch rules.");
-      return [];
     }
   };
 
   useEffect(() => {
-    const fetchAllRules = async () => {
-      if (spaceId) {
-        const fetchedRules = await fetchRules(spaceId);
-        setRules(fetchedRules);
-      }
-    };
-    fetchAllRules();
+    fetchRules();
   }, [spaceId]);
 
   const onSearchInputChange = (event) => {
@@ -94,6 +91,7 @@ const RulesDashboard = () => {
         rules={filteredRules}
         onRuleClick={(id) => setSelectedRule(id)}
         selectedRule={selectedRule}
+        fetchRules={fetchRules} // Pass the fetchRules function as a prop
       />
       {openSuccessSnackBar && (
         <SnackBar

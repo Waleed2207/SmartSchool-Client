@@ -2,8 +2,8 @@
 .NewEventForm {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem;
+    // gap: 1rem;
+    // padding: 1.5rem;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -44,3 +44,17 @@
     margin-top: 1rem;
   }
   
+  .sectionTitle {
+    text-align: left;
+    margin: 20px 0 20px;
+  }
+  .deviceRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .deviceCheckbox {
+    flex: 1 1 auto;
+  }

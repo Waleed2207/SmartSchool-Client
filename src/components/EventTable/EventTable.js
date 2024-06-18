@@ -24,8 +24,8 @@ const EventsTable = ({ events, onEventClick, selectedEvent, token, spaceId, fetc
     setEditValue({ title: event.title, description: event.description });
   };
 
-  const handleEditChange = (event) => {
-    const { name, value } = event.target;
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
     setEditValue((prevValue) => ({ ...prevValue, [name]: value }));
   };
 
@@ -58,6 +58,7 @@ const EventsTable = ({ events, onEventClick, selectedEvent, token, spaceId, fetc
 
   const confirmDeleteEvent = async () => {
     if (eventToDelete === null) return;
+  
     try {
       const response = await axios.delete(`${SERVER_URL}/api-calendar/events/${eventToDelete}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -123,7 +124,7 @@ const EventsTable = ({ events, onEventClick, selectedEvent, token, spaceId, fetc
                   )}
                 </TdStyled>
                 <TdStyled>
-                  {new Date(event.start).toLocaleTimeString()} - {new Date(event.end).toLocaleTimeString()}
+                  {new Date(event.time).toLocaleString()}
                 </TdStyled>
                 <TdStyled>
                   {editEventId === event._id ? (

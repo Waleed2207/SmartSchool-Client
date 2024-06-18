@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext  } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,7 +22,7 @@ import { SERVER_URL } from "../../consts";
 import { useSpace } from '../../contexts/SpaceContext';
 import UserContext from "../../contexts/UserContext";
 
-const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
+const RulesTable = ({ rules, onRuleClick, selectedRule, fetchRules }) => {
   const [currentRules, setCurrentRules] = useState(rules);
   const [editRuleId, setEditRuleId] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -33,7 +33,6 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
   const { user } = useContext(UserContext);
   const fullName = user?.fullName || "";
 
-  
   useEffect(() => {
     setCurrentRules(rules);
   }, [rules]);
@@ -98,6 +97,11 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
     setOpenAddRuleModal(false);
   };
 
+  const handleAddRuleSuccess = async () => {
+    setOpenAddRuleModal(false);
+    await fetchRules(); // Refresh the rules list after adding a new rule
+  };
+
   return (
     <div className={classes.TableContainer}>
       <div className={classes.TableHeader}>
@@ -107,10 +111,11 @@ const RulesTable = ({ rules, onRuleClick, selectedRule }) => {
         </button>
         <RulesModal show={openAddRuleModal} onCloseModal={handleCloseAddRuleModal}>
           <h2>Add Rule</h2>
-          <AddRuleComponent spaceId={spaceId} fullName={fullName} onSuccess={() => {
-            setOpenAddRuleModal(false);
-            // Optionally refresh the list of rules here
-          }} />
+          <AddRuleComponent 
+            spaceId={spaceId} 
+            fullName={fullName} 
+            onSuccess={handleAddRuleSuccess} 
+          />
         </RulesModal>
       </div>
       <TableContainer>
