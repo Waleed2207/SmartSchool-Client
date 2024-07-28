@@ -1,4 +1,3 @@
-
 .DateTimeContainer {
   display: flex;
   flex-direction: column;
@@ -29,7 +28,6 @@
     cursor: not-allowed;
   }
 }
-
 
 .EventTypeField {
   margin-top: 1rem;
@@ -64,7 +62,6 @@
   }
 }
 
-
 .deviceLabel {
   cursor: pointer;
   display: flex;
@@ -93,4 +90,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-height: 80vh; /* Reduce the height of the form */
   overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.DateTimeRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.DateTimeContainer {
+  flex: 1;
 }

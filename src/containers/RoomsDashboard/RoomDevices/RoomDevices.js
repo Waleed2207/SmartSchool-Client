@@ -264,9 +264,9 @@ const RoomDevices = () => {
         <FontAwesomeIcon icon={faChevronLeft} />
         <span>Back to Rooms</span>
       </NavLinkStyled>
-      <div className={classes.RoomsPage}>
+      {/* <div className={classes.RoomsPage}>
             <button className={classes.RoomsPageButton} onClick={openHouseMap}>Rooms Map</button>
-          </div>
+          </div> */}
           <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}

@@ -14,7 +14,7 @@ function Space(props) {
       <div>
         <div className={classes.Title}>{props.space_name}</div>
         <div className={classes.Container}>
-          <div>{props.type}</div>
+          <div style={{fontSize : '1.1rem'}}>{props.type}</div>
           <div className={classes.City}>
             <FontAwesomeIcon icon={cityIcon} className={classes.CityIcon} />
             <span className={classes.CityText}>{props.city}</span>

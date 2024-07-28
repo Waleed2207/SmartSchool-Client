@@ -37,8 +37,8 @@ const DeviceCard = styled.div`
 }
 
   @media (max-width: 480px) { /* Mobile view */
-  width: 16rem;
-  min-width: 16rem;
+  // width: 16rem;
+  // min-width: 16rem;
     min-height: 7rem;
     height: 7rem;
 
