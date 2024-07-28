@@ -4,7 +4,7 @@ export const eventEmitter = new EventEmitter();
 
 let tempws;
 if (window.location.protocol === "https:") {
-    tempws = new WebSocket('wss://software.shenkar.cloud:8888');
+    tempws = new WebSocket('wss://software.shenkar.cloud:8080');
 } else {
     tempws= new WebSocket('ws://software.shenkar.cloud:8001');
 }

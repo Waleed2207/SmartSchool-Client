@@ -28,6 +28,21 @@ const DeviceCard = styled.div`
     height: 300px;
     width: ${({ isLaundryDevice }) => (isLaundryDevice ? "30rem" : "18rem")};
   }
+
+  @media (max-width: 768px) { /* Tablet view */
+  width: 18rem;
+  min-width: 18rem
+  min-height: 7rem;
+  height: 7rem;
+}
+
+  @media (max-width: 480px) { /* Mobile view */
+  // width: 16rem;
+  // min-width: 16rem;
+    min-height: 7rem;
+    height: 7rem;
+
+  }
 `;
 
 const ControlContainer = styled.div`
@@ -41,6 +56,14 @@ const TopRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) { /* Tablet view */
+   margin-bottom: 0rem;
+}
+
+  @media (max-width: 480px) { /* Mobile view */
+    margin-bottom: 0rem;
+  }
 `;
 
 
@@ -243,7 +266,7 @@ export const Device = ({ device, onToggleDeviceSwitch, pumpDuration, setPumpDura
         let requests = [];
         const ACPayload = { state: newState, id: device_id, rasp_ip: raspberryPiIP };
         const basePayload = { state: newState, deviceId: device_id, rasp_ip: raspberryPiIP };
-        const LIGHTPayload = {  id: device_id, rasp_ip: raspberryPiIP};
+        const LIGHTPayload = {  id: device_id, rasp_ip: raspberryPiIP , Control: 'manual' };
         if (device.device_name.toLowerCase() === 'ac') {
           console.log("is here");
           requests.push(axios.post(`${SERVER_URL}/api-sensors/sensibo`, ACPayload));

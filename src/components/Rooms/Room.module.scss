@@ -15,6 +15,14 @@
   .Title {
     font-size: 1.1rem;
     font-weight: bold;
+
+    @include tablet-view {
+      font-size: 1rem;
+    }
+
+    @include mobile-view {
+      font-size: 1rem;
+    }
   }
 
   .Icon {

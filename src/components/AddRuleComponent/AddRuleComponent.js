@@ -7,7 +7,7 @@ import { getGreeting_rule } from '../../utils/utils';
 const predefinedActivities = ["Studying", "Sleeping", "watching_tv", "Eating", "Cooking", "Playing", "Outside"];
 const predefinedSeasons = ["Spring", "Summer", "Fall", "Winter"];
 const conditionKeywords = ["in", "not in"];
-const conditionTypes = ["motion", "temperature", "time"];
+const conditionTypes = ["motion", "temperature", "time", "eventType"];
 const timePeriods = ["morning", "afternoon", "evening", "night"];
 const operators = ["and", "or"];
 
@@ -16,6 +16,8 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
   const [conditionType, setConditionType] = useState('motion');
   const [person, setPerson] = useState(fullName);
   const [conditionKeyword, setConditionKeyword] = useState('in');
+  const [conditionKeywords, setConditionKeywords] = useState(['in', 'not in']);
+
   const [roomName, setRoomName] = useState('');
   const [activity, setActivity] = useState('');
   const [season, setSeason] = useState('');
@@ -36,46 +38,78 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
   const [operatorAfter, setOperatorAfter] = useState('and');
   const [includeHumidity, setIncludeHumidity] = useState(false);
   const [includeTemperature, setIncludeTemperature] = useState(true);
+  const [eventType, setEventType] = useState('');
+  const [includeActivity, setIncludeActivity] = useState(false);
 
   useEffect(() => {
+    if (conditionType === 'eventType') {
+      setConditionKeywords(['start', 'end']);
+      setConditionKeyword('start');
+    } else {
+      setConditionKeywords(['in', 'not in']);
+      setConditionKeyword('in');
+    }
+  }, [conditionType]);
+
+  useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
+
     const fetchRooms = async () => {
       try {
         const response = await fetch(`${SERVER_URL}/api-room/rooms/space/${spaceId}`);
         if (response.ok) {
           const data = await response.json();
-          const roomNames = data.map(room => room.name);
-          setRooms(roomNames);
+          if (isMounted) {
+            const roomNames = data.map(room => room.name);
+            setRooms(roomNames);
+          }
         } else {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
       } catch (error) {
         console.error('Failed to fetch rooms:', error);
-        toast.error(`Failed to fetch rooms. ${error.message}`);
+        if (isMounted) {
+          toast.error(`Failed to fetch rooms. ${error.message}`);
+        }
       }
     };
 
     fetchRooms();
+
+    return () => {
+      isMounted = false; // Cleanup function to set isMounted to false
+    };
   }, [spaceId]);
 
   useEffect(() => {
+    let isMounted = true; // Track if the component is mounted
+
     const fetchDevices = async () => {
       if (roomName) {
         try {
           const response = await fetch(`${SERVER_URL}/api-device/device/space/${spaceId}/${encodeURIComponent(roomName)}`);
           if (response.ok) {
             const data = await response.json();
-            setDevices(data);
+            if (isMounted) {
+              setDevices(data);
+            }
           } else {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
         } catch (error) {
           console.error('Failed to fetch devices:', error);
-          toast.error(`Failed to fetch devices. ${error.message}`);
+          if (isMounted) {
+            toast.error(`Failed to fetch devices. ${error.message}`);
+          }
         }
       }
     };
 
     fetchDevices();
+
+    return () => {
+      isMounted = false; // Cleanup function to set isMounted to false
+    };
   }, [roomName, spaceId]);
 
   const handleSubmit = async (e) => {
@@ -97,7 +131,7 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
 
     const thenActions = Object.entries(selectedDevices).map(([device, state]) => {
       if (device.includes('AC')) {
-        return `turn ${device} ${acMode} mode ${acTemperature} on`;
+        return `turn ${device} ${acMode} mode ${acTemperature} ${acState}`;
       } else {
         return `turn ${device} ${state}`;
       }
@@ -105,19 +139,27 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
 
     let condition = '';
     if (conditionType === 'motion') {
-      condition = `If ${person} ${conditionKeyword} ${roomName}${
-        conditionKeyword === 'in' && roomName !== 'bathroom' ? ` ${operatorBefore} ${activity} ${operatorAfter} season is ${season}` : ''
-      }`;
+      condition = `If ${person} ${conditionKeyword} ${roomName}`;
+      if (conditionKeyword === 'in' && roomName !== 'bathroom' && includeActivity) {
+        condition += ` ${operatorBefore} ${activity}`;
+      }
+      if (conditionKeyword === 'in' && roomName !== 'bathroom') {
+        condition += ` ${operatorAfter} season is ${season}`;
+      }
     } else if (conditionType === 'temperature') {
       if (includeTemperature && includeHumidity) {
-        condition = `If temperature in ${roomName} is ${temperatureCondition} ${temperatureValue} ${operatorBefore} humidity is ${humidityCondition} ${humidityValue}%`;
+        condition = `If temperature in ${roomName} ${temperatureCondition} ${temperatureValue} ${operatorBefore} humidity ${humidityCondition} ${humidityValue}`;
       } else if (includeTemperature) {
-        condition = `If temperature in ${roomName} is ${temperatureCondition} ${temperatureValue}`;
+        condition = `If temperature in ${roomName} ${temperatureCondition} ${temperatureValue}`;
       } else if (includeHumidity) {
-        condition = `If humidity in ${roomName} is ${humidityCondition} ${humidityValue}%`;
+        condition = `If humidity in ${roomName} ${humidityCondition} ${humidityValue}`;
       }
     } else if (conditionType === 'time') {
-      condition = `If hour ${conditionKeyword} ${roomName} is ${timePeriod} ${operatorBefore} temperature is ${temperatureCondition} ${temperatureValue}`;
+      condition = `If hour ${conditionKeyword} ${roomName} is ${timePeriod} ${operatorBefore} temperature ${temperatureCondition} ${temperatureValue}`;
+    } else if (conditionType === 'eventType') {
+      condition = `If ${conditionKeyword} ${eventType} in ${roomName}${
+        conditionKeyword === 'start' ? ` ${operatorAfter} season is ${season}` : ''
+      }`;
     }
 
     const ruleData = {
@@ -200,36 +242,66 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
       </div>
 
       {conditionType === 'motion' && (
+        <>
+          <div className={classes.formRow}>
+            <label htmlFor="personSelector" className={classes.labelColumn}>Motion:</label>
+            <input
+              id="personSelector"
+              name="personSelector"
+              value={person}
+              onChange={(e) => setPerson(e.target.value)}
+              required
+              className={classes.inputColumn}
+              placeholder="Enter Motion name"
+            />
+          </div>
+          <div className={classes.formRow}>
+            <label htmlFor="includeActivity" className={classes.labelColumn}>Include Activity:</label>
+            <input
+              id="includeActivity"
+              name="includeActivity"
+              type="checkbox"
+              checked={includeActivity}
+              onChange={(e) => setIncludeActivity(e.target.checked)}
+              className={classes.inputColumn}
+            />
+          </div>
+        </>
+      )}
+
+      {conditionType === 'eventType' && (
         <div className={classes.formRow}>
-          <label htmlFor="personSelector" className={classes.labelColumn}>Motion:</label>
+          <label htmlFor="eventTypeInput" className={classes.labelColumn}>Event Type:</label>
           <input
-            id="personSelector"
-            name="personSelector"
-            value={person}
-            onChange={(e) => setPerson(e.target.value)}
+            id="eventTypeInput"
+            name="eventTypeInput"
+            value={eventType}
+            onChange={(e) => setEventType(e.target.value)}
             required
             className={classes.inputColumn}
-            placeholder="Enter Motion name"
+            placeholder="Enter event type"
           />
         </div>
       )}
 
-      <div className={classes.formRow}>
-        <label htmlFor="conditionKeywordSelector" className={classes.labelColumn}>Condition Keyword:</label>
-        <select
-          id="conditionKeywordSelector"
-          name="conditionKeywordSelector"
-          value={conditionKeyword}
-          onChange={(e) => setConditionKeyword(e.target.value)}
-          required
-          className={classes.inputColumn}
-        >
-          <option value="">Select Condition</option>
-          {conditionKeywords.map((keyword, index) => (
-            <option key={index} value={keyword}>{keyword}</option>
-          ))}
-        </select>
-      </div>
+      {(conditionType === 'motion' || conditionType === 'eventType' || conditionType === 'time' || conditionType === 'temperature') && (
+        <div className={classes.formRow}>
+          <label htmlFor="conditionKeywordSelector" className={classes.labelColumn}>Condition Keyword:</label>
+          <select
+            id="conditionKeywordSelector"
+            name="conditionKeywordSelector"
+            value={conditionKeyword}
+            onChange={(e) => setConditionKeyword(e.target.value)}
+            required
+            className={classes.inputColumn}
+          >
+            <option value="">Select Condition</option>
+            {conditionKeywords.map((keyword, index) => (
+              <option key={index} value={keyword}>{keyword}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className={classes.formRow}>
         <label htmlFor="locationSelector" className={classes.labelColumn}>Room Name:</label>
@@ -343,7 +415,6 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
                   <option value="is equal to">Is Equal to</option>
                   <option value="is below">Is Below</option>
                   <option value="is less">Is Less</option>
-
                 </select>
               </div>
 
@@ -411,10 +482,10 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
               required
               className={classes.inputColumn}
             >
-                <option value="is above">Is Above</option>
-                <option value="is equal to">Is Equal to</option>
-                <option value="is below">Is Below</option>
-                <option value="is less">Is Less</option>
+              <option value="is above">Is Above</option>
+              <option value="is equal to">Is Equal to</option>
+              <option value="is below">Is Below</option>
+              <option value="is less">Is Less</option>
             </select>
           </div>
 
@@ -434,73 +505,81 @@ const AddRuleComponent = ({ onSuccess, spaceId, fullName }) => {
         </>
       )}
 
-      {conditionKeyword === 'in' && roomName !== 'bathroom' && conditionType === 'motion' && (
+      {((conditionKeyword === 'in' && roomName !== 'bathroom') || (conditionKeyword === 'start' && (conditionType === 'motion' || conditionType === 'eventType'))) && (
         <>
-          <div className={classes.formRow}>
-            <label htmlFor="operatorBeforeSelector" className={classes.labelColumn}>Operator Before Activity:</label>
-            <select
-              id="operatorBeforeSelector"
-              name="operatorBeforeSelector"
-              value={operatorBefore}
-              onChange={(e) => setOperatorBefore(e.target.value)}
-              required
-              className={classes.inputColumn}
-            >
-              {operators.map((op, index) => (
-                <option key={index} value={op}>{op}</option>
-              ))}
-            </select>
-          </div>
+          {conditionType === 'motion' && includeActivity && (
+            <>
+              <div className={classes.formRow}>
+                <label htmlFor="operatorBeforeSelector" className={classes.labelColumn}>Operator Before Activity:</label>
+                <select
+                  id="operatorBeforeSelector"
+                  name="operatorBeforeSelector"
+                  value={operatorBefore}
+                  onChange={(e) => setOperatorBefore(e.target.value)}
+                  required
+                  className={classes.inputColumn}
+                >
+                  {operators.map((op, index) => (
+                    <option key={index} value={op}>{op}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className={classes.formRow}>
-            <label htmlFor="activitySelector" className={classes.labelColumn}>Activity:</label>
-            <select
-              id="activitySelector"
-              name="activitySelector"
-              value={activity}
-              onChange={(e) => setActivity(e.target.value)}
-              required
-              className={classes.inputColumn}
-            >
-              <option value="">Select Activity</option>
-              {predefinedActivities.map((activity, index) => (
-                <option key={index} value={activity}>{activity}</option>
-              ))}
-            </select>
-          </div>
+              <div className={classes.formRow}>
+                <label htmlFor="activitySelector" className={classes.labelColumn}>Activity:</label>
+                <select
+                  id="activitySelector"
+                  name="activitySelector"
+                  value={activity}
+                  onChange={(e) => setActivity(e.target.value)}
+                  required
+                  className={classes.inputColumn}
+                >
+                  <option value="">Select Activity</option>
+                  {predefinedActivities.map((activity, index) => (
+                    <option key={index} value={activity}>{activity}</option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
 
-          <div className={classes.formRow}>
-            <label htmlFor="operatorAfterSelector" className={classes.labelColumn}>Operator After Activity:</label>
-            <select
-              id="operatorAfterSelector"
-              name="operatorAfterSelector"
-              value={operatorAfter}
-              onChange={(e) => setOperatorAfter(e.target.value)}
-              required
-              className={classes.inputColumn}
-            >
-              {operators.map((op, index) => (
-                <option key={index} value={op}>{op}</option>
-              ))}
-            </select>
-          </div>
+          {(conditionType === 'motion' || conditionType === 'eventType') && (
+            <>
+              <div className={classes.formRow}>
+                <label htmlFor="operatorBeforeSelector" className={classes.labelColumn}>Operator Before Season:</label>
+                <select
+                  id="operatorBeforeSelector"
+                  name="operatorBeforeSelector"
+                  value={operatorBefore}
+                  onChange={(e) => setOperatorBefore(e.target.value)}
+                  required
+                  className={classes.inputColumn}
+                >
+                  {operators.map((op, index) => (
+                    <option key={index} value={op}>{op}</option>
+                  ))}
+                </select>
+              </div>
 
-          <div className={classes.formRow}>
-            <label htmlFor="seasonSelector" className={classes.labelColumn}>Season:</label>
-            <select
-              id="seasonSelector"
-              name="seasonSelector"
-              value={season}
-              onChange={(e) => setSeason(e.target.value)}
-              required
-              className={classes.inputColumn}
-            >
-              <option value="">Select Season</option>
-              {predefinedSeasons.map((season, index) => (
-                <option key={index} value={season}>{season}</option>
-              ))}
-            </select>
-          </div>
+              <div className={classes.formRow}>
+                <label htmlFor="seasonSelector" className={classes.labelColumn}>Season:</label>
+                <select
+                  id="seasonSelector"
+                  name="seasonSelector"
+                  value={season}
+                  onChange={(e) => setSeason(e.target.value)}
+                  required
+                  className={classes.inputColumn}
+                >
+                  <option value="">Select Season</option>
+                  {predefinedSeasons.map((season, index) => (
+                    <option key={index} value={season}>{season}</option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
         </>
       )}
 

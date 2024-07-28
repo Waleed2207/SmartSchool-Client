@@ -20,6 +20,7 @@ import houseMapClasses from '../../components/HouseMap/HouseMap.module.scss';
 import {jwtDecode} from 'jwt-decode'; // Correct import
 import { ReactTyped as Typed } from 'react-typed';
 import {LabelHeader } from '../RoomsDashboard/style'
+import { useSpace } from './../../contexts/SpaceContext';
 
 const NavLinkStyled = styled(NavLink)`
   color: green;
@@ -28,7 +29,7 @@ const NavLinkStyled = styled(NavLink)`
 Modal.setAppElement('#root') 
 const RoomsDashboard = ({ token }) => {
     const [roomsTest, setRoomsTest] = useState([]);
-    const { spaceId } = useParams();
+    const { spaceId, rasp_ip } = useParams();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [openAddActivityModal, setOpenAddActivityModal] = useState(false);
     const [tokenError, setTokenError] = useState(null);

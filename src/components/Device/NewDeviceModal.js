@@ -9,11 +9,9 @@ export const NewDeviceModalContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  //   margin-top: 40px;
 `;
 
 export const NameInput = styled.input`
-  //   display: ${(props) => (props.editing ? "block" : "none")};
   width: 80%;
   height: 30px;
   text-align: center;
@@ -25,7 +23,6 @@ export const NameInput = styled.input`
 const ModalContent = styled.div`
   display: flex;
   width: 100%;
-  // flex-direction: ;
 `;
 
 export const ModalButtonsContainer = styled.div`
@@ -56,9 +53,13 @@ export const ButtonStyledNew = styled.div`
   }
   color: #3b5998;
 `;
-const NameSection = ({ spaceId, setName }) => {
+
+const NameSection = ({ spaceId, deviceId, setDeviceId, setName }) => {
   return (
     <>
+      <div>
+        Device ID: <NameInput type="text" value={deviceId} onChange={(e) => setDeviceId(e.currentTarget.value)} />
+      </div>
       <div>
         Name: <NameInput type="text" onChange={(e) => setName(e.currentTarget.value)} />
       </div>
@@ -68,8 +69,10 @@ const NameSection = ({ spaceId, setName }) => {
     </>
   );
 };
+
 export const NewDeviceModal = ({ setIsModalOpen, spaceId, roomId, fetchRoomDevices }) => {
   const [name, setName] = useState("");
+  const [deviceId, setDeviceId] = useState("");
 
   const handleAdd = async () => {
     await axios.post(`${SERVER_URL}/api-device/devices`, {
@@ -78,6 +81,7 @@ export const NewDeviceModal = ({ setIsModalOpen, spaceId, roomId, fetchRoomDevic
       },
       space_id: spaceId,
       room_id: roomId,
+      device_id: deviceId,
     });
     setIsModalOpen(false);
     fetchRoomDevices();
@@ -85,16 +89,13 @@ export const NewDeviceModal = ({ setIsModalOpen, spaceId, roomId, fetchRoomDevic
 
   return (
     <NewDeviceModalContainer>
-      {/* <ModalContent> */}
-
-      <NameSection spaceId={spaceId} setName={setName} />
+      <NameSection spaceId={spaceId} deviceId={deviceId} setDeviceId={setDeviceId} setName={setName} />
       <ModalButtonsContainer>
         <ButtonStyledNew onClick={handleAdd}>Add</ButtonStyledNew>
         <ButtonStyledNew onClick={() => setIsModalOpen(false)}>
           Close
         </ButtonStyledNew>
       </ModalButtonsContainer>
-      {/* </ModalContent> */}
     </NewDeviceModalContainer>
   );
 };

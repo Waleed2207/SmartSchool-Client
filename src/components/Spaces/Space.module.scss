@@ -12,9 +12,15 @@
   align-items: center;
 
   .Title {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     flex-grow: 1; // Ensures the title takes up the available space
+
+    @media (max-width: 768px) {
+      font-size: 1rem;    }
+
+    @media (max-width: 480px) {
+      font-size: 1rem;    }
   }
 
   .Container {
@@ -27,7 +33,7 @@
     display: flex;
     align-items: center;
     margin-top: 4px;
-    font-size: 0.9rem;
+    font-size: 1rem;
 
     .CityIcon, .IPIcon {
       margin-right: 10px;
